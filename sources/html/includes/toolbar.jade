@@ -1,0 +1,25 @@
+header.toolbar
+	.container
+		.row
+			.col-md-4.col-xs-3
+				.site-select.site-select--open
+					a.site-select__trigger(href="#")
+						| Другие сайты холдинга
+						include ../../../public_html/layout/images/svg/arrow.svg
+					.site-select__dropdown
+						.site-select__link
+			.col-xs-2
+				.lang-trigger.lang-trigger--lang_russian(data-variant="russian,english")
+					span.lang-trigger__label RU
+					span.lang-trigger__carriage
+					span.lang-trigger__label EN
+			.col-xs-3.col-md-2
+				a.phone(href="tel:88002005001")
+					include ../../../public_html/layout/images/svg/phone.svg
+					| 8 800 200 500 1
+			.col-xs-2
+				a.feedback(href="#") Обратная связь
+			.col-xs-2
+				form.search
+					input.search__input(type="text", name="q")
+					input.search__submit(type="submit", value="")

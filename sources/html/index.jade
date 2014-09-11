@@ -1,0 +1,30 @@
+include includes/header
+
+<body class="index">
+.wrap
+	include includes/toolbar
+
+	main.page
+		.container
+			.row
+				.col-md-3.col-xs-2
+					aside.sidebar
+						a(href="/").logo
+							include ../../public_html/layout/images/svg/logo.svg
+						nav.nav-left
+							a(href="#").nav-left__item О компании
+							a(href="#").nav-left__item Новости
+							a(href="#").nav-left__item Услуги
+							a(href="#").nav-left__item Технологии
+							a(href="#").nav-left__item Наши проекты
+							a(href="#").nav-left__item Партнеры
+							a(href="#").nav-left__item Контакты
+						.news
+							.news__item
+								.news__date 12.07.2014
+								a(href="#").news__title Представляем новые высокопроизводительные системы автоматической сварки трубопроводов Р-700 и М-400
+							a(href="#").news__more еще новости
+
+
+
+include includes/footer

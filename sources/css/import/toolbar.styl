@@ -1,0 +1,98 @@
+.toolbar
+	full-width()
+	position relative
+	height 62px
+	margin-bottom 35px
+	line-height 63px
+	white-space nowrap
+	background rgba(0,0,0,.5)
+	.site-select
+		middle()
+		width 200px
+		font-weight bold
+		font-size 10px
+		text-transform uppercase
+		&__trigger
+			color white
+			svg
+				margin-left 10px
+	.lang-trigger
+		font-size 11px
+		font-weight bold
+		user-select none
+		color #a4a4a4
+		middle()
+		&__label
+			t(color)
+		&--lang
+			&_russian
+				.lang-trigger__label:first-of-type
+					color white
+				.lang-trigger__carriage:after
+					left 4px
+			&_english
+				.lang-trigger__label:last-of-type
+					color white
+				.lang-trigger__carriage:after
+					left 25px
+		&__carriage
+			middle()
+			background blue
+			width 41px
+			height 20px
+			border-radius 10px
+			cursor pointer
+			margin 0 3px
+			position: relative
+			top -1px
+			&:after
+				t(left)
+				content ""
+				width 12px
+				border-radius 12px
+				left 4px
+				top 4px
+				height 12px
+				box-shadow 0 1px 3px rgba(0,0,0,.3)
+				background white
+				position absolute
+	.phone
+		color white
+		font-size 15px
+		font-weight bold
+		svg
+			middle()
+			position relative
+			top -1px
+			margin-right 10px
+	.feedback
+		middle()
+		text-transform uppercase
+		font-size 10px
+		color white
+		font-weight bold
+	.search
+		position relative
+		middle()
+		top -3px
+		width 100%
+		&__input
+			width 100%
+			border 1px solid blue
+			border-radius 20px
+			height 20px
+			background transparent
+			color white
+			line-height normal
+			padding-left 5px
+			font-size 11px
+			middle()
+			padding-right 22px
+		&__submit
+			position absolute
+			width 13px
+			height 13px
+			b('svg/seach.svg', center center no-repeat, transparent, cover)
+			border 0
+			right 6px
+			top 26px

@@ -1,0 +1,243 @@
+/*
+ * Модификаторы оформления
+ */
+
+a, input
+	&:focus
+		outline 0
+/*!
+ * Примеси
+ */
+@import "nib"
+
+full-width()
+	float left
+	width 100%
+
+middle()
+	display inline-block
+	vertical-align middle
+
+t(attr=null,time=.3s)
+	transition-property attr
+	transition-duration time
+
+b(name=null, position=null, color=null, size=null)
+	background color url(../images/name) position
+	if size
+		background-size size
+/*
+ * Модификаторы плагинов
+ */
+blue  = #0049d3
+blue2 = #00aafa
+white = #f0f4f9
+@font-face
+	font-family 'Proxima'
+	src url("../fonts/ProximaNova-Bold.ttf")
+	src local('☺'), url('../fonts/ProximaNova-Bold.ttf') format('truetype')
+	font-weight bold
+
+@font-face
+	font-family 'Proxima'
+	src url("../fonts/ProximaNova-Regular.ttf")
+	src local('☺'), url('../fonts/ProximaNova-Regular.ttf') format('truetype')
+	font-weight normal
+
+@font-face
+	font-family 'Proxima'
+	src url("../fonts/ProximaNova-Light.ttf")
+	src local('☺'), url('../fonts/ProximaNova-Light.ttf') format('truetype')
+	font-weight normal
+.footer
+	full-width()
+	color #a3a3a3
+	background black
+	border-top 1px solid #212121
+	height 65px
+	padding 24px 0
+	font-weight bold
+	text-transform uppercase
+	font-size 10px
+	a
+		color #a3a3a3
+		text-decoration: underline
+		&:hover
+			color blue
+	.social
+		full-width()
+body
+	font-family 'Proxima', 'Helvetica Neue', 'Arial', sans-serif
+	height 100%
+	background-color black
+	color white
+	&.index
+		b('bg_index.jpg', top center no-repeat, black)
+a
+	transition-property color, background-color, border-radius, box-shadow, border-radius
+	transition-duration .3s
+	&:hover
+		text-decoration none
+.container
+	max-width 1150px
+
+.wrap 
+	min-height: 100%
+	padding-bottom 65px
+	margin-bottom: -65px
+	&:after
+		content ""
+		display block
+
+html
+	height 100%
+.sidebar
+	full-width()
+	padding-bottom 80px
+	.logo
+		full-width()
+		margin-bottom 90px
+	.nav-left
+		full-width()
+		margin-bottom 90px
+		&__item
+			float left
+			clear both
+			font-size 18px
+			font-weight bold
+			text-transform uppercase
+			color white
+			line-height 31px
+			height 32px
+			padding 3px 15px 0
+			margin-left -15px
+			margin-bottom 5px
+			&--active
+				color blue
+				border 1px solid blue
+				border-radius 20px
+			&:hover
+				color blue
+	.news
+		full-width()
+		&__item
+			full-width()
+		&__date
+			color blue2
+			font-size 10px
+			font-weight bold
+			margin-bottom 2px
+		&__title
+			color white
+			text-decoration underline
+			font-size 13px
+			line-height 16px
+			float left
+			margin-bottom 25px
+			&:hover
+				color blue2
+		&__more
+			font-size 10px
+			text-transform uppercase
+			color blue2
+			font-weight bold
+			&:hover
+				text-decoration underline
+.toolbar
+	full-width()
+	position relative
+	height 62px
+	margin-bottom 35px
+	line-height 63px
+	white-space nowrap
+	background rgba(0,0,0,.5)
+	.site-select
+		middle()
+		width 200px
+		font-weight bold
+		font-size 10px
+		text-transform uppercase
+		&__trigger
+			color white
+			svg
+				margin-left 10px
+	.lang-trigger
+		font-size 11px
+		font-weight bold
+		user-select none
+		color #a4a4a4
+		middle()
+		&__label
+			t(color)
+		&--lang
+			&_russian
+				.lang-trigger__label:first-of-type
+					color white
+				.lang-trigger__carriage:after
+					left 4px
+			&_english
+				.lang-trigger__label:last-of-type
+					color white
+				.lang-trigger__carriage:after
+					left 25px
+		&__carriage
+			middle()
+			background blue
+			width 41px
+			height 20px
+			border-radius 10px
+			cursor pointer
+			margin 0 3px
+			position: relative
+			top -1px
+			&:after
+				t(left)
+				content ""
+				width 12px
+				border-radius 12px
+				left 4px
+				top 4px
+				height 12px
+				box-shadow 0 1px 3px rgba(0,0,0,.3)
+				background white
+				position absolute
+	.phone
+		color white
+		font-size 15px
+		font-weight bold
+		svg
+			middle()
+			position relative
+			top -1px
+			margin-right 10px
+	.feedback
+		middle()
+		text-transform uppercase
+		font-size 10px
+		color white
+		font-weight bold
+	.search
+		position relative
+		middle()
+		top -3px
+		width 100%
+		&__input
+			width 100%
+			border 1px solid blue
+			border-radius 20px
+			height 20px
+			background transparent
+			color white
+			line-height normal
+			padding-left 5px
+			font-size 11px
+			middle()
+			padding-right 22px
+		&__submit
+			position absolute
+			width 13px
+			height 13px
+			b('svg/seach.svg', center center no-repeat, transparent, cover)
+			border 0
+			right 6px
+			top 26px
