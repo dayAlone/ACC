@@ -1,7 +1,7 @@
 footer.footer
 	.container
 		.row
-			.col-xs-3
+			.col-xs-2.col-md-3
 				.copyright © 2014 ООО «аргус сварсервис» 
 			.col-xs-2
 				.contacts
@@ -19,6 +19,11 @@ footer.footer
 						include ../../../public_html/layout/images/svg/google.svg
 					a(href="#").social__item
 						include ../../../public_html/layout/images/svg/pinterest.svg
+			.col-xs-4.col-md-3
+				a.radia(href="http://radia.ru", target="_blank")
+					include ../../../public_html/layout/images/svg/radia.svg
+					.radia__content
+						| разработка сайта <br>radia interactive
 
 
 script(type="text/javascript", src="./layout/js/frontend.js")

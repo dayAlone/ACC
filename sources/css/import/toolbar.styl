@@ -4,6 +4,7 @@
 	height 62px
 	margin-bottom 35px
 	line-height 63px
+	z-index 20
 	white-space nowrap
 	background rgba(0,0,0,.5)
 	.site-select
@@ -12,10 +13,37 @@
 		font-weight bold
 		font-size 10px
 		text-transform uppercase
+		position: relative
+		&--open
+			.site-select__trigger
+				svg
+					path
+						fill white
 		&__trigger
 			color white
+			position relative
+			z-index 3
 			svg
 				margin-left 10px
+		&__dropdown
+			display none
+			position absolute
+			top 13px
+			left -13px
+			background blue
+			width 200px
+			padding 35px 13px 5px
+			border-radius 5px
+		&__link
+			float: left
+			clear both
+			color white
+			line-height 20px
+			text-decoration: underline
+			&:hover
+				color blue2
+				text-decoration none
+
 	.lang-trigger
 		font-size 11px
 		font-weight bold

@@ -63,7 +63,7 @@ module.exports = (grunt)->
 			sources : 'sources'
 			layout  : 'public_html/layout'
 
-		use : loadPlugins [ 'jquery', 'bootstrap', 'browser', 'bem', 'hoverIntent' ]
+		use : loadPlugins [ 'jquery', 'bootstrap', 'browser', 'bem', 'hoverIntent', 'velocity' ]
 
 		files:
 			css:

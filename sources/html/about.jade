@@ -1,0 +1,27 @@
+include includes/header
+
+<body class="about">
+.wrap
+	include includes/toolbar
+
+	main.page
+		.container
+			.row
+				.col-xs-3.col-md-4
+					aside.sidebar
+						a(href="/").logo
+							include ../../public_html/layout/images/svg/logo.svg
+						nav.nav-left
+							a(href="#").nav-left__item.nav-left__item--active О компании
+							a(href="#").nav-left__item Новости
+							a(href="#").nav-left__item Услуги
+							a(href="#").nav-left__item Технологии
+							a(href="#").nav-left__item Наши проекты
+							a(href="#").nav-left__item Партнеры
+							a(href="#").nav-left__item Контакты
+						
+				.col-xs-9.col-md-8
+					article
+						h1.page__title О компании
+						h2.page__blue-title Аргус СварСервис – компания экспертов  в области сварочно-монтажных работы при строительстве и ремонте трубопроводов мирового уровня.
+include includes/footer

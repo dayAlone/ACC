@@ -3,8 +3,9 @@ body
 	height 100%
 	background-color black
 	color white
-	&.index
-		b('bg_index.jpg', top center no-repeat, black)
+	for x in index about
+		&.{x}
+			b('bg_'+x+'.jpg', top center no-repeat, black)
 a
 	transition-property color, background-color, border-radius, box-shadow, border-radius
 	transition-duration .3s
@@ -23,3 +24,28 @@ a
 
 html
 	height 100%
+
+.index-page
+	full-width()
+	margin-top 495px
+	float right
+	max-width 700px
+	h1
+		float right
+		padding-bottom 15px
+		margin-bottom 20px
+		font-size 24px
+		text-transform: uppercase
+		border-bottom 1px solid rgba(255,255,255,.5)
+	.bages
+		line-height: 54px
+		&__image
+			max-width 54px
+			margin-right: 10px
+		&__title
+			middle()
+			max-width 60%
+			line-height 16px
+			font-size 11px
+			text-transform: uppercase
+			font-weight: bold

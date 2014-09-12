@@ -22,6 +22,26 @@
       });
       return e.preventDefault();
     });
+    $('.site-select').hoverIntent({
+      over: function() {
+        $(this).mod('open', true);
+        return $(this).elem('dropdown').velocity({
+          properties: "transition.slideDownIn",
+          options: {
+            duration: 300
+          }
+        });
+      },
+      out: function() {
+        $(this).mod('open', false);
+        return $(this).elem('dropdown').velocity({
+          properties: "transition.slideUpOut",
+          options: {
+            duration: 300
+          }
+        });
+      }
+    });
     delay(300, function() {
       return size();
     });
