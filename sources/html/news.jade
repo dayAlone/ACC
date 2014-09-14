@@ -1,0 +1,101 @@
+include includes/header
+
+<body class="news">
+.wrap
+	include includes/toolbar
+
+	main.page
+		.container
+			.row
+				.col-xs-3.col-md-4
+					aside.sidebar
+						a(href="/").logo
+							include ../../public_html/layout/images/svg/logo.svg
+						nav.nav-left
+							a(href="about.html").nav-left__item О компании
+							a(href="news.html").nav-left__item.nav-left__item--active Новости
+							a(href="services.html").nav-left__item Услуги
+							a(href="tech.html").nav-left__item Технологии
+							a(href="projects.html").nav-left__item Наши проекты
+							a(href="partners.html").nav-left__item Партнеры
+							a(href="contacts.html").nav-left__item Контакты
+						
+				.col-xs-9.col-md-8
+					article
+						.row
+							.col-xs-7
+								h1.page__title Новости
+							.col-xs-5.right
+								.years.xl-margin-top
+									a(href="#").years__item.years__item--active 2014
+									a(href="#").years__item 2013
+									a(href="#").years__item 2012
+						.page__divider.m-margin-top
+						.news
+							a.news__item(data-toggle="modal", data-target="#newsDetail", href="#newsDetail")
+								.news__frame
+									.news__picture(style="background-image: url(./layout/images/n-1.jpg)")
+									.news__date 12.07.2014
+									.news__title Представляем новые высокопроизводительные системы автоматической сварки трубопроводов Р-700 и М-400
+							a.news__item(data-toggle="modal", data-target="#newsDetail", href="#newsDetail")
+								.news__frame
+									.news__picture(style="background-image: url(./layout/images/n-2.jpg)")
+									.news__date 12.07.2014
+									.news__title Завершены работы по сварке участка магистрального трубопровода
+							a.news__item(data-toggle="modal", data-target="#newsDetail", href="#newsDetail")
+								.news__frame
+									.news__picture(style="background-image: url(./layout/images/n-3.jpg)")
+									.news__date 12.07.2014
+									.news__title Началось строительство “Южного потока”
+							a.news__item(data-toggle="modal", data-target="#newsDetail", href="#newsDetail")
+								.news__frame
+									.news__picture(style="background-image: url(./layout/images/n-2.jpg)")
+									.news__date 12.07.2014
+									.news__title Завершены работы по сварке участка магистрального трубопровода
+							a.news__item(data-toggle="modal", data-target="#newsDetail", href="#newsDetail")
+								.news__frame
+									.news__date 12.07.2014
+									.news__title Поздравляем с Днем России
+							a.news__item(data-toggle="modal", data-target="#newsDetail", href="#newsDetail")
+								.news__frame
+									.news__picture(style="background-image: url(./layout/images/n-1.jpg)")
+									.news__date 12.07.2014
+									.news__title Представляем новые высокопроизводительные системы автоматической сварки трубопроводов Р-700 и М-400, которые увеличивают эффективность сварки на 200%
+							a.news__item(data-toggle="modal", data-target="#newsDetail", href="#newsDetail")
+								.news__frame
+									.news__date 12.07.2014
+									.news__title Началось строительство “Южного потока” в строительстве которого активное учатие принимала наша компания. Спасибо всем, кто работал в тяжелых условиях.
+							a.news__item(data-toggle="modal", data-target="#newsDetail", href="#newsDetail")
+								.news__frame
+									.news__picture(style="background-image: url(./layout/images/n-3.jpg)")
+									.news__date 12.07.2014
+									.news__title Началось строительство “Южного потока”
+							a.news__item(data-toggle="modal", data-target="#newsDetail", href="#newsDetail")
+								.news__frame
+									.news__picture(style="background-image: url(./layout/images/n-1.jpg)")
+									.news__date 12.07.2014
+									.news__title Началось строительство “Южного потока” в строительстве которого активное учатие принимала наша компания. Спасибо всем, кто работал в тяжелых условиях.
+							a.news__item(data-toggle="modal", data-target="#newsDetail", href="#newsDetail")
+								.news__frame
+									.news__date 12.07.2014
+									.news__title Началось строительство “Южного потока” в строительстве которого активное учатие принимала наша компания. Спасибо всем, кто работал в тяжелых условиях.
+
+
+
+
+
+.modal.fade(id="newsDetail", tabindex="-1", role="dialog" aria-hidden="true")
+	.modal-dialog.modal-lg
+		.modal-content.modal-content--white
+			a.close(data-dismiss="modal", href="#")
+				include ../../public_html/layout/images/svg/close.svg
+			h1 Описание проекта. Заголовок.
+			.row
+				.col-xs-7
+					p В настоящее время автоматическая сварка занимает лидирующее положение не только при сооружении сухопутных и морских магистральных трубопроводов большого диаметра, но и при строительстве промысловых трубопроводов различных диаметров.
+					p При строительства трубопроводов малого диаметра основной объем работ по-прежнему выполняется с помощью ручной сварки. Однако тенденции развития трубопроводостроительной отрасли подтверждают, что и здесь в ближайшей перспективе центральное место займёт автоматическая сварка. 
+					p В то же время полуавтоматическая сварка будет играть все большую роль при выполнении ремонтных работ на трассе, вытесняя сварку штучным электродом. 
+					p Комбинация систем автоматической, полуавтоматической и ручной сварки (штучным электродом) позволят формировать единый технологический процесс, обеспечивающий стабильно высокие качество и производительность выполнения сварочных работ в совокупности с экономической рентабельностью, гибкостью и универсальностью.
+				.col-xs-5
+					img(src="./layout/images/img.jpg")
+include includes/footer

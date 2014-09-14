@@ -16,14 +16,16 @@
     "hoverIntent": "git@github.com:briancherne/jquery-hoverIntent.git",
     "hypher": "git@github.com:bramstein/hypher.git",
     "hypher_lib": "git@github.com:bramstein/hyphenation-patterns.git",
-    "jquery.browser": "~0.0.6",
-    "velocity": "~0.3.0",
-    "jquery.cookie": "~1.4.1",
-    "parsleyjs": "~2.0.3",
-    "jQuery-Mask-Plugin": "~1.6.5",
+    "jquery.browser": "latest",
+    "velocity": "latest",
+    "jquery.cookie": "latest",
+    "parsleyjs": "latest",
+    "jQuery-Mask-Plugin": "latest",
     "chosen": "https://github.com/harvesthq/chosen/releases/download/v1.1.0/chosen_v1.1.0.zip",
     "prettyPhoto": "git@github.com:scaron/prettyphoto.git",
-    "jquery.bem": "*"
+    "nested": "git@github.com:suprb/Nested.git",
+    "jquery.bem": "*",
+    "isotope": "~2.0.1"
   },
   "moduleType": [
     "amd",

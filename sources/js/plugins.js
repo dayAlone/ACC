@@ -11413,7 +11413,3936 @@ if (typeof jQuery === 'undefined') { throw new Error('Bootstrap\'s JavaScript re
 
 
   jQuery.browser = browser;
-})( jQuery, window );;/* @required jQuery */
+})( jQuery, window );;/*!
+ * Isotope PACKAGED v2.0.1
+ * Filter & sort magical layouts
+ * http://isotope.metafizzy.co
+ */
+
+/**
+ * Bridget makes jQuery widgets
+ * v1.0.1
+ */
+
+( function( window ) {
+
+
+
+// -------------------------- utils -------------------------- //
+
+var slice = Array.prototype.slice;
+
+function noop() {}
+
+// -------------------------- definition -------------------------- //
+
+function defineBridget( $ ) {
+
+// bail if no jQuery
+if ( !$ ) {
+  return;
+}
+
+// -------------------------- addOptionMethod -------------------------- //
+
+/**
+ * adds option method -> $().plugin('option', {...})
+ * @param {Function} PluginClass - constructor class
+ */
+function addOptionMethod( PluginClass ) {
+  // don't overwrite original option method
+  if ( PluginClass.prototype.option ) {
+    return;
+  }
+
+  // option setter
+  PluginClass.prototype.option = function( opts ) {
+    // bail out if not an object
+    if ( !$.isPlainObject( opts ) ){
+      return;
+    }
+    this.options = $.extend( true, this.options, opts );
+  };
+}
+
+
+// -------------------------- plugin bridge -------------------------- //
+
+// helper function for logging errors
+// $.error breaks jQuery chaining
+var logError = typeof console === 'undefined' ? noop :
+  function( message ) {
+    console.error( message );
+  };
+
+/**
+ * jQuery plugin bridge, access methods like $elem.plugin('method')
+ * @param {String} namespace - plugin name
+ * @param {Function} PluginClass - constructor class
+ */
+function bridge( namespace, PluginClass ) {
+  // add to jQuery fn namespace
+  $.fn[ namespace ] = function( options ) {
+    if ( typeof options === 'string' ) {
+      // call plugin method when first argument is a string
+      // get arguments for method
+      var args = slice.call( arguments, 1 );
+
+      for ( var i=0, len = this.length; i < len; i++ ) {
+        var elem = this[i];
+        var instance = $.data( elem, namespace );
+        if ( !instance ) {
+          logError( "cannot call methods on " + namespace + " prior to initialization; " +
+            "attempted to call '" + options + "'" );
+          continue;
+        }
+        if ( !$.isFunction( instance[options] ) || options.charAt(0) === '_' ) {
+          logError( "no such method '" + options + "' for " + namespace + " instance" );
+          continue;
+        }
+
+        // trigger method with arguments
+        var returnValue = instance[ options ].apply( instance, args );
+
+        // break look and return first value if provided
+        if ( returnValue !== undefined ) {
+          return returnValue;
+        }
+      }
+      // return this if no return value
+      return this;
+    } else {
+      return this.each( function() {
+        var instance = $.data( this, namespace );
+        if ( instance ) {
+          // apply options & init
+          instance.option( options );
+          instance._init();
+        } else {
+          // initialize new instance
+          instance = new PluginClass( this, options );
+          $.data( this, namespace, instance );
+        }
+      });
+    }
+  };
+
+}
+
+// -------------------------- bridget -------------------------- //
+
+/**
+ * converts a Prototypical class into a proper jQuery plugin
+ *   the class must have a ._init method
+ * @param {String} namespace - plugin name, used in $().pluginName
+ * @param {Function} PluginClass - constructor class
+ */
+$.bridget = function( namespace, PluginClass ) {
+  addOptionMethod( PluginClass );
+  bridge( namespace, PluginClass );
+};
+
+return $.bridget;
+
+}
+
+// transport
+if ( typeof define === 'function' && define.amd ) {
+  // AMD
+  define( 'jquery-bridget/jquery.bridget',[ 'jquery' ], defineBridget );
+} else {
+  // get jquery from browser global
+  defineBridget( window.jQuery );
+}
+
+})( window );
+
+/*!
+ * eventie v1.0.5
+ * event binding helper
+ *   eventie.bind( elem, 'click', myFn )
+ *   eventie.unbind( elem, 'click', myFn )
+ * MIT license
+ */
+
+/*jshint browser: true, undef: true, unused: true */
+/*global define: false, module: false */
+
+( function( window ) {
+
+
+
+var docElem = document.documentElement;
+
+var bind = function() {};
+
+function getIEEvent( obj ) {
+  var event = window.event;
+  // add event.target
+  event.target = event.target || event.srcElement || obj;
+  return event;
+}
+
+if ( docElem.addEventListener ) {
+  bind = function( obj, type, fn ) {
+    obj.addEventListener( type, fn, false );
+  };
+} else if ( docElem.attachEvent ) {
+  bind = function( obj, type, fn ) {
+    obj[ type + fn ] = fn.handleEvent ?
+      function() {
+        var event = getIEEvent( obj );
+        fn.handleEvent.call( fn, event );
+      } :
+      function() {
+        var event = getIEEvent( obj );
+        fn.call( obj, event );
+      };
+    obj.attachEvent( "on" + type, obj[ type + fn ] );
+  };
+}
+
+var unbind = function() {};
+
+if ( docElem.removeEventListener ) {
+  unbind = function( obj, type, fn ) {
+    obj.removeEventListener( type, fn, false );
+  };
+} else if ( docElem.detachEvent ) {
+  unbind = function( obj, type, fn ) {
+    obj.detachEvent( "on" + type, obj[ type + fn ] );
+    try {
+      delete obj[ type + fn ];
+    } catch ( err ) {
+      // can't delete window object properties
+      obj[ type + fn ] = undefined;
+    }
+  };
+}
+
+var eventie = {
+  bind: bind,
+  unbind: unbind
+};
+
+// ----- module definition ----- //
+
+if ( typeof define === 'function' && define.amd ) {
+  // AMD
+  define( 'eventie/eventie',eventie );
+} else if ( typeof exports === 'object' ) {
+  // CommonJS
+  module.exports = eventie;
+} else {
+  // browser global
+  window.eventie = eventie;
+}
+
+})( this );
+
+/*!
+ * docReady
+ * Cross browser DOMContentLoaded event emitter
+ */
+
+/*jshint browser: true, strict: true, undef: true, unused: true*/
+/*global define: false */
+
+( function( window ) {
+
+
+
+var document = window.document;
+// collection of functions to be triggered on ready
+var queue = [];
+
+function docReady( fn ) {
+  // throw out non-functions
+  if ( typeof fn !== 'function' ) {
+    return;
+  }
+
+  if ( docReady.isReady ) {
+    // ready now, hit it
+    fn();
+  } else {
+    // queue function when ready
+    queue.push( fn );
+  }
+}
+
+docReady.isReady = false;
+
+// triggered on various doc ready events
+function init( event ) {
+  // bail if IE8 document is not ready just yet
+  var isIE8NotReady = event.type === 'readystatechange' && document.readyState !== 'complete';
+  if ( docReady.isReady || isIE8NotReady ) {
+    return;
+  }
+  docReady.isReady = true;
+
+  // process queue
+  for ( var i=0, len = queue.length; i < len; i++ ) {
+    var fn = queue[i];
+    fn();
+  }
+}
+
+function defineDocReady( eventie ) {
+  eventie.bind( document, 'DOMContentLoaded', init );
+  eventie.bind( document, 'readystatechange', init );
+  eventie.bind( window, 'load', init );
+
+  return docReady;
+}
+
+// transport
+if ( typeof define === 'function' && define.amd ) {
+  // AMD
+  // if RequireJS, then doc is already ready
+  docReady.isReady = typeof requirejs === 'function';
+  define( 'doc-ready/doc-ready',[ 'eventie/eventie' ], defineDocReady );
+} else {
+  // browser global
+  window.docReady = defineDocReady( window.eventie );
+}
+
+})( this );
+
+/*!
+ * EventEmitter v4.2.7 - git.io/ee
+ * Oliver Caldwell
+ * MIT license
+ * @preserve
+ */
+
+(function () {
+	
+
+	/**
+	 * Class for managing events.
+	 * Can be extended to provide event functionality in other classes.
+	 *
+	 * @class EventEmitter Manages event registering and emitting.
+	 */
+	function EventEmitter() {}
+
+	// Shortcuts to improve speed and size
+	var proto = EventEmitter.prototype;
+	var exports = this;
+	var originalGlobalValue = exports.EventEmitter;
+
+	/**
+	 * Finds the index of the listener for the event in it's storage array.
+	 *
+	 * @param {Function[]} listeners Array of listeners to search through.
+	 * @param {Function} listener Method to look for.
+	 * @return {Number} Index of the specified listener, -1 if not found
+	 * @api private
+	 */
+	function indexOfListener(listeners, listener) {
+		var i = listeners.length;
+		while (i--) {
+			if (listeners[i].listener === listener) {
+				return i;
+			}
+		}
+
+		return -1;
+	}
+
+	/**
+	 * Alias a method while keeping the context correct, to allow for overwriting of target method.
+	 *
+	 * @param {String} name The name of the target method.
+	 * @return {Function} The aliased method
+	 * @api private
+	 */
+	function alias(name) {
+		return function aliasClosure() {
+			return this[name].apply(this, arguments);
+		};
+	}
+
+	/**
+	 * Returns the listener array for the specified event.
+	 * Will initialise the event object and listener arrays if required.
+	 * Will return an object if you use a regex search. The object contains keys for each matched event. So /ba[rz]/ might return an object containing bar and baz. But only if you have either defined them with defineEvent or added some listeners to them.
+	 * Each property in the object response is an array of listener functions.
+	 *
+	 * @param {String|RegExp} evt Name of the event to return the listeners from.
+	 * @return {Function[]|Object} All listener functions for the event.
+	 */
+	proto.getListeners = function getListeners(evt) {
+		var events = this._getEvents();
+		var response;
+		var key;
+
+		// Return a concatenated array of all matching events if
+		// the selector is a regular expression.
+		if (evt instanceof RegExp) {
+			response = {};
+			for (key in events) {
+				if (events.hasOwnProperty(key) && evt.test(key)) {
+					response[key] = events[key];
+				}
+			}
+		}
+		else {
+			response = events[evt] || (events[evt] = []);
+		}
+
+		return response;
+	};
+
+	/**
+	 * Takes a list of listener objects and flattens it into a list of listener functions.
+	 *
+	 * @param {Object[]} listeners Raw listener objects.
+	 * @return {Function[]} Just the listener functions.
+	 */
+	proto.flattenListeners = function flattenListeners(listeners) {
+		var flatListeners = [];
+		var i;
+
+		for (i = 0; i < listeners.length; i += 1) {
+			flatListeners.push(listeners[i].listener);
+		}
+
+		return flatListeners;
+	};
+
+	/**
+	 * Fetches the requested listeners via getListeners but will always return the results inside an object. This is mainly for internal use but others may find it useful.
+	 *
+	 * @param {String|RegExp} evt Name of the event to return the listeners from.
+	 * @return {Object} All listener functions for an event in an object.
+	 */
+	proto.getListenersAsObject = function getListenersAsObject(evt) {
+		var listeners = this.getListeners(evt);
+		var response;
+
+		if (listeners instanceof Array) {
+			response = {};
+			response[evt] = listeners;
+		}
+
+		return response || listeners;
+	};
+
+	/**
+	 * Adds a listener function to the specified event.
+	 * The listener will not be added if it is a duplicate.
+	 * If the listener returns true then it will be removed after it is called.
+	 * If you pass a regular expression as the event name then the listener will be added to all events that match it.
+	 *
+	 * @param {String|RegExp} evt Name of the event to attach the listener to.
+	 * @param {Function} listener Method to be called when the event is emitted. If the function returns true then it will be removed after calling.
+	 * @return {Object} Current instance of EventEmitter for chaining.
+	 */
+	proto.addListener = function addListener(evt, listener) {
+		var listeners = this.getListenersAsObject(evt);
+		var listenerIsWrapped = typeof listener === 'object';
+		var key;
+
+		for (key in listeners) {
+			if (listeners.hasOwnProperty(key) && indexOfListener(listeners[key], listener) === -1) {
+				listeners[key].push(listenerIsWrapped ? listener : {
+					listener: listener,
+					once: false
+				});
+			}
+		}
+
+		return this;
+	};
+
+	/**
+	 * Alias of addListener
+	 */
+	proto.on = alias('addListener');
+
+	/**
+	 * Semi-alias of addListener. It will add a listener that will be
+	 * automatically removed after it's first execution.
+	 *
+	 * @param {String|RegExp} evt Name of the event to attach the listener to.
+	 * @param {Function} listener Method to be called when the event is emitted. If the function returns true then it will be removed after calling.
+	 * @return {Object} Current instance of EventEmitter for chaining.
+	 */
+	proto.addOnceListener = function addOnceListener(evt, listener) {
+		return this.addListener(evt, {
+			listener: listener,
+			once: true
+		});
+	};
+
+	/**
+	 * Alias of addOnceListener.
+	 */
+	proto.once = alias('addOnceListener');
+
+	/**
+	 * Defines an event name. This is required if you want to use a regex to add a listener to multiple events at once. If you don't do this then how do you expect it to know what event to add to? Should it just add to every possible match for a regex? No. That is scary and bad.
+	 * You need to tell it what event names should be matched by a regex.
+	 *
+	 * @param {String} evt Name of the event to create.
+	 * @return {Object} Current instance of EventEmitter for chaining.
+	 */
+	proto.defineEvent = function defineEvent(evt) {
+		this.getListeners(evt);
+		return this;
+	};
+
+	/**
+	 * Uses defineEvent to define multiple events.
+	 *
+	 * @param {String[]} evts An array of event names to define.
+	 * @return {Object} Current instance of EventEmitter for chaining.
+	 */
+	proto.defineEvents = function defineEvents(evts) {
+		for (var i = 0; i < evts.length; i += 1) {
+			this.defineEvent(evts[i]);
+		}
+		return this;
+	};
+
+	/**
+	 * Removes a listener function from the specified event.
+	 * When passed a regular expression as the event name, it will remove the listener from all events that match it.
+	 *
+	 * @param {String|RegExp} evt Name of the event to remove the listener from.
+	 * @param {Function} listener Method to remove from the event.
+	 * @return {Object} Current instance of EventEmitter for chaining.
+	 */
+	proto.removeListener = function removeListener(evt, listener) {
+		var listeners = this.getListenersAsObject(evt);
+		var index;
+		var key;
+
+		for (key in listeners) {
+			if (listeners.hasOwnProperty(key)) {
+				index = indexOfListener(listeners[key], listener);
+
+				if (index !== -1) {
+					listeners[key].splice(index, 1);
+				}
+			}
+		}
+
+		return this;
+	};
+
+	/**
+	 * Alias of removeListener
+	 */
+	proto.off = alias('removeListener');
+
+	/**
+	 * Adds listeners in bulk using the manipulateListeners method.
+	 * If you pass an object as the second argument you can add to multiple events at once. The object should contain key value pairs of events and listeners or listener arrays. You can also pass it an event name and an array of listeners to be added.
+	 * You can also pass it a regular expression to add the array of listeners to all events that match it.
+	 * Yeah, this function does quite a bit. That's probably a bad thing.
+	 *
+	 * @param {String|Object|RegExp} evt An event name if you will pass an array of listeners next. An object if you wish to add to multiple events at once.
+	 * @param {Function[]} [listeners] An optional array of listener functions to add.
+	 * @return {Object} Current instance of EventEmitter for chaining.
+	 */
+	proto.addListeners = function addListeners(evt, listeners) {
+		// Pass through to manipulateListeners
+		return this.manipulateListeners(false, evt, listeners);
+	};
+
+	/**
+	 * Removes listeners in bulk using the manipulateListeners method.
+	 * If you pass an object as the second argument you can remove from multiple events at once. The object should contain key value pairs of events and listeners or listener arrays.
+	 * You can also pass it an event name and an array of listeners to be removed.
+	 * You can also pass it a regular expression to remove the listeners from all events that match it.
+	 *
+	 * @param {String|Object|RegExp} evt An event name if you will pass an array of listeners next. An object if you wish to remove from multiple events at once.
+	 * @param {Function[]} [listeners] An optional array of listener functions to remove.
+	 * @return {Object} Current instance of EventEmitter for chaining.
+	 */
+	proto.removeListeners = function removeListeners(evt, listeners) {
+		// Pass through to manipulateListeners
+		return this.manipulateListeners(true, evt, listeners);
+	};
+
+	/**
+	 * Edits listeners in bulk. The addListeners and removeListeners methods both use this to do their job. You should really use those instead, this is a little lower level.
+	 * The first argument will determine if the listeners are removed (true) or added (false).
+	 * If you pass an object as the second argument you can add/remove from multiple events at once. The object should contain key value pairs of events and listeners or listener arrays.
+	 * You can also pass it an event name and an array of listeners to be added/removed.
+	 * You can also pass it a regular expression to manipulate the listeners of all events that match it.
+	 *
+	 * @param {Boolean} remove True if you want to remove listeners, false if you want to add.
+	 * @param {String|Object|RegExp} evt An event name if you will pass an array of listeners next. An object if you wish to add/remove from multiple events at once.
+	 * @param {Function[]} [listeners] An optional array of listener functions to add/remove.
+	 * @return {Object} Current instance of EventEmitter for chaining.
+	 */
+	proto.manipulateListeners = function manipulateListeners(remove, evt, listeners) {
+		var i;
+		var value;
+		var single = remove ? this.removeListener : this.addListener;
+		var multiple = remove ? this.removeListeners : this.addListeners;
+
+		// If evt is an object then pass each of it's properties to this method
+		if (typeof evt === 'object' && !(evt instanceof RegExp)) {
+			for (i in evt) {
+				if (evt.hasOwnProperty(i) && (value = evt[i])) {
+					// Pass the single listener straight through to the singular method
+					if (typeof value === 'function') {
+						single.call(this, i, value);
+					}
+					else {
+						// Otherwise pass back to the multiple function
+						multiple.call(this, i, value);
+					}
+				}
+			}
+		}
+		else {
+			// So evt must be a string
+			// And listeners must be an array of listeners
+			// Loop over it and pass each one to the multiple method
+			i = listeners.length;
+			while (i--) {
+				single.call(this, evt, listeners[i]);
+			}
+		}
+
+		return this;
+	};
+
+	/**
+	 * Removes all listeners from a specified event.
+	 * If you do not specify an event then all listeners will be removed.
+	 * That means every event will be emptied.
+	 * You can also pass a regex to remove all events that match it.
+	 *
+	 * @param {String|RegExp} [evt] Optional name of the event to remove all listeners for. Will remove from every event if not passed.
+	 * @return {Object} Current instance of EventEmitter for chaining.
+	 */
+	proto.removeEvent = function removeEvent(evt) {
+		var type = typeof evt;
+		var events = this._getEvents();
+		var key;
+
+		// Remove different things depending on the state of evt
+		if (type === 'string') {
+			// Remove all listeners for the specified event
+			delete events[evt];
+		}
+		else if (evt instanceof RegExp) {
+			// Remove all events matching the regex.
+			for (key in events) {
+				if (events.hasOwnProperty(key) && evt.test(key)) {
+					delete events[key];
+				}
+			}
+		}
+		else {
+			// Remove all listeners in all events
+			delete this._events;
+		}
+
+		return this;
+	};
+
+	/**
+	 * Alias of removeEvent.
+	 *
+	 * Added to mirror the node API.
+	 */
+	proto.removeAllListeners = alias('removeEvent');
+
+	/**
+	 * Emits an event of your choice.
+	 * When emitted, every listener attached to that event will be executed.
+	 * If you pass the optional argument array then those arguments will be passed to every listener upon execution.
+	 * Because it uses `apply`, your array of arguments will be passed as if you wrote them out separately.
+	 * So they will not arrive within the array on the other side, they will be separate.
+	 * You can also pass a regular expression to emit to all events that match it.
+	 *
+	 * @param {String|RegExp} evt Name of the event to emit and execute listeners for.
+	 * @param {Array} [args] Optional array of arguments to be passed to each listener.
+	 * @return {Object} Current instance of EventEmitter for chaining.
+	 */
+	proto.emitEvent = function emitEvent(evt, args) {
+		var listeners = this.getListenersAsObject(evt);
+		var listener;
+		var i;
+		var key;
+		var response;
+
+		for (key in listeners) {
+			if (listeners.hasOwnProperty(key)) {
+				i = listeners[key].length;
+
+				while (i--) {
+					// If the listener returns true then it shall be removed from the event
+					// The function is executed either with a basic call or an apply if there is an args array
+					listener = listeners[key][i];
+
+					if (listener.once === true) {
+						this.removeListener(evt, listener.listener);
+					}
+
+					response = listener.listener.apply(this, args || []);
+
+					if (response === this._getOnceReturnValue()) {
+						this.removeListener(evt, listener.listener);
+					}
+				}
+			}
+		}
+
+		return this;
+	};
+
+	/**
+	 * Alias of emitEvent
+	 */
+	proto.trigger = alias('emitEvent');
+
+	/**
+	 * Subtly different from emitEvent in that it will pass its arguments on to the listeners, as opposed to taking a single array of arguments to pass on.
+	 * As with emitEvent, you can pass a regex in place of the event name to emit to all events that match it.
+	 *
+	 * @param {String|RegExp} evt Name of the event to emit and execute listeners for.
+	 * @param {...*} Optional additional arguments to be passed to each listener.
+	 * @return {Object} Current instance of EventEmitter for chaining.
+	 */
+	proto.emit = function emit(evt) {
+		var args = Array.prototype.slice.call(arguments, 1);
+		return this.emitEvent(evt, args);
+	};
+
+	/**
+	 * Sets the current value to check against when executing listeners. If a
+	 * listeners return value matches the one set here then it will be removed
+	 * after execution. This value defaults to true.
+	 *
+	 * @param {*} value The new value to check for when executing listeners.
+	 * @return {Object} Current instance of EventEmitter for chaining.
+	 */
+	proto.setOnceReturnValue = function setOnceReturnValue(value) {
+		this._onceReturnValue = value;
+		return this;
+	};
+
+	/**
+	 * Fetches the current value to check against when executing listeners. If
+	 * the listeners return value matches this one then it should be removed
+	 * automatically. It will return true by default.
+	 *
+	 * @return {*|Boolean} The current value to check for or the default, true.
+	 * @api private
+	 */
+	proto._getOnceReturnValue = function _getOnceReturnValue() {
+		if (this.hasOwnProperty('_onceReturnValue')) {
+			return this._onceReturnValue;
+		}
+		else {
+			return true;
+		}
+	};
+
+	/**
+	 * Fetches the events object and creates one if required.
+	 *
+	 * @return {Object} The events storage object.
+	 * @api private
+	 */
+	proto._getEvents = function _getEvents() {
+		return this._events || (this._events = {});
+	};
+
+	/**
+	 * Reverts the global {@link EventEmitter} to its previous value and returns a reference to this version.
+	 *
+	 * @return {Function} Non conflicting EventEmitter class.
+	 */
+	EventEmitter.noConflict = function noConflict() {
+		exports.EventEmitter = originalGlobalValue;
+		return EventEmitter;
+	};
+
+	// Expose the class either via AMD, CommonJS or the global object
+	if (typeof define === 'function' && define.amd) {
+		define('eventEmitter/EventEmitter',[],function () {
+			return EventEmitter;
+		});
+	}
+	else if (typeof module === 'object' && module.exports){
+		module.exports = EventEmitter;
+	}
+	else {
+		this.EventEmitter = EventEmitter;
+	}
+}.call(this));
+
+/*!
+ * getStyleProperty v1.0.3
+ * original by kangax
+ * http://perfectionkills.com/feature-testing-css-properties/
+ */
+
+/*jshint browser: true, strict: true, undef: true */
+/*global define: false, exports: false, module: false */
+
+( function( window ) {
+
+
+
+var prefixes = 'Webkit Moz ms Ms O'.split(' ');
+var docElemStyle = document.documentElement.style;
+
+function getStyleProperty( propName ) {
+  if ( !propName ) {
+    return;
+  }
+
+  // test standard property first
+  if ( typeof docElemStyle[ propName ] === 'string' ) {
+    return propName;
+  }
+
+  // capitalize
+  propName = propName.charAt(0).toUpperCase() + propName.slice(1);
+
+  // test vendor specific properties
+  var prefixed;
+  for ( var i=0, len = prefixes.length; i < len; i++ ) {
+    prefixed = prefixes[i] + propName;
+    if ( typeof docElemStyle[ prefixed ] === 'string' ) {
+      return prefixed;
+    }
+  }
+}
+
+// transport
+if ( typeof define === 'function' && define.amd ) {
+  // AMD
+  define( 'get-style-property/get-style-property',[],function() {
+    return getStyleProperty;
+  });
+} else if ( typeof exports === 'object' ) {
+  // CommonJS for Component
+  module.exports = getStyleProperty;
+} else {
+  // browser global
+  window.getStyleProperty = getStyleProperty;
+}
+
+})( window );
+
+/**
+ * getSize v1.1.7
+ * measure size of elements
+ */
+
+/*jshint browser: true, strict: true, undef: true, unused: true */
+/*global define: false, exports: false, require: false, module: false */
+
+( function( window, undefined ) {
+
+
+
+// -------------------------- helpers -------------------------- //
+
+var getComputedStyle = window.getComputedStyle;
+var getStyle = getComputedStyle ?
+  function( elem ) {
+    return getComputedStyle( elem, null );
+  } :
+  function( elem ) {
+    return elem.currentStyle;
+  };
+
+// get a number from a string, not a percentage
+function getStyleSize( value ) {
+  var num = parseFloat( value );
+  // not a percent like '100%', and a number
+  var isValid = value.indexOf('%') === -1 && !isNaN( num );
+  return isValid && num;
+}
+
+// -------------------------- measurements -------------------------- //
+
+var measurements = [
+  'paddingLeft',
+  'paddingRight',
+  'paddingTop',
+  'paddingBottom',
+  'marginLeft',
+  'marginRight',
+  'marginTop',
+  'marginBottom',
+  'borderLeftWidth',
+  'borderRightWidth',
+  'borderTopWidth',
+  'borderBottomWidth'
+];
+
+function getZeroSize() {
+  var size = {
+    width: 0,
+    height: 0,
+    innerWidth: 0,
+    innerHeight: 0,
+    outerWidth: 0,
+    outerHeight: 0
+  };
+  for ( var i=0, len = measurements.length; i < len; i++ ) {
+    var measurement = measurements[i];
+    size[ measurement ] = 0;
+  }
+  return size;
+}
+
+
+
+function defineGetSize( getStyleProperty ) {
+
+// -------------------------- box sizing -------------------------- //
+
+var boxSizingProp = getStyleProperty('boxSizing');
+var isBoxSizeOuter;
+
+/**
+ * WebKit measures the outer-width on style.width on border-box elems
+ * IE & Firefox measures the inner-width
+ */
+( function() {
+  if ( !boxSizingProp ) {
+    return;
+  }
+
+  var div = document.createElement('div');
+  div.style.width = '200px';
+  div.style.padding = '1px 2px 3px 4px';
+  div.style.borderStyle = 'solid';
+  div.style.borderWidth = '1px 2px 3px 4px';
+  div.style[ boxSizingProp ] = 'border-box';
+
+  var body = document.body || document.documentElement;
+  body.appendChild( div );
+  var style = getStyle( div );
+
+  isBoxSizeOuter = getStyleSize( style.width ) === 200;
+  body.removeChild( div );
+})();
+
+
+// -------------------------- getSize -------------------------- //
+
+function getSize( elem ) {
+  // use querySeletor if elem is string
+  if ( typeof elem === 'string' ) {
+    elem = document.querySelector( elem );
+  }
+
+  // do not proceed on non-objects
+  if ( !elem || typeof elem !== 'object' || !elem.nodeType ) {
+    return;
+  }
+
+  var style = getStyle( elem );
+
+  // if hidden, everything is 0
+  if ( style.display === 'none' ) {
+    return getZeroSize();
+  }
+
+  var size = {};
+  size.width = elem.offsetWidth;
+  size.height = elem.offsetHeight;
+
+  var isBorderBox = size.isBorderBox = !!( boxSizingProp &&
+    style[ boxSizingProp ] && style[ boxSizingProp ] === 'border-box' );
+
+  // get all measurements
+  for ( var i=0, len = measurements.length; i < len; i++ ) {
+    var measurement = measurements[i];
+    var value = style[ measurement ];
+    value = mungeNonPixel( elem, value );
+    var num = parseFloat( value );
+    // any 'auto', 'medium' value will be 0
+    size[ measurement ] = !isNaN( num ) ? num : 0;
+  }
+
+  var paddingWidth = size.paddingLeft + size.paddingRight;
+  var paddingHeight = size.paddingTop + size.paddingBottom;
+  var marginWidth = size.marginLeft + size.marginRight;
+  var marginHeight = size.marginTop + size.marginBottom;
+  var borderWidth = size.borderLeftWidth + size.borderRightWidth;
+  var borderHeight = size.borderTopWidth + size.borderBottomWidth;
+
+  var isBorderBoxSizeOuter = isBorderBox && isBoxSizeOuter;
+
+  // overwrite width and height if we can get it from style
+  var styleWidth = getStyleSize( style.width );
+  if ( styleWidth !== false ) {
+    size.width = styleWidth +
+      // add padding and border unless it's already including it
+      ( isBorderBoxSizeOuter ? 0 : paddingWidth + borderWidth );
+  }
+
+  var styleHeight = getStyleSize( style.height );
+  if ( styleHeight !== false ) {
+    size.height = styleHeight +
+      // add padding and border unless it's already including it
+      ( isBorderBoxSizeOuter ? 0 : paddingHeight + borderHeight );
+  }
+
+  size.innerWidth = size.width - ( paddingWidth + borderWidth );
+  size.innerHeight = size.height - ( paddingHeight + borderHeight );
+
+  size.outerWidth = size.width + marginWidth;
+  size.outerHeight = size.height + marginHeight;
+
+  return size;
+}
+
+// IE8 returns percent values, not pixels
+// taken from jQuery's curCSS
+function mungeNonPixel( elem, value ) {
+  // IE8 and has percent value
+  if ( getComputedStyle || value.indexOf('%') === -1 ) {
+    return value;
+  }
+  var style = elem.style;
+  // Remember the original values
+  var left = style.left;
+  var rs = elem.runtimeStyle;
+  var rsLeft = rs && rs.left;
+
+  // Put in the new values to get a computed value out
+  if ( rsLeft ) {
+    rs.left = elem.currentStyle.left;
+  }
+  style.left = value;
+  value = style.pixelLeft;
+
+  // Revert the changed values
+  style.left = left;
+  if ( rsLeft ) {
+    rs.left = rsLeft;
+  }
+
+  return value;
+}
+
+return getSize;
+
+}
+
+// transport
+if ( typeof define === 'function' && define.amd ) {
+  // AMD for RequireJS
+  define( 'get-size/get-size',[ 'get-style-property/get-style-property' ], defineGetSize );
+} else if ( typeof exports === 'object' ) {
+  // CommonJS for Component
+  module.exports = defineGetSize( require('get-style-property') );
+} else {
+  // browser global
+  window.getSize = defineGetSize( window.getStyleProperty );
+}
+
+})( window );
+
+/**
+ * matchesSelector helper v1.0.1
+ *
+ * @name matchesSelector
+ *   @param {Element} elem
+ *   @param {String} selector
+ */
+
+/*jshint browser: true, strict: true, undef: true, unused: true */
+/*global define: false */
+
+( function( global, ElemProto ) {
+
+  
+
+  var matchesMethod = ( function() {
+    // check un-prefixed
+    if ( ElemProto.matchesSelector ) {
+      return 'matchesSelector';
+    }
+    // check vendor prefixes
+    var prefixes = [ 'webkit', 'moz', 'ms', 'o' ];
+
+    for ( var i=0, len = prefixes.length; i < len; i++ ) {
+      var prefix = prefixes[i];
+      var method = prefix + 'MatchesSelector';
+      if ( ElemProto[ method ] ) {
+        return method;
+      }
+    }
+  })();
+
+  // ----- match ----- //
+
+  function match( elem, selector ) {
+    return elem[ matchesMethod ]( selector );
+  }
+
+  // ----- appendToFragment ----- //
+
+  function checkParent( elem ) {
+    // not needed if already has parent
+    if ( elem.parentNode ) {
+      return;
+    }
+    var fragment = document.createDocumentFragment();
+    fragment.appendChild( elem );
+  }
+
+  // ----- query ----- //
+
+  // fall back to using QSA
+  // thx @jonathantneal https://gist.github.com/3062955
+  function query( elem, selector ) {
+    // append to fragment if no parent
+    checkParent( elem );
+
+    // match elem with all selected elems of parent
+    var elems = elem.parentNode.querySelectorAll( selector );
+    for ( var i=0, len = elems.length; i < len; i++ ) {
+      // return true if match
+      if ( elems[i] === elem ) {
+        return true;
+      }
+    }
+    // otherwise return false
+    return false;
+  }
+
+  // ----- matchChild ----- //
+
+  function matchChild( elem, selector ) {
+    checkParent( elem );
+    return match( elem, selector );
+  }
+
+  // ----- matchesSelector ----- //
+
+  var matchesSelector;
+
+  if ( matchesMethod ) {
+    // IE9 supports matchesSelector, but doesn't work on orphaned elems
+    // check for that
+    var div = document.createElement('div');
+    var supportsOrphans = match( div, 'div' );
+    matchesSelector = supportsOrphans ? match : matchChild;
+  } else {
+    matchesSelector = query;
+  }
+
+  // transport
+  if ( typeof define === 'function' && define.amd ) {
+    // AMD
+    define( 'matches-selector/matches-selector',[],function() {
+      return matchesSelector;
+    });
+  } else {
+    // browser global
+    window.matchesSelector = matchesSelector;
+  }
+
+})( this, Element.prototype );
+
+/**
+ * Outlayer Item
+ */
+
+( function( window ) {
+
+
+
+// ----- get style ----- //
+
+var getComputedStyle = window.getComputedStyle;
+var getStyle = getComputedStyle ?
+  function( elem ) {
+    return getComputedStyle( elem, null );
+  } :
+  function( elem ) {
+    return elem.currentStyle;
+  };
+
+
+// extend objects
+function extend( a, b ) {
+  for ( var prop in b ) {
+    a[ prop ] = b[ prop ];
+  }
+  return a;
+}
+
+function isEmptyObj( obj ) {
+  for ( var prop in obj ) {
+    return false;
+  }
+  prop = null;
+  return true;
+}
+
+// http://jamesroberts.name/blog/2010/02/22/string-functions-for-javascript-trim-to-camel-case-to-dashed-and-to-underscore/
+function toDash( str ) {
+  return str.replace( /([A-Z])/g, function( $1 ){
+    return '-' + $1.toLowerCase();
+  });
+}
+
+// -------------------------- Outlayer definition -------------------------- //
+
+function outlayerItemDefinition( EventEmitter, getSize, getStyleProperty ) {
+
+// -------------------------- CSS3 support -------------------------- //
+
+var transitionProperty = getStyleProperty('transition');
+var transformProperty = getStyleProperty('transform');
+var supportsCSS3 = transitionProperty && transformProperty;
+var is3d = !!getStyleProperty('perspective');
+
+var transitionEndEvent = {
+  WebkitTransition: 'webkitTransitionEnd',
+  MozTransition: 'transitionend',
+  OTransition: 'otransitionend',
+  transition: 'transitionend'
+}[ transitionProperty ];
+
+// properties that could have vendor prefix
+var prefixableProperties = [
+  'transform',
+  'transition',
+  'transitionDuration',
+  'transitionProperty'
+];
+
+// cache all vendor properties
+var vendorProperties = ( function() {
+  var cache = {};
+  for ( var i=0, len = prefixableProperties.length; i < len; i++ ) {
+    var prop = prefixableProperties[i];
+    var supportedProp = getStyleProperty( prop );
+    if ( supportedProp && supportedProp !== prop ) {
+      cache[ prop ] = supportedProp;
+    }
+  }
+  return cache;
+})();
+
+// -------------------------- Item -------------------------- //
+
+function Item( element, layout ) {
+  if ( !element ) {
+    return;
+  }
+
+  this.element = element;
+  // parent layout class, i.e. Masonry, Isotope, or Packery
+  this.layout = layout;
+  this.position = {
+    x: 0,
+    y: 0
+  };
+
+  this._create();
+}
+
+// inherit EventEmitter
+extend( Item.prototype, EventEmitter.prototype );
+
+Item.prototype._create = function() {
+  // transition objects
+  this._transn = {
+    ingProperties: {},
+    clean: {},
+    onEnd: {}
+  };
+
+  this.css({
+    position: 'absolute'
+  });
+};
+
+// trigger specified handler for event type
+Item.prototype.handleEvent = function( event ) {
+  var method = 'on' + event.type;
+  if ( this[ method ] ) {
+    this[ method ]( event );
+  }
+};
+
+Item.prototype.getSize = function() {
+  this.size = getSize( this.element );
+};
+
+/**
+ * apply CSS styles to element
+ * @param {Object} style
+ */
+Item.prototype.css = function( style ) {
+  var elemStyle = this.element.style;
+
+  for ( var prop in style ) {
+    // use vendor property if available
+    var supportedProp = vendorProperties[ prop ] || prop;
+    elemStyle[ supportedProp ] = style[ prop ];
+  }
+};
+
+ // measure position, and sets it
+Item.prototype.getPosition = function() {
+  var style = getStyle( this.element );
+  var layoutOptions = this.layout.options;
+  var isOriginLeft = layoutOptions.isOriginLeft;
+  var isOriginTop = layoutOptions.isOriginTop;
+  var x = parseInt( style[ isOriginLeft ? 'left' : 'right' ], 10 );
+  var y = parseInt( style[ isOriginTop ? 'top' : 'bottom' ], 10 );
+
+  // clean up 'auto' or other non-integer values
+  x = isNaN( x ) ? 0 : x;
+  y = isNaN( y ) ? 0 : y;
+  // remove padding from measurement
+  var layoutSize = this.layout.size;
+  x -= isOriginLeft ? layoutSize.paddingLeft : layoutSize.paddingRight;
+  y -= isOriginTop ? layoutSize.paddingTop : layoutSize.paddingBottom;
+
+  this.position.x = x;
+  this.position.y = y;
+};
+
+// set settled position, apply padding
+Item.prototype.layoutPosition = function() {
+  var layoutSize = this.layout.size;
+  var layoutOptions = this.layout.options;
+  var style = {};
+
+  if ( layoutOptions.isOriginLeft ) {
+    style.left = ( this.position.x + layoutSize.paddingLeft ) + 'px';
+    // reset other property
+    style.right = '';
+  } else {
+    style.right = ( this.position.x + layoutSize.paddingRight ) + 'px';
+    style.left = '';
+  }
+
+  if ( layoutOptions.isOriginTop ) {
+    style.top = ( this.position.y + layoutSize.paddingTop ) + 'px';
+    style.bottom = '';
+  } else {
+    style.bottom = ( this.position.y + layoutSize.paddingBottom ) + 'px';
+    style.top = '';
+  }
+
+  this.css( style );
+  this.emitEvent( 'layout', [ this ] );
+};
+
+
+// transform translate function
+var translate = is3d ?
+  function( x, y ) {
+    return 'translate3d(' + x + 'px, ' + y + 'px, 0)';
+  } :
+  function( x, y ) {
+    return 'translate(' + x + 'px, ' + y + 'px)';
+  };
+
+
+Item.prototype._transitionTo = function( x, y ) {
+  this.getPosition();
+  // get current x & y from top/left
+  var curX = this.position.x;
+  var curY = this.position.y;
+
+  var compareX = parseInt( x, 10 );
+  var compareY = parseInt( y, 10 );
+  var didNotMove = compareX === this.position.x && compareY === this.position.y;
+
+  // save end position
+  this.setPosition( x, y );
+
+  // if did not move and not transitioning, just go to layout
+  if ( didNotMove && !this.isTransitioning ) {
+    this.layoutPosition();
+    return;
+  }
+
+  var transX = x - curX;
+  var transY = y - curY;
+  var transitionStyle = {};
+  // flip cooridinates if origin on right or bottom
+  var layoutOptions = this.layout.options;
+  transX = layoutOptions.isOriginLeft ? transX : -transX;
+  transY = layoutOptions.isOriginTop ? transY : -transY;
+  transitionStyle.transform = translate( transX, transY );
+
+  this.transition({
+    to: transitionStyle,
+    onTransitionEnd: {
+      transform: this.layoutPosition
+    },
+    isCleaning: true
+  });
+};
+
+// non transition + transform support
+Item.prototype.goTo = function( x, y ) {
+  this.setPosition( x, y );
+  this.layoutPosition();
+};
+
+// use transition and transforms if supported
+Item.prototype.moveTo = supportsCSS3 ?
+  Item.prototype._transitionTo : Item.prototype.goTo;
+
+Item.prototype.setPosition = function( x, y ) {
+  this.position.x = parseInt( x, 10 );
+  this.position.y = parseInt( y, 10 );
+};
+
+// ----- transition ----- //
+
+/**
+ * @param {Object} style - CSS
+ * @param {Function} onTransitionEnd
+ */
+
+// non transition, just trigger callback
+Item.prototype._nonTransition = function( args ) {
+  this.css( args.to );
+  if ( args.isCleaning ) {
+    this._removeStyles( args.to );
+  }
+  for ( var prop in args.onTransitionEnd ) {
+    args.onTransitionEnd[ prop ].call( this );
+  }
+};
+
+/**
+ * proper transition
+ * @param {Object} args - arguments
+ *   @param {Object} to - style to transition to
+ *   @param {Object} from - style to start transition from
+ *   @param {Boolean} isCleaning - removes transition styles after transition
+ *   @param {Function} onTransitionEnd - callback
+ */
+Item.prototype._transition = function( args ) {
+  // redirect to nonTransition if no transition duration
+  if ( !parseFloat( this.layout.options.transitionDuration ) ) {
+    this._nonTransition( args );
+    return;
+  }
+
+  var _transition = this._transn;
+  // keep track of onTransitionEnd callback by css property
+  for ( var prop in args.onTransitionEnd ) {
+    _transition.onEnd[ prop ] = args.onTransitionEnd[ prop ];
+  }
+  // keep track of properties that are transitioning
+  for ( prop in args.to ) {
+    _transition.ingProperties[ prop ] = true;
+    // keep track of properties to clean up when transition is done
+    if ( args.isCleaning ) {
+      _transition.clean[ prop ] = true;
+    }
+  }
+
+  // set from styles
+  if ( args.from ) {
+    this.css( args.from );
+    // force redraw. http://blog.alexmaccaw.com/css-transitions
+    var h = this.element.offsetHeight;
+    // hack for JSHint to hush about unused var
+    h = null;
+  }
+  // enable transition
+  this.enableTransition( args.to );
+  // set styles that are transitioning
+  this.css( args.to );
+
+  this.isTransitioning = true;
+
+};
+
+var itemTransitionProperties = transformProperty && ( toDash( transformProperty ) +
+  ',opacity' );
+
+Item.prototype.enableTransition = function(/* style */) {
+  // only enable if not already transitioning
+  // bug in IE10 were re-setting transition style will prevent
+  // transitionend event from triggering
+  if ( this.isTransitioning ) {
+    return;
+  }
+
+  // make transition: foo, bar, baz from style object
+  // TODO uncomment this bit when IE10 bug is resolved
+  // var transitionValue = [];
+  // for ( var prop in style ) {
+  //   // dash-ify camelCased properties like WebkitTransition
+  //   transitionValue.push( toDash( prop ) );
+  // }
+  // enable transition styles
+  // HACK always enable transform,opacity for IE10
+  this.css({
+    transitionProperty: itemTransitionProperties,
+    transitionDuration: this.layout.options.transitionDuration
+  });
+  // listen for transition end event
+  this.element.addEventListener( transitionEndEvent, this, false );
+};
+
+Item.prototype.transition = Item.prototype[ transitionProperty ? '_transition' : '_nonTransition' ];
+
+// ----- events ----- //
+
+Item.prototype.onwebkitTransitionEnd = function( event ) {
+  this.ontransitionend( event );
+};
+
+Item.prototype.onotransitionend = function( event ) {
+  this.ontransitionend( event );
+};
+
+// properties that I munge to make my life easier
+var dashedVendorProperties = {
+  '-webkit-transform': 'transform',
+  '-moz-transform': 'transform',
+  '-o-transform': 'transform'
+};
+
+Item.prototype.ontransitionend = function( event ) {
+  // disregard bubbled events from children
+  if ( event.target !== this.element ) {
+    return;
+  }
+  var _transition = this._transn;
+  // get property name of transitioned property, convert to prefix-free
+  var propertyName = dashedVendorProperties[ event.propertyName ] || event.propertyName;
+
+  // remove property that has completed transitioning
+  delete _transition.ingProperties[ propertyName ];
+  // check if any properties are still transitioning
+  if ( isEmptyObj( _transition.ingProperties ) ) {
+    // all properties have completed transitioning
+    this.disableTransition();
+  }
+  // clean style
+  if ( propertyName in _transition.clean ) {
+    // clean up style
+    this.element.style[ event.propertyName ] = '';
+    delete _transition.clean[ propertyName ];
+  }
+  // trigger onTransitionEnd callback
+  if ( propertyName in _transition.onEnd ) {
+    var onTransitionEnd = _transition.onEnd[ propertyName ];
+    onTransitionEnd.call( this );
+    delete _transition.onEnd[ propertyName ];
+  }
+
+  this.emitEvent( 'transitionEnd', [ this ] );
+};
+
+Item.prototype.disableTransition = function() {
+  this.removeTransitionStyles();
+  this.element.removeEventListener( transitionEndEvent, this, false );
+  this.isTransitioning = false;
+};
+
+/**
+ * removes style property from element
+ * @param {Object} style
+**/
+Item.prototype._removeStyles = function( style ) {
+  // clean up transition styles
+  var cleanStyle = {};
+  for ( var prop in style ) {
+    cleanStyle[ prop ] = '';
+  }
+  this.css( cleanStyle );
+};
+
+var cleanTransitionStyle = {
+  transitionProperty: '',
+  transitionDuration: ''
+};
+
+Item.prototype.removeTransitionStyles = function() {
+  // remove transition
+  this.css( cleanTransitionStyle );
+};
+
+// ----- show/hide/remove ----- //
+
+// remove element from DOM
+Item.prototype.removeElem = function() {
+  this.element.parentNode.removeChild( this.element );
+  this.emitEvent( 'remove', [ this ] );
+};
+
+Item.prototype.remove = function() {
+  // just remove element if no transition support or no transition
+  if ( !transitionProperty || !parseFloat( this.layout.options.transitionDuration ) ) {
+    this.removeElem();
+    return;
+  }
+
+  // start transition
+  var _this = this;
+  this.on( 'transitionEnd', function() {
+    _this.removeElem();
+    return true; // bind once
+  });
+  this.hide();
+};
+
+Item.prototype.reveal = function() {
+  delete this.isHidden;
+  // remove display: none
+  this.css({ display: '' });
+
+  var options = this.layout.options;
+  this.transition({
+    from: options.hiddenStyle,
+    to: options.visibleStyle,
+    isCleaning: true
+  });
+};
+
+Item.prototype.hide = function() {
+  // set flag
+  this.isHidden = true;
+  // remove display: none
+  this.css({ display: '' });
+
+  var options = this.layout.options;
+  this.transition({
+    from: options.visibleStyle,
+    to: options.hiddenStyle,
+    // keep hidden stuff hidden
+    isCleaning: true,
+    onTransitionEnd: {
+      opacity: function() {
+        // check if still hidden
+        // during transition, item may have been un-hidden
+        if ( this.isHidden ) {
+          this.css({ display: 'none' });
+        }
+      }
+    }
+  });
+};
+
+Item.prototype.destroy = function() {
+  this.css({
+    position: '',
+    left: '',
+    right: '',
+    top: '',
+    bottom: '',
+    transition: '',
+    transform: ''
+  });
+};
+
+return Item;
+
+}
+
+// -------------------------- transport -------------------------- //
+
+if ( typeof define === 'function' && define.amd ) {
+  // AMD
+  define( 'outlayer/item',[
+      'eventEmitter/EventEmitter',
+      'get-size/get-size',
+      'get-style-property/get-style-property'
+    ],
+    outlayerItemDefinition );
+} else {
+  // browser global
+  window.Outlayer = {};
+  window.Outlayer.Item = outlayerItemDefinition(
+    window.EventEmitter,
+    window.getSize,
+    window.getStyleProperty
+  );
+}
+
+})( window );
+
+/*!
+ * Outlayer v1.2.0
+ * the brains and guts of a layout library
+ * MIT license
+ */
+
+( function( window ) {
+
+
+
+// ----- vars ----- //
+
+var document = window.document;
+var console = window.console;
+var jQuery = window.jQuery;
+
+var noop = function() {};
+
+// -------------------------- helpers -------------------------- //
+
+// extend objects
+function extend( a, b ) {
+  for ( var prop in b ) {
+    a[ prop ] = b[ prop ];
+  }
+  return a;
+}
+
+
+var objToString = Object.prototype.toString;
+function isArray( obj ) {
+  return objToString.call( obj ) === '[object Array]';
+}
+
+// turn element or nodeList into an array
+function makeArray( obj ) {
+  var ary = [];
+  if ( isArray( obj ) ) {
+    // use object if already an array
+    ary = obj;
+  } else if ( obj && typeof obj.length === 'number' ) {
+    // convert nodeList to array
+    for ( var i=0, len = obj.length; i < len; i++ ) {
+      ary.push( obj[i] );
+    }
+  } else {
+    // array of single index
+    ary.push( obj );
+  }
+  return ary;
+}
+
+// http://stackoverflow.com/a/384380/182183
+var isElement = ( typeof HTMLElement === 'object' ) ?
+  function isElementDOM2( obj ) {
+    return obj instanceof HTMLElement;
+  } :
+  function isElementQuirky( obj ) {
+    return obj && typeof obj === 'object' &&
+      obj.nodeType === 1 && typeof obj.nodeName === 'string';
+  };
+
+// index of helper cause IE8
+var indexOf = Array.prototype.indexOf ? function( ary, obj ) {
+    return ary.indexOf( obj );
+  } : function( ary, obj ) {
+    for ( var i=0, len = ary.length; i < len; i++ ) {
+      if ( ary[i] === obj ) {
+        return i;
+      }
+    }
+    return -1;
+  };
+
+function removeFrom( obj, ary ) {
+  var index = indexOf( ary, obj );
+  if ( index !== -1 ) {
+    ary.splice( index, 1 );
+  }
+}
+
+// http://jamesroberts.name/blog/2010/02/22/string-functions-for-javascript-trim-to-camel-case-to-dashed-and-to-underscore/
+function toDashed( str ) {
+  return str.replace( /(.)([A-Z])/g, function( match, $1, $2 ) {
+    return $1 + '-' + $2;
+  }).toLowerCase();
+}
+
+
+function outlayerDefinition( eventie, docReady, EventEmitter, getSize, matchesSelector, Item ) {
+
+// -------------------------- Outlayer -------------------------- //
+
+// globally unique identifiers
+var GUID = 0;
+// internal store of all Outlayer intances
+var instances = {};
+
+
+/**
+ * @param {Element, String} element
+ * @param {Object} options
+ * @constructor
+ */
+function Outlayer( element, options ) {
+  // use element as selector string
+  if ( typeof element === 'string' ) {
+    element = document.querySelector( element );
+  }
+
+  // bail out if not proper element
+  if ( !element || !isElement( element ) ) {
+    if ( console ) {
+      console.error( 'Bad ' + this.constructor.namespace + ' element: ' + element );
+    }
+    return;
+  }
+
+  this.element = element;
+
+  // options
+  this.options = extend( {}, this.constructor.defaults );
+  this.option( options );
+
+  // add id for Outlayer.getFromElement
+  var id = ++GUID;
+  this.element.outlayerGUID = id; // expando
+  instances[ id ] = this; // associate via id
+
+  // kick it off
+  this._create();
+
+  if ( this.options.isInitLayout ) {
+    this.layout();
+  }
+}
+
+// settings are for internal use only
+Outlayer.namespace = 'outlayer';
+Outlayer.Item = Item;
+
+// default options
+Outlayer.defaults = {
+  containerStyle: {
+    position: 'relative'
+  },
+  isInitLayout: true,
+  isOriginLeft: true,
+  isOriginTop: true,
+  isResizeBound: true,
+  isResizingContainer: true,
+  // item options
+  transitionDuration: '0.4s',
+  hiddenStyle: {
+    opacity: 0,
+    transform: 'scale(0.001)'
+  },
+  visibleStyle: {
+    opacity: 1,
+    transform: 'scale(1)'
+  }
+};
+
+// inherit EventEmitter
+extend( Outlayer.prototype, EventEmitter.prototype );
+
+/**
+ * set options
+ * @param {Object} opts
+ */
+Outlayer.prototype.option = function( opts ) {
+  extend( this.options, opts );
+};
+
+Outlayer.prototype._create = function() {
+  // get items from children
+  this.reloadItems();
+  // elements that affect layout, but are not laid out
+  this.stamps = [];
+  this.stamp( this.options.stamp );
+  // set container style
+  extend( this.element.style, this.options.containerStyle );
+
+  // bind resize method
+  if ( this.options.isResizeBound ) {
+    this.bindResize();
+  }
+};
+
+// goes through all children again and gets bricks in proper order
+Outlayer.prototype.reloadItems = function() {
+  // collection of item elements
+  this.items = this._itemize( this.element.children );
+};
+
+
+/**
+ * turn elements into Outlayer.Items to be used in layout
+ * @param {Array or NodeList or HTMLElement} elems
+ * @returns {Array} items - collection of new Outlayer Items
+ */
+Outlayer.prototype._itemize = function( elems ) {
+
+  var itemElems = this._filterFindItemElements( elems );
+  var Item = this.constructor.Item;
+
+  // create new Outlayer Items for collection
+  var items = [];
+  for ( var i=0, len = itemElems.length; i < len; i++ ) {
+    var elem = itemElems[i];
+    var item = new Item( elem, this );
+    items.push( item );
+  }
+
+  return items;
+};
+
+/**
+ * get item elements to be used in layout
+ * @param {Array or NodeList or HTMLElement} elems
+ * @returns {Array} items - item elements
+ */
+Outlayer.prototype._filterFindItemElements = function( elems ) {
+  // make array of elems
+  elems = makeArray( elems );
+  var itemSelector = this.options.itemSelector;
+  var itemElems = [];
+
+  for ( var i=0, len = elems.length; i < len; i++ ) {
+    var elem = elems[i];
+    // check that elem is an actual element
+    if ( !isElement( elem ) ) {
+      continue;
+    }
+    // filter & find items if we have an item selector
+    if ( itemSelector ) {
+      // filter siblings
+      if ( matchesSelector( elem, itemSelector ) ) {
+        itemElems.push( elem );
+      }
+      // find children
+      var childElems = elem.querySelectorAll( itemSelector );
+      // concat childElems to filterFound array
+      for ( var j=0, jLen = childElems.length; j < jLen; j++ ) {
+        itemElems.push( childElems[j] );
+      }
+    } else {
+      itemElems.push( elem );
+    }
+  }
+
+  return itemElems;
+};
+
+/**
+ * getter method for getting item elements
+ * @returns {Array} elems - collection of item elements
+ */
+Outlayer.prototype.getItemElements = function() {
+  var elems = [];
+  for ( var i=0, len = this.items.length; i < len; i++ ) {
+    elems.push( this.items[i].element );
+  }
+  return elems;
+};
+
+// ----- init & layout ----- //
+
+/**
+ * lays out all items
+ */
+Outlayer.prototype.layout = function() {
+  this._resetLayout();
+  this._manageStamps();
+
+  // don't animate first layout
+  var isInstant = this.options.isLayoutInstant !== undefined ?
+    this.options.isLayoutInstant : !this._isLayoutInited;
+  this.layoutItems( this.items, isInstant );
+
+  // flag for initalized
+  this._isLayoutInited = true;
+};
+
+// _init is alias for layout
+Outlayer.prototype._init = Outlayer.prototype.layout;
+
+/**
+ * logic before any new layout
+ */
+Outlayer.prototype._resetLayout = function() {
+  this.getSize();
+};
+
+
+Outlayer.prototype.getSize = function() {
+  this.size = getSize( this.element );
+};
+
+/**
+ * get measurement from option, for columnWidth, rowHeight, gutter
+ * if option is String -> get element from selector string, & get size of element
+ * if option is Element -> get size of element
+ * else use option as a number
+ *
+ * @param {String} measurement
+ * @param {String} size - width or height
+ * @private
+ */
+Outlayer.prototype._getMeasurement = function( measurement, size ) {
+  var option = this.options[ measurement ];
+  var elem;
+  if ( !option ) {
+    // default to 0
+    this[ measurement ] = 0;
+  } else {
+    // use option as an element
+    if ( typeof option === 'string' ) {
+      elem = this.element.querySelector( option );
+    } else if ( isElement( option ) ) {
+      elem = option;
+    }
+    // use size of element, if element
+    this[ measurement ] = elem ? getSize( elem )[ size ] : option;
+  }
+};
+
+/**
+ * layout a collection of item elements
+ * @api public
+ */
+Outlayer.prototype.layoutItems = function( items, isInstant ) {
+  items = this._getItemsForLayout( items );
+
+  this._layoutItems( items, isInstant );
+
+  this._postLayout();
+};
+
+/**
+ * get the items to be laid out
+ * you may want to skip over some items
+ * @param {Array} items
+ * @returns {Array} items
+ */
+Outlayer.prototype._getItemsForLayout = function( items ) {
+  var layoutItems = [];
+  for ( var i=0, len = items.length; i < len; i++ ) {
+    var item = items[i];
+    if ( !item.isIgnored ) {
+      layoutItems.push( item );
+    }
+  }
+  return layoutItems;
+};
+
+/**
+ * layout items
+ * @param {Array} items
+ * @param {Boolean} isInstant
+ */
+Outlayer.prototype._layoutItems = function( items, isInstant ) {
+  var _this = this;
+  function onItemsLayout() {
+    _this.emitEvent( 'layoutComplete', [ _this, items ] );
+  }
+
+  if ( !items || !items.length ) {
+    // no items, emit event with empty array
+    onItemsLayout();
+    return;
+  }
+
+  // emit layoutComplete when done
+  this._itemsOn( items, 'layout', onItemsLayout );
+
+  var queue = [];
+
+  for ( var i=0, len = items.length; i < len; i++ ) {
+    var item = items[i];
+    // get x/y object from method
+    var position = this._getItemLayoutPosition( item );
+    // enqueue
+    position.item = item;
+    position.isInstant = isInstant || item.isLayoutInstant;
+    queue.push( position );
+  }
+
+  this._processLayoutQueue( queue );
+};
+
+/**
+ * get item layout position
+ * @param {Outlayer.Item} item
+ * @returns {Object} x and y position
+ */
+Outlayer.prototype._getItemLayoutPosition = function( /* item */ ) {
+  return {
+    x: 0,
+    y: 0
+  };
+};
+
+/**
+ * iterate over array and position each item
+ * Reason being - separating this logic prevents 'layout invalidation'
+ * thx @paul_irish
+ * @param {Array} queue
+ */
+Outlayer.prototype._processLayoutQueue = function( queue ) {
+  for ( var i=0, len = queue.length; i < len; i++ ) {
+    var obj = queue[i];
+    this._positionItem( obj.item, obj.x, obj.y, obj.isInstant );
+  }
+};
+
+/**
+ * Sets position of item in DOM
+ * @param {Outlayer.Item} item
+ * @param {Number} x - horizontal position
+ * @param {Number} y - vertical position
+ * @param {Boolean} isInstant - disables transitions
+ */
+Outlayer.prototype._positionItem = function( item, x, y, isInstant ) {
+  if ( isInstant ) {
+    // if not transition, just set CSS
+    item.goTo( x, y );
+  } else {
+    item.moveTo( x, y );
+  }
+};
+
+/**
+ * Any logic you want to do after each layout,
+ * i.e. size the container
+ */
+Outlayer.prototype._postLayout = function() {
+  this.resizeContainer();
+};
+
+Outlayer.prototype.resizeContainer = function() {
+  if ( !this.options.isResizingContainer ) {
+    return;
+  }
+  var size = this._getContainerSize();
+  if ( size ) {
+    this._setContainerMeasure( size.width, true );
+    this._setContainerMeasure( size.height, false );
+  }
+};
+
+/**
+ * Sets width or height of container if returned
+ * @returns {Object} size
+ *   @param {Number} width
+ *   @param {Number} height
+ */
+Outlayer.prototype._getContainerSize = noop;
+
+/**
+ * @param {Number} measure - size of width or height
+ * @param {Boolean} isWidth
+ */
+Outlayer.prototype._setContainerMeasure = function( measure, isWidth ) {
+  if ( measure === undefined ) {
+    return;
+  }
+
+  var elemSize = this.size;
+  // add padding and border width if border box
+  if ( elemSize.isBorderBox ) {
+    measure += isWidth ? elemSize.paddingLeft + elemSize.paddingRight +
+      elemSize.borderLeftWidth + elemSize.borderRightWidth :
+      elemSize.paddingBottom + elemSize.paddingTop +
+      elemSize.borderTopWidth + elemSize.borderBottomWidth;
+  }
+
+  measure = Math.max( measure, 0 );
+  this.element.style[ isWidth ? 'width' : 'height' ] = measure + 'px';
+};
+
+/**
+ * trigger a callback for a collection of items events
+ * @param {Array} items - Outlayer.Items
+ * @param {String} eventName
+ * @param {Function} callback
+ */
+Outlayer.prototype._itemsOn = function( items, eventName, callback ) {
+  var doneCount = 0;
+  var count = items.length;
+  // event callback
+  var _this = this;
+  function tick() {
+    doneCount++;
+    if ( doneCount === count ) {
+      callback.call( _this );
+    }
+    return true; // bind once
+  }
+  // bind callback
+  for ( var i=0, len = items.length; i < len; i++ ) {
+    var item = items[i];
+    item.on( eventName, tick );
+  }
+};
+
+// -------------------------- ignore & stamps -------------------------- //
+
+
+/**
+ * keep item in collection, but do not lay it out
+ * ignored items do not get skipped in layout
+ * @param {Element} elem
+ */
+Outlayer.prototype.ignore = function( elem ) {
+  var item = this.getItem( elem );
+  if ( item ) {
+    item.isIgnored = true;
+  }
+};
+
+/**
+ * return item to layout collection
+ * @param {Element} elem
+ */
+Outlayer.prototype.unignore = function( elem ) {
+  var item = this.getItem( elem );
+  if ( item ) {
+    delete item.isIgnored;
+  }
+};
+
+/**
+ * adds elements to stamps
+ * @param {NodeList, Array, Element, or String} elems
+ */
+Outlayer.prototype.stamp = function( elems ) {
+  elems = this._find( elems );
+  if ( !elems ) {
+    return;
+  }
+
+  this.stamps = this.stamps.concat( elems );
+  // ignore
+  for ( var i=0, len = elems.length; i < len; i++ ) {
+    var elem = elems[i];
+    this.ignore( elem );
+  }
+};
+
+/**
+ * removes elements to stamps
+ * @param {NodeList, Array, or Element} elems
+ */
+Outlayer.prototype.unstamp = function( elems ) {
+  elems = this._find( elems );
+  if ( !elems ){
+    return;
+  }
+
+  for ( var i=0, len = elems.length; i < len; i++ ) {
+    var elem = elems[i];
+    // filter out removed stamp elements
+    removeFrom( elem, this.stamps );
+    this.unignore( elem );
+  }
+
+};
+
+/**
+ * finds child elements
+ * @param {NodeList, Array, Element, or String} elems
+ * @returns {Array} elems
+ */
+Outlayer.prototype._find = function( elems ) {
+  if ( !elems ) {
+    return;
+  }
+  // if string, use argument as selector string
+  if ( typeof elems === 'string' ) {
+    elems = this.element.querySelectorAll( elems );
+  }
+  elems = makeArray( elems );
+  return elems;
+};
+
+Outlayer.prototype._manageStamps = function() {
+  if ( !this.stamps || !this.stamps.length ) {
+    return;
+  }
+
+  this._getBoundingRect();
+
+  for ( var i=0, len = this.stamps.length; i < len; i++ ) {
+    var stamp = this.stamps[i];
+    this._manageStamp( stamp );
+  }
+};
+
+// update boundingLeft / Top
+Outlayer.prototype._getBoundingRect = function() {
+  // get bounding rect for container element
+  var boundingRect = this.element.getBoundingClientRect();
+  var size = this.size;
+  this._boundingRect = {
+    left: boundingRect.left + size.paddingLeft + size.borderLeftWidth,
+    top: boundingRect.top + size.paddingTop + size.borderTopWidth,
+    right: boundingRect.right - ( size.paddingRight + size.borderRightWidth ),
+    bottom: boundingRect.bottom - ( size.paddingBottom + size.borderBottomWidth )
+  };
+};
+
+/**
+ * @param {Element} stamp
+**/
+Outlayer.prototype._manageStamp = noop;
+
+/**
+ * get x/y position of element relative to container element
+ * @param {Element} elem
+ * @returns {Object} offset - has left, top, right, bottom
+ */
+Outlayer.prototype._getElementOffset = function( elem ) {
+  var boundingRect = elem.getBoundingClientRect();
+  var thisRect = this._boundingRect;
+  var size = getSize( elem );
+  var offset = {
+    left: boundingRect.left - thisRect.left - size.marginLeft,
+    top: boundingRect.top - thisRect.top - size.marginTop,
+    right: thisRect.right - boundingRect.right - size.marginRight,
+    bottom: thisRect.bottom - boundingRect.bottom - size.marginBottom
+  };
+  return offset;
+};
+
+// -------------------------- resize -------------------------- //
+
+// enable event handlers for listeners
+// i.e. resize -> onresize
+Outlayer.prototype.handleEvent = function( event ) {
+  var method = 'on' + event.type;
+  if ( this[ method ] ) {
+    this[ method ]( event );
+  }
+};
+
+/**
+ * Bind layout to window resizing
+ */
+Outlayer.prototype.bindResize = function() {
+  // bind just one listener
+  if ( this.isResizeBound ) {
+    return;
+  }
+  eventie.bind( window, 'resize', this );
+  this.isResizeBound = true;
+};
+
+/**
+ * Unbind layout to window resizing
+ */
+Outlayer.prototype.unbindResize = function() {
+  if ( this.isResizeBound ) {
+    eventie.unbind( window, 'resize', this );
+  }
+  this.isResizeBound = false;
+};
+
+// original debounce by John Hann
+// http://unscriptable.com/index.php/2009/03/20/debouncing-javascript-methods/
+
+// this fires every resize
+Outlayer.prototype.onresize = function() {
+  if ( this.resizeTimeout ) {
+    clearTimeout( this.resizeTimeout );
+  }
+
+  var _this = this;
+  function delayed() {
+    _this.resize();
+    delete _this.resizeTimeout;
+  }
+
+  this.resizeTimeout = setTimeout( delayed, 100 );
+};
+
+// debounced, layout on resize
+Outlayer.prototype.resize = function() {
+  // don't trigger if size did not change
+  // or if resize was unbound. See #9
+  if ( !this.isResizeBound || !this.needsResizeLayout() ) {
+    return;
+  }
+
+  this.layout();
+};
+
+/**
+ * check if layout is needed post layout
+ * @returns Boolean
+ */
+Outlayer.prototype.needsResizeLayout = function() {
+  var size = getSize( this.element );
+  // check that this.size and size are there
+  // IE8 triggers resize on body size change, so they might not be
+  var hasSizes = this.size && size;
+  return hasSizes && size.innerWidth !== this.size.innerWidth;
+};
+
+// -------------------------- methods -------------------------- //
+
+/**
+ * add items to Outlayer instance
+ * @param {Array or NodeList or Element} elems
+ * @returns {Array} items - Outlayer.Items
+**/
+Outlayer.prototype.addItems = function( elems ) {
+  var items = this._itemize( elems );
+  // add items to collection
+  if ( items.length ) {
+    this.items = this.items.concat( items );
+  }
+  return items;
+};
+
+/**
+ * Layout newly-appended item elements
+ * @param {Array or NodeList or Element} elems
+ */
+Outlayer.prototype.appended = function( elems ) {
+  var items = this.addItems( elems );
+  if ( !items.length ) {
+    return;
+  }
+  // layout and reveal just the new items
+  this.layoutItems( items, true );
+  this.reveal( items );
+};
+
+/**
+ * Layout prepended elements
+ * @param {Array or NodeList or Element} elems
+ */
+Outlayer.prototype.prepended = function( elems ) {
+  var items = this._itemize( elems );
+  if ( !items.length ) {
+    return;
+  }
+  // add items to beginning of collection
+  var previousItems = this.items.slice(0);
+  this.items = items.concat( previousItems );
+  // start new layout
+  this._resetLayout();
+  this._manageStamps();
+  // layout new stuff without transition
+  this.layoutItems( items, true );
+  this.reveal( items );
+  // layout previous items
+  this.layoutItems( previousItems );
+};
+
+/**
+ * reveal a collection of items
+ * @param {Array of Outlayer.Items} items
+ */
+Outlayer.prototype.reveal = function( items ) {
+  var len = items && items.length;
+  if ( !len ) {
+    return;
+  }
+  for ( var i=0; i < len; i++ ) {
+    var item = items[i];
+    item.reveal();
+  }
+};
+
+/**
+ * hide a collection of items
+ * @param {Array of Outlayer.Items} items
+ */
+Outlayer.prototype.hide = function( items ) {
+  var len = items && items.length;
+  if ( !len ) {
+    return;
+  }
+  for ( var i=0; i < len; i++ ) {
+    var item = items[i];
+    item.hide();
+  }
+};
+
+/**
+ * get Outlayer.Item, given an Element
+ * @param {Element} elem
+ * @param {Function} callback
+ * @returns {Outlayer.Item} item
+ */
+Outlayer.prototype.getItem = function( elem ) {
+  // loop through items to get the one that matches
+  for ( var i=0, len = this.items.length; i < len; i++ ) {
+    var item = this.items[i];
+    if ( item.element === elem ) {
+      // return item
+      return item;
+    }
+  }
+};
+
+/**
+ * get collection of Outlayer.Items, given Elements
+ * @param {Array} elems
+ * @returns {Array} items - Outlayer.Items
+ */
+Outlayer.prototype.getItems = function( elems ) {
+  if ( !elems || !elems.length ) {
+    return;
+  }
+  var items = [];
+  for ( var i=0, len = elems.length; i < len; i++ ) {
+    var elem = elems[i];
+    var item = this.getItem( elem );
+    if ( item ) {
+      items.push( item );
+    }
+  }
+
+  return items;
+};
+
+/**
+ * remove element(s) from instance and DOM
+ * @param {Array or NodeList or Element} elems
+ */
+Outlayer.prototype.remove = function( elems ) {
+  elems = makeArray( elems );
+
+  var removeItems = this.getItems( elems );
+  // bail if no items to remove
+  if ( !removeItems || !removeItems.length ) {
+    return;
+  }
+
+  this._itemsOn( removeItems, 'remove', function() {
+    this.emitEvent( 'removeComplete', [ this, removeItems ] );
+  });
+
+  for ( var i=0, len = removeItems.length; i < len; i++ ) {
+    var item = removeItems[i];
+    item.remove();
+    // remove item from collection
+    removeFrom( item, this.items );
+  }
+};
+
+// ----- destroy ----- //
+
+// remove and disable Outlayer instance
+Outlayer.prototype.destroy = function() {
+  // clean up dynamic styles
+  var style = this.element.style;
+  style.height = '';
+  style.position = '';
+  style.width = '';
+  // destroy items
+  for ( var i=0, len = this.items.length; i < len; i++ ) {
+    var item = this.items[i];
+    item.destroy();
+  }
+
+  this.unbindResize();
+
+  delete this.element.outlayerGUID;
+  // remove data for jQuery
+  if ( jQuery ) {
+    jQuery.removeData( this.element, this.constructor.namespace );
+  }
+
+};
+
+// -------------------------- data -------------------------- //
+
+/**
+ * get Outlayer instance from element
+ * @param {Element} elem
+ * @returns {Outlayer}
+ */
+Outlayer.data = function( elem ) {
+  var id = elem && elem.outlayerGUID;
+  return id && instances[ id ];
+};
+
+
+// -------------------------- create Outlayer class -------------------------- //
+
+/**
+ * create a layout class
+ * @param {String} namespace
+ */
+Outlayer.create = function( namespace, options ) {
+  // sub-class Outlayer
+  function Layout() {
+    Outlayer.apply( this, arguments );
+  }
+  // inherit Outlayer prototype, use Object.create if there
+  if ( Object.create ) {
+    Layout.prototype = Object.create( Outlayer.prototype );
+  } else {
+    extend( Layout.prototype, Outlayer.prototype );
+  }
+  // set contructor, used for namespace and Item
+  Layout.prototype.constructor = Layout;
+
+  Layout.defaults = extend( {}, Outlayer.defaults );
+  // apply new options
+  extend( Layout.defaults, options );
+  // keep prototype.settings for backwards compatibility (Packery v1.2.0)
+  Layout.prototype.settings = {};
+
+  Layout.namespace = namespace;
+
+  Layout.data = Outlayer.data;
+
+  // sub-class Item
+  Layout.Item = function LayoutItem() {
+    Item.apply( this, arguments );
+  };
+
+  Layout.Item.prototype = new Item();
+
+  // -------------------------- declarative -------------------------- //
+
+  /**
+   * allow user to initialize Outlayer via .js-namespace class
+   * options are parsed from data-namespace-option attribute
+   */
+  docReady( function() {
+    var dashedNamespace = toDashed( namespace );
+    var elems = document.querySelectorAll( '.js-' + dashedNamespace );
+    var dataAttr = 'data-' + dashedNamespace + '-options';
+
+    for ( var i=0, len = elems.length; i < len; i++ ) {
+      var elem = elems[i];
+      var attr = elem.getAttribute( dataAttr );
+      var options;
+      try {
+        options = attr && JSON.parse( attr );
+      } catch ( error ) {
+        // log error, do not initialize
+        if ( console ) {
+          console.error( 'Error parsing ' + dataAttr + ' on ' +
+            elem.nodeName.toLowerCase() + ( elem.id ? '#' + elem.id : '' ) + ': ' +
+            error );
+        }
+        continue;
+      }
+      // initialize
+      var instance = new Layout( elem, options );
+      // make available via $().data('layoutname')
+      if ( jQuery ) {
+        jQuery.data( elem, namespace, instance );
+      }
+    }
+  });
+
+  // -------------------------- jQuery bridge -------------------------- //
+
+  // make into jQuery plugin
+  if ( jQuery && jQuery.bridget ) {
+    jQuery.bridget( namespace, Layout );
+  }
+
+  return Layout;
+};
+
+// ----- fin ----- //
+
+// back in global
+Outlayer.Item = Item;
+
+return Outlayer;
+
+}
+
+// -------------------------- transport -------------------------- //
+
+if ( typeof define === 'function' && define.amd ) {
+  // AMD
+  define( 'outlayer/outlayer',[
+      'eventie/eventie',
+      'doc-ready/doc-ready',
+      'eventEmitter/EventEmitter',
+      'get-size/get-size',
+      'matches-selector/matches-selector',
+      './item'
+    ],
+    outlayerDefinition );
+} else {
+  // browser global
+  window.Outlayer = outlayerDefinition(
+    window.eventie,
+    window.docReady,
+    window.EventEmitter,
+    window.getSize,
+    window.matchesSelector,
+    window.Outlayer.Item
+  );
+}
+
+})( window );
+
+/**
+ * Isotope Item
+**/
+
+( function( window ) {
+
+
+
+// -------------------------- Item -------------------------- //
+
+function itemDefinition( Outlayer ) {
+
+// sub-class Outlayer Item
+function Item() {
+  Outlayer.Item.apply( this, arguments );
+}
+
+Item.prototype = new Outlayer.Item();
+
+Item.prototype._create = function() {
+  // assign id, used for original-order sorting
+  this.id = this.layout.itemGUID++;
+  Outlayer.Item.prototype._create.call( this );
+  this.sortData = {};
+};
+
+Item.prototype.updateSortData = function() {
+  if ( this.isIgnored ) {
+    return;
+  }
+  // default sorters
+  this.sortData.id = this.id;
+  // for backward compatibility
+  this.sortData['original-order'] = this.id;
+  this.sortData.random = Math.random();
+  // go thru getSortData obj and apply the sorters
+  var getSortData = this.layout.options.getSortData;
+  var sorters = this.layout._sorters;
+  for ( var key in getSortData ) {
+    var sorter = sorters[ key ];
+    this.sortData[ key ] = sorter( this.element, this );
+  }
+};
+
+var _destroy = Item.prototype.destroy;
+Item.prototype.destroy = function() {
+  // call super
+  _destroy.apply( this, arguments );
+  // reset display, #741
+  this.css({
+    display: ''
+  });
+};
+
+return Item;
+
+}
+
+// -------------------------- transport -------------------------- //
+
+if ( typeof define === 'function' && define.amd ) {
+  // AMD
+  define( 'isotope/js/item',[
+      'outlayer/outlayer'
+    ],
+    itemDefinition );
+} else {
+  // browser global
+  window.Isotope = window.Isotope || {};
+  window.Isotope.Item = itemDefinition(
+    window.Outlayer
+  );
+}
+
+})( window );
+
+( function( window ) {
+
+
+
+// --------------------------  -------------------------- //
+
+function layoutModeDefinition( getSize, Outlayer ) {
+
+  // layout mode class
+  function LayoutMode( isotope ) {
+    this.isotope = isotope;
+    // link properties
+    if ( isotope ) {
+      this.options = isotope.options[ this.namespace ];
+      this.element = isotope.element;
+      this.items = isotope.filteredItems;
+      this.size = isotope.size;
+    }
+  }
+
+  /**
+   * some methods should just defer to default Outlayer method
+   * and reference the Isotope instance as `this`
+  **/
+  ( function() {
+    var facadeMethods = [
+      '_resetLayout',
+      '_getItemLayoutPosition',
+      '_manageStamp',
+      '_getContainerSize',
+      '_getElementOffset',
+      'needsResizeLayout'
+    ];
+
+    for ( var i=0, len = facadeMethods.length; i < len; i++ ) {
+      var methodName = facadeMethods[i];
+      LayoutMode.prototype[ methodName ] = getOutlayerMethod( methodName );
+    }
+
+    function getOutlayerMethod( methodName ) {
+      return function() {
+        return Outlayer.prototype[ methodName ].apply( this.isotope, arguments );
+      };
+    }
+  })();
+
+  // -----  ----- //
+
+  // for horizontal layout modes, check vertical size
+  LayoutMode.prototype.needsVerticalResizeLayout = function() {
+    // don't trigger if size did not change
+    var size = getSize( this.isotope.element );
+    // check that this.size and size are there
+    // IE8 triggers resize on body size change, so they might not be
+    var hasSizes = this.isotope.size && size;
+    return hasSizes && size.innerHeight !== this.isotope.size.innerHeight;
+  };
+
+  // ----- measurements ----- //
+
+  LayoutMode.prototype._getMeasurement = function() {
+    this.isotope._getMeasurement.apply( this, arguments );
+  };
+
+  LayoutMode.prototype.getColumnWidth = function() {
+    this.getSegmentSize( 'column', 'Width' );
+  };
+
+  LayoutMode.prototype.getRowHeight = function() {
+    this.getSegmentSize( 'row', 'Height' );
+  };
+
+  /**
+   * get columnWidth or rowHeight
+   * segment: 'column' or 'row'
+   * size 'Width' or 'Height'
+  **/
+  LayoutMode.prototype.getSegmentSize = function( segment, size ) {
+    var segmentName = segment + size;
+    var outerSize = 'outer' + size;
+    // columnWidth / outerWidth // rowHeight / outerHeight
+    this._getMeasurement( segmentName, outerSize );
+    // got rowHeight or columnWidth, we can chill
+    if ( this[ segmentName ] ) {
+      return;
+    }
+    // fall back to item of first element
+    var firstItemSize = this.getFirstItemSize();
+    this[ segmentName ] = firstItemSize && firstItemSize[ outerSize ] ||
+      // or size of container
+      this.isotope.size[ 'inner' + size ];
+  };
+
+  LayoutMode.prototype.getFirstItemSize = function() {
+    var firstItem = this.isotope.filteredItems[0];
+    return firstItem && firstItem.element && getSize( firstItem.element );
+  };
+
+  // ----- methods that should reference isotope ----- //
+
+  LayoutMode.prototype.layout = function() {
+    this.isotope.layout.apply( this.isotope, arguments );
+  };
+
+  LayoutMode.prototype.getSize = function() {
+    this.isotope.getSize();
+    this.size = this.isotope.size;
+  };
+
+  // -------------------------- create -------------------------- //
+
+  LayoutMode.modes = {};
+
+  LayoutMode.create = function( namespace, options ) {
+
+    function Mode() {
+      LayoutMode.apply( this, arguments );
+    }
+
+    Mode.prototype = new LayoutMode();
+
+    // default options
+    if ( options ) {
+      Mode.options = options;
+    }
+
+    Mode.prototype.namespace = namespace;
+    // register in Isotope
+    LayoutMode.modes[ namespace ] = Mode;
+
+    return Mode;
+  };
+
+
+  return LayoutMode;
+
+}
+
+if ( typeof define === 'function' && define.amd ) {
+  // AMD
+  define( 'isotope/js/layout-mode',[
+      'get-size/get-size',
+      'outlayer/outlayer'
+    ],
+    layoutModeDefinition );
+} else {
+  // browser global
+  window.Isotope = window.Isotope || {};
+  window.Isotope.LayoutMode = layoutModeDefinition(
+    window.getSize,
+    window.Outlayer
+  );
+}
+
+
+})( window );
+
+/*!
+ * Masonry v3.1.5
+ * Cascading grid layout library
+ * http://masonry.desandro.com
+ * MIT License
+ * by David DeSandro
+ */
+
+( function( window ) {
+
+
+
+// -------------------------- helpers -------------------------- //
+
+var indexOf = Array.prototype.indexOf ?
+  function( items, value ) {
+    return items.indexOf( value );
+  } :
+  function ( items, value ) {
+    for ( var i=0, len = items.length; i < len; i++ ) {
+      var item = items[i];
+      if ( item === value ) {
+        return i;
+      }
+    }
+    return -1;
+  };
+
+// -------------------------- masonryDefinition -------------------------- //
+
+// used for AMD definition and requires
+function masonryDefinition( Outlayer, getSize ) {
+  // create an Outlayer layout class
+  var Masonry = Outlayer.create('masonry');
+
+  Masonry.prototype._resetLayout = function() {
+    this.getSize();
+    this._getMeasurement( 'columnWidth', 'outerWidth' );
+    this._getMeasurement( 'gutter', 'outerWidth' );
+    this.measureColumns();
+
+    // reset column Y
+    var i = this.cols;
+    this.colYs = [];
+    while (i--) {
+      this.colYs.push( 0 );
+    }
+
+    this.maxY = 0;
+  };
+
+  Masonry.prototype.measureColumns = function() {
+    this.getContainerWidth();
+    // if columnWidth is 0, default to outerWidth of first item
+    if ( !this.columnWidth ) {
+      var firstItem = this.items[0];
+      var firstItemElem = firstItem && firstItem.element;
+      // columnWidth fall back to item of first element
+      this.columnWidth = firstItemElem && getSize( firstItemElem ).outerWidth ||
+        // if first elem has no width, default to size of container
+        this.containerWidth;
+    }
+
+    this.columnWidth += this.gutter;
+
+    this.cols = Math.floor( ( this.containerWidth + this.gutter ) / this.columnWidth );
+    this.cols = Math.max( this.cols, 1 );
+  };
+
+  Masonry.prototype.getContainerWidth = function() {
+    // container is parent if fit width
+    var container = this.options.isFitWidth ? this.element.parentNode : this.element;
+    // check that this.size and size are there
+    // IE8 triggers resize on body size change, so they might not be
+    var size = getSize( container );
+    this.containerWidth = size && size.innerWidth;
+  };
+
+  Masonry.prototype._getItemLayoutPosition = function( item ) {
+    item.getSize();
+    // how many columns does this brick span
+    var remainder = item.size.outerWidth % this.columnWidth;
+    var mathMethod = remainder && remainder < 1 ? 'round' : 'ceil';
+    // round if off by 1 pixel, otherwise use ceil
+    var colSpan = Math[ mathMethod ]( item.size.outerWidth / this.columnWidth );
+    colSpan = Math.min( colSpan, this.cols );
+
+    var colGroup = this._getColGroup( colSpan );
+    // get the minimum Y value from the columns
+    var minimumY = Math.min.apply( Math, colGroup );
+    var shortColIndex = indexOf( colGroup, minimumY );
+
+    // position the brick
+    var position = {
+      x: this.columnWidth * shortColIndex,
+      y: minimumY
+    };
+
+    // apply setHeight to necessary columns
+    var setHeight = minimumY + item.size.outerHeight;
+    var setSpan = this.cols + 1 - colGroup.length;
+    for ( var i = 0; i < setSpan; i++ ) {
+      this.colYs[ shortColIndex + i ] = setHeight;
+    }
+
+    return position;
+  };
+
+  /**
+   * @param {Number} colSpan - number of columns the element spans
+   * @returns {Array} colGroup
+   */
+  Masonry.prototype._getColGroup = function( colSpan ) {
+    if ( colSpan < 2 ) {
+      // if brick spans only one column, use all the column Ys
+      return this.colYs;
+    }
+
+    var colGroup = [];
+    // how many different places could this brick fit horizontally
+    var groupCount = this.cols + 1 - colSpan;
+    // for each group potential horizontal position
+    for ( var i = 0; i < groupCount; i++ ) {
+      // make an array of colY values for that one group
+      var groupColYs = this.colYs.slice( i, i + colSpan );
+      // and get the max value of the array
+      colGroup[i] = Math.max.apply( Math, groupColYs );
+    }
+    return colGroup;
+  };
+
+  Masonry.prototype._manageStamp = function( stamp ) {
+    var stampSize = getSize( stamp );
+    var offset = this._getElementOffset( stamp );
+    // get the columns that this stamp affects
+    var firstX = this.options.isOriginLeft ? offset.left : offset.right;
+    var lastX = firstX + stampSize.outerWidth;
+    var firstCol = Math.floor( firstX / this.columnWidth );
+    firstCol = Math.max( 0, firstCol );
+    var lastCol = Math.floor( lastX / this.columnWidth );
+    // lastCol should not go over if multiple of columnWidth #425
+    lastCol -= lastX % this.columnWidth ? 0 : 1;
+    lastCol = Math.min( this.cols - 1, lastCol );
+    // set colYs to bottom of the stamp
+    var stampMaxY = ( this.options.isOriginTop ? offset.top : offset.bottom ) +
+      stampSize.outerHeight;
+    for ( var i = firstCol; i <= lastCol; i++ ) {
+      this.colYs[i] = Math.max( stampMaxY, this.colYs[i] );
+    }
+  };
+
+  Masonry.prototype._getContainerSize = function() {
+    this.maxY = Math.max.apply( Math, this.colYs );
+    var size = {
+      height: this.maxY
+    };
+
+    if ( this.options.isFitWidth ) {
+      size.width = this._getContainerFitWidth();
+    }
+
+    return size;
+  };
+
+  Masonry.prototype._getContainerFitWidth = function() {
+    var unusedCols = 0;
+    // count unused columns
+    var i = this.cols;
+    while ( --i ) {
+      if ( this.colYs[i] !== 0 ) {
+        break;
+      }
+      unusedCols++;
+    }
+    // fit container to columns that have been used
+    return ( this.cols - unusedCols ) * this.columnWidth - this.gutter;
+  };
+
+  Masonry.prototype.needsResizeLayout = function() {
+    var previousWidth = this.containerWidth;
+    this.getContainerWidth();
+    return previousWidth !== this.containerWidth;
+  };
+
+  return Masonry;
+}
+
+// -------------------------- transport -------------------------- //
+
+if ( typeof define === 'function' && define.amd ) {
+  // AMD
+  define( 'masonry/masonry',[
+      'outlayer/outlayer',
+      'get-size/get-size'
+    ],
+    masonryDefinition );
+} else {
+  // browser global
+  window.Masonry = masonryDefinition(
+    window.Outlayer,
+    window.getSize
+  );
+}
+
+})( window );
+
+/*!
+ * Masonry layout mode
+ * sub-classes Masonry
+ * http://masonry.desandro.com
+ */
+
+( function( window ) {
+
+
+
+// -------------------------- helpers -------------------------- //
+
+// extend objects
+function extend( a, b ) {
+  for ( var prop in b ) {
+    a[ prop ] = b[ prop ];
+  }
+  return a;
+}
+
+// -------------------------- masonryDefinition -------------------------- //
+
+// used for AMD definition and requires
+function masonryDefinition( LayoutMode, Masonry ) {
+  // create an Outlayer layout class
+  var MasonryMode = LayoutMode.create('masonry');
+
+  // save on to these methods
+  var _getElementOffset = MasonryMode.prototype._getElementOffset;
+  var layout = MasonryMode.prototype.layout;
+  var _getMeasurement = MasonryMode.prototype._getMeasurement;
+
+  // sub-class Masonry
+  extend( MasonryMode.prototype, Masonry.prototype );
+
+  // set back, as it was overwritten by Masonry
+  MasonryMode.prototype._getElementOffset = _getElementOffset;
+  MasonryMode.prototype.layout = layout;
+  MasonryMode.prototype._getMeasurement = _getMeasurement;
+
+  var measureColumns = MasonryMode.prototype.measureColumns;
+  MasonryMode.prototype.measureColumns = function() {
+    // set items, used if measuring first item
+    this.items = this.isotope.filteredItems;
+    measureColumns.call( this );
+  };
+
+  // HACK copy over isOriginLeft/Top options
+  var _manageStamp = MasonryMode.prototype._manageStamp;
+  MasonryMode.prototype._manageStamp = function() {
+    this.options.isOriginLeft = this.isotope.options.isOriginLeft;
+    this.options.isOriginTop = this.isotope.options.isOriginTop;
+    _manageStamp.apply( this, arguments );
+  };
+
+  return MasonryMode;
+}
+
+// -------------------------- transport -------------------------- //
+
+if ( typeof define === 'function' && define.amd ) {
+  // AMD
+  define( 'isotope/js/layout-modes/masonry',[
+      '../layout-mode',
+      'masonry/masonry'
+    ],
+    masonryDefinition );
+} else {
+  // browser global
+  masonryDefinition(
+    window.Isotope.LayoutMode,
+    window.Masonry
+  );
+}
+
+})( window );
+
+( function( window ) {
+
+
+
+function fitRowsDefinition( LayoutMode ) {
+
+var FitRows = LayoutMode.create('fitRows');
+
+FitRows.prototype._resetLayout = function() {
+  this.x = 0;
+  this.y = 0;
+  this.maxY = 0;
+};
+
+FitRows.prototype._getItemLayoutPosition = function( item ) {
+  item.getSize();
+
+  // if this element cannot fit in the current row
+  if ( this.x !== 0 && item.size.outerWidth + this.x > this.isotope.size.innerWidth ) {
+    this.x = 0;
+    this.y = this.maxY;
+  }
+
+  var position = {
+    x: this.x,
+    y: this.y
+  };
+
+  this.maxY = Math.max( this.maxY, this.y + item.size.outerHeight );
+  this.x += item.size.outerWidth;
+
+  return position;
+};
+
+FitRows.prototype._getContainerSize = function() {
+  return { height: this.maxY };
+};
+
+return FitRows;
+
+}
+
+if ( typeof define === 'function' && define.amd ) {
+  // AMD
+  define( 'isotope/js/layout-modes/fit-rows',[
+      '../layout-mode'
+    ],
+    fitRowsDefinition );
+} else {
+  // browser global
+  fitRowsDefinition(
+    window.Isotope.LayoutMode
+  );
+}
+
+})( window );
+
+( function( window ) {
+
+
+
+function verticalDefinition( LayoutMode ) {
+
+var Vertical = LayoutMode.create( 'vertical', {
+  horizontalAlignment: 0
+});
+
+Vertical.prototype._resetLayout = function() {
+  this.y = 0;
+};
+
+Vertical.prototype._getItemLayoutPosition = function( item ) {
+  item.getSize();
+  var x = ( this.isotope.size.innerWidth - item.size.outerWidth ) *
+    this.options.horizontalAlignment;
+  var y = this.y;
+  this.y += item.size.outerHeight;
+  return { x: x, y: y };
+};
+
+Vertical.prototype._getContainerSize = function() {
+  return { height: this.y };
+};
+
+return Vertical;
+
+}
+
+if ( typeof define === 'function' && define.amd ) {
+  // AMD
+  define( 'isotope/js/layout-modes/vertical',[
+      '../layout-mode'
+    ],
+    verticalDefinition );
+} else {
+  // browser global
+  verticalDefinition(
+    window.Isotope.LayoutMode
+  );
+}
+
+})( window );
+
+/*!
+ * Isotope v2.0.1
+ * Filter & sort magical layouts
+ * http://isotope.metafizzy.co
+ */
+
+( function( window ) {
+
+
+
+// -------------------------- vars -------------------------- //
+
+var jQuery = window.jQuery;
+
+// -------------------------- helpers -------------------------- //
+
+// extend objects
+function extend( a, b ) {
+  for ( var prop in b ) {
+    a[ prop ] = b[ prop ];
+  }
+  return a;
+}
+
+var trim = String.prototype.trim ?
+  function( str ) {
+    return str.trim();
+  } :
+  function( str ) {
+    return str.replace( /^\s+|\s+$/g, '' );
+  };
+
+var docElem = document.documentElement;
+
+var getText = docElem.textContent ?
+  function( elem ) {
+    return elem.textContent;
+  } :
+  function( elem ) {
+    return elem.innerText;
+  };
+
+var objToString = Object.prototype.toString;
+function isArray( obj ) {
+  return objToString.call( obj ) === '[object Array]';
+}
+
+// index of helper cause IE8
+var indexOf = Array.prototype.indexOf ? function( ary, obj ) {
+    return ary.indexOf( obj );
+  } : function( ary, obj ) {
+    for ( var i=0, len = ary.length; i < len; i++ ) {
+      if ( ary[i] === obj ) {
+        return i;
+      }
+    }
+    return -1;
+  };
+
+// turn element or nodeList into an array
+function makeArray( obj ) {
+  var ary = [];
+  if ( isArray( obj ) ) {
+    // use object if already an array
+    ary = obj;
+  } else if ( obj && typeof obj.length === 'number' ) {
+    // convert nodeList to array
+    for ( var i=0, len = obj.length; i < len; i++ ) {
+      ary.push( obj[i] );
+    }
+  } else {
+    // array of single index
+    ary.push( obj );
+  }
+  return ary;
+}
+
+function removeFrom( obj, ary ) {
+  var index = indexOf( ary, obj );
+  if ( index !== -1 ) {
+    ary.splice( index, 1 );
+  }
+}
+
+// -------------------------- isotopeDefinition -------------------------- //
+
+// used for AMD definition and requires
+function isotopeDefinition( Outlayer, getSize, matchesSelector, Item, LayoutMode ) {
+  // create an Outlayer layout class
+  var Isotope = Outlayer.create( 'isotope', {
+    layoutMode: "masonry",
+    isJQueryFiltering: true,
+    sortAscending: true
+  });
+
+  Isotope.Item = Item;
+  Isotope.LayoutMode = LayoutMode;
+
+  Isotope.prototype._create = function() {
+    this.itemGUID = 0;
+    // functions that sort items
+    this._sorters = {};
+    this._getSorters();
+    // call super
+    Outlayer.prototype._create.call( this );
+
+    // create layout modes
+    this.modes = {};
+    // start filteredItems with all items
+    this.filteredItems = this.items;
+    // keep of track of sortBys
+    this.sortHistory = [ 'original-order' ];
+    // create from registered layout modes
+    for ( var name in LayoutMode.modes ) {
+      this._initLayoutMode( name );
+    }
+  };
+
+  Isotope.prototype.reloadItems = function() {
+    // reset item ID counter
+    this.itemGUID = 0;
+    // call super
+    Outlayer.prototype.reloadItems.call( this );
+  };
+
+  Isotope.prototype._itemize = function() {
+    var items = Outlayer.prototype._itemize.apply( this, arguments );
+    // assign ID for original-order
+    for ( var i=0, len = items.length; i < len; i++ ) {
+      var item = items[i];
+      item.id = this.itemGUID++;
+    }
+    this._updateItemsSortData( items );
+    return items;
+  };
+
+
+  // -------------------------- layout -------------------------- //
+
+  Isotope.prototype._initLayoutMode = function( name ) {
+    var Mode = LayoutMode.modes[ name ];
+    // set mode options
+    // HACK extend initial options, back-fill in default options
+    var initialOpts = this.options[ name ] || {};
+    this.options[ name ] = Mode.options ?
+      extend( Mode.options, initialOpts ) : initialOpts;
+    // init layout mode instance
+    this.modes[ name ] = new Mode( this );
+  };
+
+
+  Isotope.prototype.layout = function() {
+    // if first time doing layout, do all magic
+    if ( !this._isLayoutInited && this.options.isInitLayout ) {
+      this.arrange();
+      return;
+    }
+    this._layout();
+  };
+
+  // private method to be used in layout() & magic()
+  Isotope.prototype._layout = function() {
+    // don't animate first layout
+    var isInstant = this._getIsInstant();
+    // layout flow
+    this._resetLayout();
+    this._manageStamps();
+    this.layoutItems( this.filteredItems, isInstant );
+
+    // flag for initalized
+    this._isLayoutInited = true;
+  };
+
+  // filter + sort + layout
+  Isotope.prototype.arrange = function( opts ) {
+    // set any options pass
+    this.option( opts );
+    this._getIsInstant();
+    // filter, sort, and layout
+    this.filteredItems = this._filter( this.items );
+    this._sort();
+    this._layout();
+  };
+  // alias to _init for main plugin method
+  Isotope.prototype._init = Isotope.prototype.arrange;
+
+  // HACK
+  // Don't animate/transition first layout
+  // Or don't animate/transition other layouts
+  Isotope.prototype._getIsInstant = function() {
+    var isInstant = this.options.isLayoutInstant !== undefined ?
+      this.options.isLayoutInstant : !this._isLayoutInited;
+    this._isInstant = isInstant;
+    return isInstant;
+  };
+
+  // -------------------------- filter -------------------------- //
+
+  Isotope.prototype._filter = function( items ) {
+    var filter = this.options.filter;
+    filter = filter || '*';
+    var matches = [];
+    var hiddenMatched = [];
+    var visibleUnmatched = [];
+
+    var test = this._getFilterTest( filter );
+
+    // test each item
+    for ( var i=0, len = items.length; i < len; i++ ) {
+      var item = items[i];
+      if ( item.isIgnored ) {
+        continue;
+      }
+      // add item to either matched or unmatched group
+      var isMatched = test( item );
+      // item.isFilterMatched = isMatched;
+      // add to matches if its a match
+      if ( isMatched ) {
+        matches.push( item );
+      }
+      // add to additional group if item needs to be hidden or revealed
+      if ( isMatched && item.isHidden ) {
+        hiddenMatched.push( item );
+      } else if ( !isMatched && !item.isHidden ) {
+        visibleUnmatched.push( item );
+      }
+    }
+
+    var _this = this;
+    function hideReveal() {
+      _this.reveal( hiddenMatched );
+      _this.hide( visibleUnmatched );
+    }
+
+    if ( this._isInstant ) {
+      this._noTransition( hideReveal );
+    } else {
+      hideReveal();
+    }
+
+    return matches;
+  };
+
+  // get a jQuery, function, or a matchesSelector test given the filter
+  Isotope.prototype._getFilterTest = function( filter ) {
+    if ( jQuery && this.options.isJQueryFiltering ) {
+      // use jQuery
+      return function( item ) {
+        return jQuery( item.element ).is( filter );
+      };
+    }
+    if ( typeof filter === 'function' ) {
+      // use filter as function
+      return function( item ) {
+        return filter( item.element );
+      };
+    }
+    // default, use filter as selector string
+    return function( item ) {
+      return matchesSelector( item.element, filter );
+    };
+  };
+
+  // -------------------------- sorting -------------------------- //
+
+  /**
+   * @params {Array} elems
+   * @public
+   */
+  Isotope.prototype.updateSortData = function( elems ) {
+    this._getSorters();
+    // update item sort data
+    // default to all items if none are passed in
+    elems = makeArray( elems );
+    var items = this.getItems( elems );
+    // if no items found, update all items
+    items = items.length ? items : this.items;
+    this._updateItemsSortData( items );
+  };
+
+  Isotope.prototype._getSorters = function() {
+    var getSortData = this.options.getSortData;
+    for ( var key in getSortData ) {
+      var sorter = getSortData[ key ];
+      this._sorters[ key ] = mungeSorter( sorter );
+    }
+  };
+
+  /**
+   * @params {Array} items - of Isotope.Items
+   * @private
+   */
+  Isotope.prototype._updateItemsSortData = function( items ) {
+    for ( var i=0, len = items.length; i < len; i++ ) {
+      var item = items[i];
+      item.updateSortData();
+    }
+  };
+
+  // ----- munge sorter ----- //
+
+  // encapsulate this, as we just need mungeSorter
+  // other functions in here are just for munging
+  var mungeSorter = ( function() {
+    // add a magic layer to sorters for convienent shorthands
+    // `.foo-bar` will use the text of .foo-bar querySelector
+    // `[foo-bar]` will use attribute
+    // you can also add parser
+    // `.foo-bar parseInt` will parse that as a number
+    function mungeSorter( sorter ) {
+      // if not a string, return function or whatever it is
+      if ( typeof sorter !== 'string' ) {
+        return sorter;
+      }
+      // parse the sorter string
+      var args = trim( sorter ).split(' ');
+      var query = args[0];
+      // check if query looks like [an-attribute]
+      var attrMatch = query.match( /^\[(.+)\]$/ );
+      var attr = attrMatch && attrMatch[1];
+      var getValue = getValueGetter( attr, query );
+      // use second argument as a parser
+      var parser = Isotope.sortDataParsers[ args[1] ];
+      // parse the value, if there was a parser
+      sorter = parser ? function( elem ) {
+        return elem && parser( getValue( elem ) );
+      } :
+      // otherwise just return value
+      function( elem ) {
+        return elem && getValue( elem );
+      };
+
+      return sorter;
+    }
+
+    // get an attribute getter, or get text of the querySelector
+    function getValueGetter( attr, query ) {
+      var getValue;
+      // if query looks like [foo-bar], get attribute
+      if ( attr ) {
+        getValue = function( elem ) {
+          return elem.getAttribute( attr );
+        };
+      } else {
+        // otherwise, assume its a querySelector, and get its text
+        getValue = function( elem ) {
+          var child = elem.querySelector( query );
+          return child && getText( child );
+        };
+      }
+      return getValue;
+    }
+
+    return mungeSorter;
+  })();
+
+  // parsers used in getSortData shortcut strings
+  Isotope.sortDataParsers = {
+    'parseInt': function( val ) {
+      return parseInt( val, 10 );
+    },
+    'parseFloat': function( val ) {
+      return parseFloat( val );
+    }
+  };
+
+  // ----- sort method ----- //
+
+  // sort filteredItem order
+  Isotope.prototype._sort = function() {
+    var sortByOpt = this.options.sortBy;
+    if ( !sortByOpt ) {
+      return;
+    }
+    // concat all sortBy and sortHistory
+    var sortBys = [].concat.apply( sortByOpt, this.sortHistory );
+    // sort magic
+    var itemSorter = getItemSorter( sortBys, this.options.sortAscending );
+    this.filteredItems.sort( itemSorter );
+    // keep track of sortBy History
+    if ( sortByOpt !== this.sortHistory[0] ) {
+      // add to front, oldest goes in last
+      this.sortHistory.unshift( sortByOpt );
+    }
+  };
+
+  // returns a function used for sorting
+  function getItemSorter( sortBys, sortAsc ) {
+    return function sorter( itemA, itemB ) {
+      // cycle through all sortKeys
+      for ( var i = 0, len = sortBys.length; i < len; i++ ) {
+        var sortBy = sortBys[i];
+        var a = itemA.sortData[ sortBy ];
+        var b = itemB.sortData[ sortBy ];
+        if ( a > b || a < b ) {
+          // if sortAsc is an object, use the value given the sortBy key
+          var isAscending = sortAsc[ sortBy ] !== undefined ? sortAsc[ sortBy ] : sortAsc;
+          var direction = isAscending ? 1 : -1;
+          return ( a > b ? 1 : -1 ) * direction;
+        }
+      }
+      return 0;
+    };
+  }
+
+  // -------------------------- methods -------------------------- //
+
+  // get layout mode
+  Isotope.prototype._mode = function() {
+    var layoutMode = this.options.layoutMode;
+    var mode = this.modes[ layoutMode ];
+    if ( !mode ) {
+      // TODO console.error
+      throw new Error( 'No layout mode: ' + layoutMode );
+    }
+    // HACK sync mode's options
+    // any options set after init for layout mode need to be synced
+    mode.options = this.options[ layoutMode ];
+    return mode;
+  };
+
+  Isotope.prototype._resetLayout = function() {
+    // trigger original reset layout
+    Outlayer.prototype._resetLayout.call( this );
+    this._mode()._resetLayout();
+  };
+
+  Isotope.prototype._getItemLayoutPosition = function( item  ) {
+    return this._mode()._getItemLayoutPosition( item );
+  };
+
+  Isotope.prototype._manageStamp = function( stamp ) {
+    this._mode()._manageStamp( stamp );
+  };
+
+  Isotope.prototype._getContainerSize = function() {
+    return this._mode()._getContainerSize();
+  };
+
+  Isotope.prototype.needsResizeLayout = function() {
+    return this._mode().needsResizeLayout();
+  };
+
+  // -------------------------- adding & removing -------------------------- //
+
+  // HEADS UP overwrites default Outlayer appended
+  Isotope.prototype.appended = function( elems ) {
+    var items = this.addItems( elems );
+    if ( !items.length ) {
+      return;
+    }
+    var filteredItems = this._filterRevealAdded( items );
+    // add to filteredItems
+    this.filteredItems = this.filteredItems.concat( filteredItems );
+  };
+
+  // HEADS UP overwrites default Outlayer prepended
+  Isotope.prototype.prepended = function( elems ) {
+    var items = this._itemize( elems );
+    if ( !items.length ) {
+      return;
+    }
+    // add items to beginning of collection
+    var previousItems = this.items.slice(0);
+    this.items = items.concat( previousItems );
+    // start new layout
+    this._resetLayout();
+    this._manageStamps();
+    // layout new stuff without transition
+    var filteredItems = this._filterRevealAdded( items );
+    // layout previous items
+    this.layoutItems( previousItems );
+    // add to filteredItems
+    this.filteredItems = filteredItems.concat( this.filteredItems );
+  };
+
+  Isotope.prototype._filterRevealAdded = function( items ) {
+    var filteredItems = this._noTransition( function() {
+      return this._filter( items );
+    });
+    // layout and reveal just the new items
+    this.layoutItems( filteredItems, true );
+    this.reveal( filteredItems );
+    return items;
+  };
+
+  /**
+   * Filter, sort, and layout newly-appended item elements
+   * @param {Array or NodeList or Element} elems
+   */
+  Isotope.prototype.insert = function( elems ) {
+    var items = this.addItems( elems );
+    if ( !items.length ) {
+      return;
+    }
+    // append item elements
+    var i, item;
+    var len = items.length;
+    for ( i=0; i < len; i++ ) {
+      item = items[i];
+      this.element.appendChild( item.element );
+    }
+    // filter new stuff
+    /*
+    // this way adds hides new filtered items with NO transition
+    // so user can't see if new hidden items have been inserted
+    var filteredInsertItems;
+    this._noTransition( function() {
+      filteredInsertItems = this._filter( items );
+      // hide all new items
+      this.hide( filteredInsertItems );
+    });
+    // */
+    // this way hides new filtered items with transition
+    // so user at least sees that something has been added
+    var filteredInsertItems = this._filter( items );
+    // hide all newitems
+    this._noTransition( function() {
+      this.hide( filteredInsertItems );
+    });
+    // */
+    // set flag
+    for ( i=0; i < len; i++ ) {
+      items[i].isLayoutInstant = true;
+    }
+    this.arrange();
+    // reset flag
+    for ( i=0; i < len; i++ ) {
+      delete items[i].isLayoutInstant;
+    }
+    this.reveal( filteredInsertItems );
+  };
+
+  var _remove = Isotope.prototype.remove;
+  Isotope.prototype.remove = function( elems ) {
+    elems = makeArray( elems );
+    var removeItems = this.getItems( elems );
+    // do regular thing
+    _remove.call( this, elems );
+    // bail if no items to remove
+    if ( !removeItems || !removeItems.length ) {
+      return;
+    }
+    // remove elems from filteredItems
+    for ( var i=0, len = removeItems.length; i < len; i++ ) {
+      var item = removeItems[i];
+      // remove item from collection
+      removeFrom( item, this.filteredItems );
+    }
+  };
+
+  Isotope.prototype.shuffle = function() {
+    // update random sortData
+    for ( var i=0, len = this.items.length; i < len; i++ ) {
+      var item = this.items[i];
+      item.sortData.random = Math.random();
+    }
+    this.options.sortBy = 'random';
+    this._sort();
+    this._layout();
+  };
+
+  /**
+   * trigger fn without transition
+   * kind of hacky to have this in the first place
+   * @param {Function} fn
+   * @returns ret
+   * @private
+   */
+  Isotope.prototype._noTransition = function( fn ) {
+    // save transitionDuration before disabling
+    var transitionDuration = this.options.transitionDuration;
+    // disable transition
+    this.options.transitionDuration = 0;
+    // do it
+    var returnValue = fn.call( this );
+    // re-enable transition for reveal
+    this.options.transitionDuration = transitionDuration;
+    return returnValue;
+  };
+
+  // ----- helper methods ----- //
+
+  /**
+   * getter method for getting filtered item elements
+   * @returns {Array} elems - collection of item elements
+   */
+  Isotope.prototype.getFilteredItemElements = function() {
+    var elems = [];
+    for ( var i=0, len = this.filteredItems.length; i < len; i++ ) {
+      elems.push( this.filteredItems[i].element );
+    }
+    return elems;
+  };
+
+  // -----  ----- //
+
+  return Isotope;
+}
+
+// -------------------------- transport -------------------------- //
+
+if ( typeof define === 'function' && define.amd ) {
+  // AMD
+  define( [
+      'outlayer/outlayer',
+      'get-size/get-size',
+      'matches-selector/matches-selector',
+      'isotope/js/item',
+      'isotope/js/layout-mode',
+      // include default layout modes
+      'isotope/js/layout-modes/masonry',
+      'isotope/js/layout-modes/fit-rows',
+      'isotope/js/layout-modes/vertical'
+    ],
+    isotopeDefinition );
+} else {
+  // browser global
+  window.Isotope = isotopeDefinition(
+    window.Outlayer,
+    window.getSize,
+    window.matchesSelector,
+    window.Isotope.Item,
+    window.Isotope.LayoutMode
+  );
+}
+
+})( window );
+
+;/*!
+ * Fotorama 4.6.2 | http://fotorama.io/license/
+ */
+fotoramaVersion="4.6.2",function(a,b,c,d,e){"use strict";function f(a){var b="bez_"+d.makeArray(arguments).join("_").replace(".","p");if("function"!=typeof d.easing[b]){var c=function(a,b){var c=[null,null],d=[null,null],e=[null,null],f=function(f,g){return e[g]=3*a[g],d[g]=3*(b[g]-a[g])-e[g],c[g]=1-e[g]-d[g],f*(e[g]+f*(d[g]+f*c[g]))},g=function(a){return e[0]+a*(2*d[0]+3*c[0]*a)},h=function(a){for(var b,c=a,d=0;++d<14&&(b=f(c,0)-a,!(Math.abs(b)<.001));)c-=b/g(c);return c};return function(a){return f(h(a),1)}};d.easing[b]=function(b,d,e,f,g){return f*c([a[0],a[1]],[a[2],a[3]])(d/g)+e}}return b}function g(){}function h(a,b,c){return Math.max(isNaN(b)?-1/0:b,Math.min(isNaN(c)?1/0:c,a))}function i(a){return a.match(/ma/)&&a.match(/-?\d+(?!d)/g)[a.match(/3d/)?12:4]}function j(a){return Ic?+i(a.css("transform")):+a.css("left").replace("px","")}function k(a){var b={};return Ic?b.transform="translate3d("+a+"px,0,0)":b.left=a,b}function l(a){return{"transition-duration":a+"ms"}}function m(a,b){return isNaN(a)?b:a}function n(a,b){return m(+String(a).replace(b||"px",""))}function o(a){return/%$/.test(a)?n(a,"%"):e}function p(a,b){return m(o(a)/100*b,n(a))}function q(a){return(!isNaN(n(a))||!isNaN(n(a,"%")))&&a}function r(a,b,c,d){return(a-(d||0))*(b+(c||0))}function s(a,b,c,d){return-Math.round(a/(b+(c||0))-(d||0))}function t(a){var b=a.data();if(!b.tEnd){var c=a[0],d={WebkitTransition:"webkitTransitionEnd",MozTransition:"transitionend",OTransition:"oTransitionEnd otransitionend",msTransition:"MSTransitionEnd",transition:"transitionend"};T(c,d[uc.prefixed("transition")],function(a){b.tProp&&a.propertyName.match(b.tProp)&&b.onEndFn()}),b.tEnd=!0}}function u(a,b,c,d){var e,f=a.data();f&&(f.onEndFn=function(){e||(e=!0,clearTimeout(f.tT),c())},f.tProp=b,clearTimeout(f.tT),f.tT=setTimeout(function(){f.onEndFn()},1.5*d),t(a))}function v(a,b){if(a.length){var c=a.data();Ic?(a.css(l(0)),c.onEndFn=g,clearTimeout(c.tT)):a.stop();var d=w(b,function(){return j(a)});return a.css(k(d)),d}}function w(){for(var a,b=0,c=arguments.length;c>b&&(a=b?arguments[b]():arguments[b],"number"!=typeof a);b++);return a}function x(a,b){return Math.round(a+(b-a)/1.5)}function y(){return y.p=y.p||("https:"===c.protocol?"https://":"http://"),y.p}function z(a){var c=b.createElement("a");return c.href=a,c}function A(a,b){if("string"!=typeof a)return a;a=z(a);var c,d;if(a.host.match(/youtube\.com/)&&a.search){if(c=a.search.split("v=")[1]){var e=c.indexOf("&");-1!==e&&(c=c.substring(0,e)),d="youtube"}}else a.host.match(/youtube\.com|youtu\.be/)?(c=a.pathname.replace(/^\/(embed\/|v\/)?/,"").replace(/\/.*/,""),d="youtube"):a.host.match(/vimeo\.com/)&&(d="vimeo",c=a.pathname.replace(/^\/(video\/)?/,"").replace(/\/.*/,""));return c&&d||!b||(c=a.href,d="custom"),c?{id:c,type:d,s:a.search.replace(/^\?/,""),p:y()}:!1}function B(a,b,c){var e,f,g=a.video;return"youtube"===g.type?(f=y()+"img.youtube.com/vi/"+g.id+"/default.jpg",e=f.replace(/\/default.jpg$/,"/hqdefault.jpg"),a.thumbsReady=!0):"vimeo"===g.type?d.ajax({url:y()+"vimeo.com/api/v2/video/"+g.id+".json",dataType:"jsonp",success:function(d){a.thumbsReady=!0,C(b,{img:d[0].thumbnail_large,thumb:d[0].thumbnail_small},a.i,c)}}):a.thumbsReady=!0,{img:e,thumb:f}}function C(a,b,c,e){for(var f=0,g=a.length;g>f;f++){var h=a[f];if(h.i===c&&h.thumbsReady){var i={videoReady:!0};i[Xc]=i[Zc]=i[Yc]=!1,e.splice(f,1,d.extend({},h,i,b));break}}}function D(a){function b(a,b,e){var f=a.children("img").eq(0),g=a.attr("href"),h=a.attr("src"),i=f.attr("src"),j=b.video,k=e?A(g,j===!0):!1;k?g=!1:k=j,c(a,f,d.extend(b,{video:k,img:b.img||g||h||i,thumb:b.thumb||i||h||g}))}function c(a,b,c){var e=c.thumb&&c.img!==c.thumb,f=n(c.width||a.attr("width")),g=n(c.height||a.attr("height"));d.extend(c,{width:f,height:g,thumbratio:S(c.thumbratio||n(c.thumbwidth||b&&b.attr("width")||e||f)/n(c.thumbheight||b&&b.attr("height")||e||g))})}var e=[];return a.children().each(function(){var a=d(this),f=R(d.extend(a.data(),{id:a.attr("id")}));if(a.is("a, img"))b(a,f,!0);else{if(a.is(":empty"))return;c(a,null,d.extend(f,{html:this,_html:a.html()}))}e.push(f)}),e}function E(a){return 0===a.offsetWidth&&0===a.offsetHeight}function F(a){return!d.contains(b.documentElement,a)}function G(a,b,c,d){return G.i||(G.i=1,G.ii=[!0]),d=d||G.i,"undefined"==typeof G.ii[d]&&(G.ii[d]=!0),a()?b():G.ii[d]&&setTimeout(function(){G.ii[d]&&G(a,b,c,d)},c||100),G.i++}function H(a){c.replace(c.protocol+"//"+c.host+c.pathname.replace(/^\/?/,"/")+c.search+"#"+a)}function I(a,b,c,d){var e=a.data(),f=e.measures;if(f&&(!e.l||e.l.W!==f.width||e.l.H!==f.height||e.l.r!==f.ratio||e.l.w!==b.w||e.l.h!==b.h||e.l.m!==c||e.l.p!==d)){var g=f.width,i=f.height,j=b.w/b.h,k=f.ratio>=j,l="scaledown"===c,m="contain"===c,n="cover"===c,o=$(d);k&&(l||m)||!k&&n?(g=h(b.w,0,l?g:1/0),i=g/f.ratio):(k&&n||!k&&(l||m))&&(i=h(b.h,0,l?i:1/0),g=i*f.ratio),a.css({width:Math.ceil(g),height:Math.ceil(i),left:Math.floor(p(o.x,b.w-g)),top:Math.floor(p(o.y,b.h-i))}),e.l={W:f.width,H:f.height,r:f.ratio,w:b.w,h:b.h,m:c,p:d}}return!0}function J(a,b){var c=a[0];c.styleSheet?c.styleSheet.cssText=b:a.html(b)}function K(a,b,c){return b===c?!1:b>=a?"left":a>=c?"right":"left right"}function L(a,b,c,d){if(!c)return!1;if(!isNaN(a))return a-(d?0:1);for(var e,f=0,g=b.length;g>f;f++){var h=b[f];if(h.id===a){e=f;break}}return e}function M(a,b,c){c=c||{},a.each(function(){var a,e=d(this),f=e.data();f.clickOn||(f.clickOn=!0,d.extend(cb(e,{onStart:function(b){a=b,(c.onStart||g).call(this,b)},onMove:c.onMove||g,onTouchEnd:c.onTouchEnd||g,onEnd:function(c){c.moved||b.call(this,a)}}),{noMove:!0}))})}function N(a,b){return'<div class="'+a+'">'+(b||"")+"</div>"}function O(a){for(var b=a.length;b;){var c=Math.floor(Math.random()*b--),d=a[b];a[b]=a[c],a[c]=d}return a}function P(a){return"[object Array]"==Object.prototype.toString.call(a)&&d.map(a,function(a){return d.extend({},a)})}function Q(a,b,c){a.scrollLeft(b||0).scrollTop(c||0)}function R(a){if(a){var b={};return d.each(a,function(a,c){b[a.toLowerCase()]=c}),b}}function S(a){if(a){var b=+a;return isNaN(b)?(b=a.split("/"),+b[0]/+b[1]||e):b}}function T(a,b,c,d){b&&(a.addEventListener?a.addEventListener(b,c,!!d):a.attachEvent("on"+b,c))}function U(a){return!!a.getAttribute("disabled")}function V(a){return{tabindex:-1*a+"",disabled:a}}function W(a,b){T(a,"keyup",function(c){U(a)||13==c.keyCode&&b.call(a,c)})}function X(a,b){T(a,"focus",a.onfocusin=function(c){b.call(a,c)},!0)}function Y(a,b){a.preventDefault?a.preventDefault():a.returnValue=!1,b&&a.stopPropagation&&a.stopPropagation()}function Z(a){return a?">":"<"}function $(a){return a=(a+"").split(/\s+/),{x:q(a[0])||bd,y:q(a[1])||bd}}function _(a,b){var c=a.data(),e=Math.round(b.pos),f=function(){c.sliding=!1,(b.onEnd||g)()};"undefined"!=typeof b.overPos&&b.overPos!==b.pos&&(e=b.overPos,f=function(){_(a,d.extend({},b,{overPos:b.pos,time:Math.max(Qc,b.time/2)}))});var h=d.extend(k(e),b.width&&{width:b.width});c.sliding=!0,Ic?(a.css(d.extend(l(b.time),h)),b.time>10?u(a,"transform",f,b.time):f()):a.stop().animate(h,b.time,_c,f)}function ab(a,b,c,e,f,h){var i="undefined"!=typeof h;if(i||(f.push(arguments),Array.prototype.push.call(arguments,f.length),!(f.length>1))){a=a||d(a),b=b||d(b);var j=a[0],k=b[0],l="crossfade"===e.method,m=function(){if(!m.done){m.done=!0;var a=(i||f.shift())&&f.shift();a&&ab.apply(this,a),(e.onEnd||g)(!!a)}},n=e.time/(h||1);c.removeClass(Rb+" "+Qb),a.stop().addClass(Rb),b.stop().addClass(Qb),l&&k&&a.fadeTo(0,0),a.fadeTo(l?n:0,1,l&&m),b.fadeTo(n,0,m),j&&l||k||m()}}function bb(a){var b=(a.touches||[])[0]||a;a._x=b.pageX,a._y=b.clientY,a._now=d.now()}function cb(a,c){function e(a){return m=d(a.target),u.checked=p=q=s=!1,k||u.flow||a.touches&&a.touches.length>1||a.which>1||ed&&ed.type!==a.type&&gd||(p=c.select&&m.is(c.select,t))?p:(o="touchstart"===a.type,q=m.is("a, a *",t),n=u.control,r=u.noMove||u.noSwipe||n?16:u.snap?0:4,bb(a),l=ed=a,fd=a.type.replace(/down|start/,"move").replace(/Down/,"Move"),(c.onStart||g).call(t,a,{control:n,$target:m}),k=u.flow=!0,void((!o||u.go)&&Y(a)))}function f(a){if(a.touches&&a.touches.length>1||Nc&&!a.isPrimary||fd!==a.type||!k)return k&&h(),void(c.onTouchEnd||g)();bb(a);var b=Math.abs(a._x-l._x),d=Math.abs(a._y-l._y),e=b-d,f=(u.go||u.x||e>=0)&&!u.noSwipe,i=0>e;o&&!u.checked?(k=f)&&Y(a):(Y(a),(c.onMove||g).call(t,a,{touch:o})),!s&&Math.sqrt(Math.pow(b,2)+Math.pow(d,2))>r&&(s=!0),u.checked=u.checked||f||i}function h(a){(c.onTouchEnd||g)();var b=k;u.control=k=!1,b&&(u.flow=!1),!b||q&&!u.checked||(a&&Y(a),gd=!0,clearTimeout(hd),hd=setTimeout(function(){gd=!1},1e3),(c.onEnd||g).call(t,{moved:s,$target:m,control:n,touch:o,startEvent:l,aborted:!a||"MSPointerCancel"===a.type}))}function i(){u.flow||setTimeout(function(){u.flow=!0},10)}function j(){u.flow&&setTimeout(function(){u.flow=!1},Pc)}var k,l,m,n,o,p,q,r,s,t=a[0],u={};return Nc?(T(t,"MSPointerDown",e),T(b,"MSPointerMove",f),T(b,"MSPointerCancel",h),T(b,"MSPointerUp",h)):(T(t,"touchstart",e),T(t,"touchmove",f),T(t,"touchend",h),T(b,"touchstart",i),T(b,"touchend",j),T(b,"touchcancel",j),Ec.on("scroll",j),a.on("mousedown",e),Fc.on("mousemove",f).on("mouseup",h)),a.on("click","a",function(a){u.checked&&Y(a)}),u}function db(a,b){function c(c,d){A=!0,j=l=c._x,q=c._now,p=[[q,j]],m=n=D.noMove||d?0:v(a,(b.getPos||g)()),(b.onStart||g).call(B,c)}function e(a,b){s=D.min,t=D.max,u=D.snap,w=a.altKey,A=z=!1,y=b.control,y||C.sliding||c(a)}function f(d,e){D.noSwipe||(A||c(d),l=d._x,p.push([d._now,l]),n=m-(j-l),o=K(n,s,t),s>=n?n=x(n,s):n>=t&&(n=x(n,t)),D.noMove||(a.css(k(n)),z||(z=!0,e.touch||Nc||a.addClass(ec)),(b.onMove||g).call(B,d,{pos:n,edge:o})))}function i(e){if(!D.noSwipe||!e.moved){A||c(e.startEvent,!0),e.touch||Nc||a.removeClass(ec),r=d.now();for(var f,i,j,k,o,q,v,x,y,z=r-Pc,C=null,E=Qc,F=b.friction,G=p.length-1;G>=0;G--){if(f=p[G][0],i=Math.abs(f-z),null===C||j>i)C=f,k=p[G][1];else if(C===z||i>j)break;j=i}v=h(n,s,t);var H=k-l,I=H>=0,J=r-C,K=J>Pc,L=!K&&n!==m&&v===n;u&&(v=h(Math[L?I?"floor":"ceil":"round"](n/u)*u,s,t),s=t=v),L&&(u||v===n)&&(y=-(H/J),E*=h(Math.abs(y),b.timeLow,b.timeHigh),o=Math.round(n+y*E/F),u||(v=o),(!I&&o>t||I&&s>o)&&(q=I?s:t,x=o-q,u||(v=q),x=h(v+.03*x,q-50,q+50),E=Math.abs((n-x)/(y/F)))),E*=w?10:1,(b.onEnd||g).call(B,d.extend(e,{moved:e.moved||K&&u,pos:n,newPos:v,overPos:x,time:E}))}}var j,l,m,n,o,p,q,r,s,t,u,w,y,z,A,B=a[0],C=a.data(),D={};return D=d.extend(cb(b.$wrap,d.extend({},b,{onStart:e,onMove:f,onEnd:i})),D)}function eb(a,b){var c,e,f,h=a[0],i={prevent:{}};return T(h,Oc,function(a){var h=a.wheelDeltaY||-1*a.deltaY||0,j=a.wheelDeltaX||-1*a.deltaX||0,k=Math.abs(j)&&!Math.abs(h),l=Z(0>j),m=e===l,n=d.now(),o=Pc>n-f;e=l,f=n,k&&i.ok&&(!i.prevent[l]||c)&&(Y(a,!0),c&&m&&o||(b.shift&&(c=!0,clearTimeout(i.t),i.t=setTimeout(function(){c=!1},Rc)),(b.onEnd||g)(a,b.shift?l:j)))}),i}function fb(){d.each(d.Fotorama.instances,function(a,b){b.index=a})}function gb(a){d.Fotorama.instances.push(a),fb()}function hb(a){d.Fotorama.instances.splice(a.index,1),fb()}var ib="fotorama",jb="fullscreen",kb=ib+"__wrap",lb=kb+"--css2",mb=kb+"--css3",nb=kb+"--video",ob=kb+"--fade",pb=kb+"--slide",qb=kb+"--no-controls",rb=kb+"--no-shadows",sb=kb+"--pan-y",tb=kb+"--rtl",ub=kb+"--only-active",vb=kb+"--no-captions",wb=kb+"--toggle-arrows",xb=ib+"__stage",yb=xb+"__frame",zb=yb+"--video",Ab=xb+"__shaft",Bb=ib+"__grab",Cb=ib+"__pointer",Db=ib+"__arr",Eb=Db+"--disabled",Fb=Db+"--prev",Gb=Db+"--next",Hb=ib+"__nav",Ib=Hb+"-wrap",Jb=Hb+"__shaft",Kb=Hb+"--dots",Lb=Hb+"--thumbs",Mb=Hb+"__frame",Nb=Mb+"--dot",Ob=Mb+"--thumb",Pb=ib+"__fade",Qb=Pb+"-front",Rb=Pb+"-rear",Sb=ib+"__shadow",Tb=Sb+"s",Ub=Tb+"--left",Vb=Tb+"--right",Wb=ib+"__active",Xb=ib+"__select",Yb=ib+"--hidden",Zb=ib+"--fullscreen",$b=ib+"__fullscreen-icon",_b=ib+"__error",ac=ib+"__loading",bc=ib+"__loaded",cc=bc+"--full",dc=bc+"--img",ec=ib+"__grabbing",fc=ib+"__img",gc=fc+"--full",hc=ib+"__dot",ic=ib+"__thumb",jc=ic+"-border",kc=ib+"__html",lc=ib+"__video",mc=lc+"-play",nc=lc+"-close",oc=ib+"__caption",pc=ib+"__caption__wrap",qc=ib+"__spinner",rc='" tabindex="0" role="button',sc=d&&d.fn.jquery.split(".");if(!sc||sc[0]<1||1==sc[0]&&sc[1]<8)throw"Fotorama requires jQuery 1.8 or later and will not run without it.";var tc={},uc=function(a,b,c){function d(a){r.cssText=a}function e(a,b){return typeof a===b}function f(a,b){return!!~(""+a).indexOf(b)}function g(a,b){for(var d in a){var e=a[d];if(!f(e,"-")&&r[e]!==c)return"pfx"==b?e:!0}return!1}function h(a,b,d){for(var f in a){var g=b[a[f]];if(g!==c)return d===!1?a[f]:e(g,"function")?g.bind(d||b):g}return!1}function i(a,b,c){var d=a.charAt(0).toUpperCase()+a.slice(1),f=(a+" "+u.join(d+" ")+d).split(" ");return e(b,"string")||e(b,"undefined")?g(f,b):(f=(a+" "+v.join(d+" ")+d).split(" "),h(f,b,c))}var j,k,l,m="2.6.2",n={},o=b.documentElement,p="modernizr",q=b.createElement(p),r=q.style,s=({}.toString," -webkit- -moz- -o- -ms- ".split(" ")),t="Webkit Moz O ms",u=t.split(" "),v=t.toLowerCase().split(" "),w={},x=[],y=x.slice,z=function(a,c,d,e){var f,g,h,i,j=b.createElement("div"),k=b.body,l=k||b.createElement("body");if(parseInt(d,10))for(;d--;)h=b.createElement("div"),h.id=e?e[d]:p+(d+1),j.appendChild(h);return f=["&#173;",'<style id="s',p,'">',a,"</style>"].join(""),j.id=p,(k?j:l).innerHTML+=f,l.appendChild(j),k||(l.style.background="",l.style.overflow="hidden",i=o.style.overflow,o.style.overflow="hidden",o.appendChild(l)),g=c(j,a),k?j.parentNode.removeChild(j):(l.parentNode.removeChild(l),o.style.overflow=i),!!g},A={}.hasOwnProperty;l=e(A,"undefined")||e(A.call,"undefined")?function(a,b){return b in a&&e(a.constructor.prototype[b],"undefined")}:function(a,b){return A.call(a,b)},Function.prototype.bind||(Function.prototype.bind=function(a){var b=this;if("function"!=typeof b)throw new TypeError;var c=y.call(arguments,1),d=function(){if(this instanceof d){var e=function(){};e.prototype=b.prototype;var f=new e,g=b.apply(f,c.concat(y.call(arguments)));return Object(g)===g?g:f}return b.apply(a,c.concat(y.call(arguments)))};return d}),w.csstransforms3d=function(){var a=!!i("perspective");return a};for(var B in w)l(w,B)&&(k=B.toLowerCase(),n[k]=w[B](),x.push((n[k]?"":"no-")+k));return n.addTest=function(a,b){if("object"==typeof a)for(var d in a)l(a,d)&&n.addTest(d,a[d]);else{if(a=a.toLowerCase(),n[a]!==c)return n;b="function"==typeof b?b():b,"undefined"!=typeof enableClasses&&enableClasses&&(o.className+=" "+(b?"":"no-")+a),n[a]=b}return n},d(""),q=j=null,n._version=m,n._prefixes=s,n._domPrefixes=v,n._cssomPrefixes=u,n.testProp=function(a){return g([a])},n.testAllProps=i,n.testStyles=z,n.prefixed=function(a,b,c){return b?i(a,b,c):i(a,"pfx")},n}(a,b),vc={ok:!1,is:function(){return!1},request:function(){},cancel:function(){},event:"",prefix:""},wc="webkit moz o ms khtml".split(" ");if("undefined"!=typeof b.cancelFullScreen)vc.ok=!0;else for(var xc=0,yc=wc.length;yc>xc;xc++)if(vc.prefix=wc[xc],"undefined"!=typeof b[vc.prefix+"CancelFullScreen"]){vc.ok=!0;break}vc.ok&&(vc.event=vc.prefix+"fullscreenchange",vc.is=function(){switch(this.prefix){case"":return b.fullScreen;case"webkit":return b.webkitIsFullScreen;default:return b[this.prefix+"FullScreen"]}},vc.request=function(a){return""===this.prefix?a.requestFullScreen():a[this.prefix+"RequestFullScreen"]()},vc.cancel=function(){return""===this.prefix?b.cancelFullScreen():b[this.prefix+"CancelFullScreen"]()});var zc,Ac={lines:12,length:5,width:2,radius:7,corners:1,rotate:15,color:"rgba(128, 128, 128, .75)",hwaccel:!0},Bc={top:"auto",left:"auto",className:""};!function(a,b){zc=b()}(this,function(){function a(a,c){var d,e=b.createElement(a||"div");for(d in c)e[d]=c[d];return e}function c(a){for(var b=1,c=arguments.length;c>b;b++)a.appendChild(arguments[b]);return a}function d(a,b,c,d){var e=["opacity",b,~~(100*a),c,d].join("-"),f=.01+c/d*100,g=Math.max(1-(1-a)/b*(100-f),a),h=m.substring(0,m.indexOf("Animation")).toLowerCase(),i=h&&"-"+h+"-"||"";return o[e]||(p.insertRule("@"+i+"keyframes "+e+"{0%{opacity:"+g+"}"+f+"%{opacity:"+a+"}"+(f+.01)+"%{opacity:1}"+(f+b)%100+"%{opacity:"+a+"}100%{opacity:"+g+"}}",p.cssRules.length),o[e]=1),e}function f(a,b){var c,d,f=a.style;for(b=b.charAt(0).toUpperCase()+b.slice(1),d=0;d<n.length;d++)if(c=n[d]+b,f[c]!==e)return c;return f[b]!==e?b:void 0}function g(a,b){for(var c in b)a.style[f(a,c)||c]=b[c];return a}function h(a){for(var b=1;b<arguments.length;b++){var c=arguments[b];for(var d in c)a[d]===e&&(a[d]=c[d])}return a}function i(a){for(var b={x:a.offsetLeft,y:a.offsetTop};a=a.offsetParent;)b.x+=a.offsetLeft,b.y+=a.offsetTop;return b}function j(a,b){return"string"==typeof a?a:a[b%a.length]}function k(a){return"undefined"==typeof this?new k(a):void(this.opts=h(a||{},k.defaults,q))}function l(){function b(b,c){return a("<"+b+' xmlns="urn:schemas-microsoft.com:vml" class="spin-vml">',c)}p.addRule(".spin-vml","behavior:url(#default#VML)"),k.prototype.lines=function(a,d){function e(){return g(b("group",{coordsize:k+" "+k,coordorigin:-i+" "+-i}),{width:k,height:k})}function f(a,f,h){c(m,c(g(e(),{rotation:360/d.lines*a+"deg",left:~~f}),c(g(b("roundrect",{arcsize:d.corners}),{width:i,height:d.width,left:d.radius,top:-d.width>>1,filter:h}),b("fill",{color:j(d.color,a),opacity:d.opacity}),b("stroke",{opacity:0}))))}var h,i=d.length+d.width,k=2*i,l=2*-(d.width+d.length)+"px",m=g(e(),{position:"absolute",top:l,left:l});if(d.shadow)for(h=1;h<=d.lines;h++)f(h,-2,"progid:DXImageTransform.Microsoft.Blur(pixelradius=2,makeshadow=1,shadowopacity=.3)");for(h=1;h<=d.lines;h++)f(h);return c(a,m)},k.prototype.opacity=function(a,b,c,d){var e=a.firstChild;d=d.shadow&&d.lines||0,e&&b+d<e.childNodes.length&&(e=e.childNodes[b+d],e=e&&e.firstChild,e=e&&e.firstChild,e&&(e.opacity=c))}}var m,n=["webkit","Moz","ms","O"],o={},p=function(){var d=a("style",{type:"text/css"});return c(b.getElementsByTagName("head")[0],d),d.sheet||d.styleSheet}(),q={lines:12,length:7,width:5,radius:10,rotate:0,corners:1,color:"#000",direction:1,speed:1,trail:100,opacity:.25,fps:20,zIndex:2e9,className:"spinner",top:"auto",left:"auto",position:"relative"};k.defaults={},h(k.prototype,{spin:function(b){this.stop();var c,d,e=this,f=e.opts,h=e.el=g(a(0,{className:f.className}),{position:f.position,width:0,zIndex:f.zIndex}),j=f.radius+f.length+f.width;if(b&&(b.insertBefore(h,b.firstChild||null),d=i(b),c=i(h),g(h,{left:("auto"==f.left?d.x-c.x+(b.offsetWidth>>1):parseInt(f.left,10)+j)+"px",top:("auto"==f.top?d.y-c.y+(b.offsetHeight>>1):parseInt(f.top,10)+j)+"px"})),h.setAttribute("role","progressbar"),e.lines(h,e.opts),!m){var k,l=0,n=(f.lines-1)*(1-f.direction)/2,o=f.fps,p=o/f.speed,q=(1-f.opacity)/(p*f.trail/100),r=p/f.lines;!function s(){l++;for(var a=0;a<f.lines;a++)k=Math.max(1-(l+(f.lines-a)*r)%p*q,f.opacity),e.opacity(h,a*f.direction+n,k,f);e.timeout=e.el&&setTimeout(s,~~(1e3/o))}()}return e},stop:function(){var a=this.el;return a&&(clearTimeout(this.timeout),a.parentNode&&a.parentNode.removeChild(a),this.el=e),this},lines:function(b,e){function f(b,c){return g(a(),{position:"absolute",width:e.length+e.width+"px",height:e.width+"px",background:b,boxShadow:c,transformOrigin:"left",transform:"rotate("+~~(360/e.lines*i+e.rotate)+"deg) translate("+e.radius+"px,0)",borderRadius:(e.corners*e.width>>1)+"px"})}for(var h,i=0,k=(e.lines-1)*(1-e.direction)/2;i<e.lines;i++)h=g(a(),{position:"absolute",top:1+~(e.width/2)+"px",transform:e.hwaccel?"translate3d(0,0,0)":"",opacity:e.opacity,animation:m&&d(e.opacity,e.trail,k+i*e.direction,e.lines)+" "+1/e.speed+"s linear infinite"}),e.shadow&&c(h,g(f("#000","0 0 4px #000"),{top:"2px"})),c(b,c(h,f(j(e.color,i),"0 0 1px rgba(0,0,0,.1)")));return b},opacity:function(a,b,c){b<a.childNodes.length&&(a.childNodes[b].style.opacity=c)}});var r=g(a("group"),{behavior:"url(#default#VML)"});return!f(r,"transform")&&r.adj?l():m=f(r,"animation"),k});var Cc,Dc,Ec=d(a),Fc=d(b),Gc="quirks"===c.hash.replace("#",""),Hc=uc.csstransforms3d,Ic=Hc&&!Gc,Jc=Hc||"CSS1Compat"===b.compatMode,Kc=vc.ok,Lc=navigator.userAgent.match(/Android|webOS|iPhone|iPad|iPod|BlackBerry|Windows Phone/i),Mc=!Ic||Lc,Nc=navigator.msPointerEnabled,Oc="onwheel"in b.createElement("div")?"wheel":b.onmousewheel!==e?"mousewheel":"DOMMouseScroll",Pc=250,Qc=300,Rc=1400,Sc=5e3,Tc=2,Uc=64,Vc=500,Wc=333,Xc="$stageFrame",Yc="$navDotFrame",Zc="$navThumbFrame",$c="auto",_c=f([.1,0,.25,1]),ad=99999,bd="50%",cd={width:null,minwidth:null,maxwidth:"100%",height:null,minheight:null,maxheight:null,ratio:null,margin:Tc,glimpse:0,fit:"contain",position:bd,thumbposition:bd,nav:"dots",navposition:"bottom",navwidth:null,thumbwidth:Uc,thumbheight:Uc,thumbmargin:Tc,thumbborderwidth:Tc,thumbfit:"cover",allowfullscreen:!1,transition:"slide",clicktransition:null,transitionduration:Qc,captions:!0,hash:!1,startindex:0,loop:!1,autoplay:!1,stopautoplayontouch:!0,keyboard:!1,arrows:!0,click:!0,swipe:!0,trackpad:!1,enableifsingleframe:!1,controlsonstart:!0,shuffle:!1,direction:"ltr",shadows:!0,spinner:null},dd={left:!0,right:!0,down:!1,up:!1,space:!1,home:!1,end:!1};G.stop=function(a){G.ii[a]=!1};var ed,fd,gd,hd;jQuery.Fotorama=function(a,e){function f(){d.each(yd,function(a,b){if(!b.i){b.i=me++;var c=A(b.video,!0);if(c){var d={};b.video=c,b.img||b.thumb?b.thumbsReady=!0:d=B(b,yd,ie),C(yd,{img:d.img,thumb:d.thumb},b.i,ie)}}})}function g(a){return Zd[a]||ie.fullScreen}function i(a){var b="keydown."+ib,c=ib+je,d="keydown."+c,f="resize."+c+" orientationchange."+c;a?(Fc.on(d,function(a){var b,c;Cd&&27===a.keyCode?(b=!0,md(Cd,!0,!0)):(ie.fullScreen||e.keyboard&&!ie.index)&&(27===a.keyCode?(b=!0,ie.cancelFullScreen()):a.shiftKey&&32===a.keyCode&&g("space")||37===a.keyCode&&g("left")||38===a.keyCode&&g("up")?c="<":32===a.keyCode&&g("space")||39===a.keyCode&&g("right")||40===a.keyCode&&g("down")?c=">":36===a.keyCode&&g("home")?c="<<":35===a.keyCode&&g("end")&&(c=">>")),(b||c)&&Y(a),c&&ie.show({index:c,slow:a.altKey,user:!0})}),ie.index||Fc.off(b).on(b,"textarea, input, select",function(a){!Dc.hasClass(jb)&&a.stopPropagation()}),Ec.on(f,ie.resize)):(Fc.off(d),Ec.off(f))}function j(b){b!==j.f&&(b?(a.html("").addClass(ib+" "+ke).append(qe).before(oe).before(pe),gb(ie)):(qe.detach(),oe.detach(),pe.detach(),a.html(ne.urtext).removeClass(ke),hb(ie)),i(b),j.f=b)}function m(){yd=ie.data=yd||P(e.data)||D(a),zd=ie.size=yd.length,!xd.ok&&e.shuffle&&O(yd),f(),Je=y(Je),zd&&j(!0)}function o(){var a=2>zd&&!e.enableifsingleframe||Cd;Me.noMove=a||Sd,Me.noSwipe=a||!e.swipe,!Wd&&se.toggleClass(Bb,!e.click&&!Me.noMove&&!Me.noSwipe),Nc&&qe.toggleClass(sb,!Me.noSwipe)}function t(a){a===!0&&(a=""),e.autoplay=Math.max(+a||Sc,1.5*Vd)}function u(){function a(a,c){b[a?"add":"remove"].push(c)}ie.options=e=R(e),Sd="crossfade"===e.transition||"dissolve"===e.transition,Md=e.loop&&(zd>2||Sd&&(!Wd||"slide"!==Wd)),Vd=+e.transitionduration||Qc,Yd="rtl"===e.direction,Zd=d.extend({},e.keyboard&&dd,e.keyboard);var b={add:[],remove:[]};zd>1||e.enableifsingleframe?(Nd=e.nav,Pd="top"===e.navposition,b.remove.push(Xb),we.toggle(!!e.arrows)):(Nd=!1,we.hide()),Rb(),Bd=new zc(d.extend(Ac,e.spinner,Bc,{direction:Yd?-1:1})),Gc(),Hc(),e.autoplay&&t(e.autoplay),Td=n(e.thumbwidth)||Uc,Ud=n(e.thumbheight)||Uc,Ne.ok=Pe.ok=e.trackpad&&!Mc,o(),ed(e,[Le]),Od="thumbs"===Nd,Od?(lc(zd,"navThumb"),Ad=Be,he=Zc,J(oe,d.Fotorama.jst.style({w:Td,h:Ud,b:e.thumbborderwidth,m:e.thumbmargin,s:je,q:!Jc})),ye.addClass(Lb).removeClass(Kb)):"dots"===Nd?(lc(zd,"navDot"),Ad=Ae,he=Yc,ye.addClass(Kb).removeClass(Lb)):(Nd=!1,ye.removeClass(Lb+" "+Kb)),Nd&&(Pd?xe.insertBefore(re):xe.insertAfter(re),wc.nav=!1,wc(Ad,ze,"nav")),Qd=e.allowfullscreen,Qd?(De.prependTo(re),Rd=Kc&&"native"===Qd):(De.detach(),Rd=!1),a(Sd,ob),a(!Sd,pb),a(!e.captions,vb),a(Yd,tb),a("always"!==e.arrows,wb),Xd=e.shadows&&!Mc,a(!Xd,rb),qe.addClass(b.add.join(" ")).removeClass(b.remove.join(" ")),Ke=d.extend({},e)}function x(a){return 0>a?(zd+a%zd)%zd:a>=zd?a%zd:a}function y(a){return h(a,0,zd-1)}function z(a){return Md?x(a):y(a)}function E(a){return a>0||Md?a-1:!1}function U(a){return zd-1>a||Md?a+1:!1}function $(){Me.min=Md?-1/0:-r(zd-1,Le.w,e.margin,Fd),Me.max=Md?1/0:-r(0,Le.w,e.margin,Fd),Me.snap=Le.w+e.margin}function bb(){Oe.min=Math.min(0,Le.nw-ze.width()),Oe.max=0,ze.toggleClass(Bb,!(Oe.noMove=Oe.min===Oe.max))}function cb(a,b,c){if("number"==typeof a){a=new Array(a);var e=!0}return d.each(a,function(a,d){if(e&&(d=a),"number"==typeof d){var f=yd[x(d)];if(f){var g="$"+b+"Frame",h=f[g];c.call(this,a,d,f,h,g,h&&h.data())}}})}function fb(a,b,c,d){(!$d||"*"===$d&&d===Ld)&&(a=q(e.width)||q(a)||Vc,b=q(e.height)||q(b)||Wc,ie.resize({width:a,ratio:e.ratio||c||a/b},0,d!==Ld&&"*"))}function Pb(a,b,c,f,g,h){cb(a,b,function(a,i,j,k,l,m){function n(a){var b=x(i);fd(a,{index:b,src:w,frame:yd[b]})}function o(){t.remove(),d.Fotorama.cache[w]="error",j.html&&"stage"===b||!y||y===w?(!w||j.html||r?"stage"===b&&(k.trigger("f:load").removeClass(ac+" "+_b).addClass(bc),n("load"),fb()):(k.trigger("f:error").removeClass(ac).addClass(_b),n("error")),m.state="error",!(zd>1&&yd[i]===j)||j.html||j.deleted||j.video||r||(j.deleted=!0,ie.splice(i,1))):(j[v]=w=y,Pb([i],b,c,f,g,!0))}function p(){d.Fotorama.measures[w]=u.measures=d.Fotorama.measures[w]||{width:s.width,height:s.height,ratio:s.width/s.height},fb(u.measures.width,u.measures.height,u.measures.ratio,i),t.off("load error").addClass(fc+(r?" "+gc:"")).prependTo(k),I(t,(d.isFunction(c)?c():c)||Le,f||j.fit||e.fit,g||j.position||e.position),d.Fotorama.cache[w]=m.state="loaded",setTimeout(function(){k.trigger("f:load").removeClass(ac+" "+_b).addClass(bc+" "+(r?cc:dc)),"stage"===b?n("load"):(j.thumbratio===$c||!j.thumbratio&&e.thumbratio===$c)&&(j.thumbratio=u.measures.ratio,vd())},0)}function q(){var a=10;G(function(){return!fe||!a--&&!Mc},function(){p()})}if(k){var r=ie.fullScreen&&j.full&&j.full!==j.img&&!m.$full&&"stage"===b;if(!m.$img||h||r){var s=new Image,t=d(s),u=t.data();m[r?"$full":"$img"]=t;var v="stage"===b?r?"full":"img":"thumb",w=j[v],y=r?null:j["stage"===b?"thumb":"img"];if("navThumb"===b&&(k=m.$wrap),!w)return void o();d.Fotorama.cache[w]?!function z(){"error"===d.Fotorama.cache[w]?o():"loaded"===d.Fotorama.cache[w]?setTimeout(q,0):setTimeout(z,100)}():(d.Fotorama.cache[w]="*",t.on("load",q).on("error",o)),m.state="",s.src=w}}})}function Qb(a){Ie.append(Bd.spin().el).appendTo(a)}function Rb(){Ie.detach(),Bd&&Bd.stop()}function Sb(){var a=Dd[Xc];a&&!a.data().state&&(Qb(a),a.on("f:load f:error",function(){a.off("f:load f:error"),Rb()}))}function ec(a){W(a,sd),X(a,function(){setTimeout(function(){Q(ye)},0),Rc({time:Vd,guessIndex:d(this).data().eq,minMax:Oe})})}function lc(a,b){cb(a,b,function(a,c,e,f,g,h){if(!f){f=e[g]=qe[g].clone(),h=f.data(),h.data=e;var i=f[0];"stage"===b?(e.html&&d('<div class="'+kc+'"></div>').append(e._html?d(e.html).removeAttr("id").html(e._html):e.html).appendTo(f),e.caption&&d(N(oc,N(pc,e.caption))).appendTo(f),e.video&&f.addClass(zb).append(Fe.clone()),X(i,function(){setTimeout(function(){Q(re)},0),pd({index:h.eq,user:!0})}),te=te.add(f)):"navDot"===b?(ec(i),Ae=Ae.add(f)):"navThumb"===b&&(ec(i),h.$wrap=f.children(":first"),Be=Be.add(f),e.video&&h.$wrap.append(Fe.clone()))}})}function sc(a,b,c,d){return a&&a.length&&I(a,b,c,d)}function tc(a){cb(a,"stage",function(a,b,c,f,g,h){if(f){var i=x(b),j=c.fit||e.fit,k=c.position||e.position;h.eq=i,Re[Xc][i]=f.css(d.extend({left:Sd?0:r(b,Le.w,e.margin,Fd)},Sd&&l(0))),F(f[0])&&(f.appendTo(se),md(c.$video)),sc(h.$img,Le,j,k),sc(h.$full,Le,j,k)}})}function uc(a,b){if("thumbs"===Nd&&!isNaN(a)){var c=-a,f=-a+Le.nw;Be.each(function(){var a=d(this),g=a.data(),h=g.eq,i=function(){return{h:Ud,w:g.w}},j=i(),k=yd[h]||{},l=k.thumbfit||e.thumbfit,m=k.thumbposition||e.thumbposition;j.w=g.w,g.l+g.w<c||g.l>f||sc(g.$img,j,l,m)||b&&Pb([h],"navThumb",i,l,m)})}}function wc(a,b,c){if(!wc[c]){var f="nav"===c&&Od,g=0;b.append(a.filter(function(){for(var a,b=d(this),c=b.data(),e=0,f=yd.length;f>e;e++)if(c.data===yd[e]){a=!0,c.eq=e;break}return a||b.remove()&&!1}).sort(function(a,b){return d(a).data().eq-d(b).data().eq}).each(function(){if(f){var a=d(this),b=a.data(),c=Math.round(Ud*b.data.thumbratio)||Td;b.l=g,b.w=c,a.css({width:c}),g+=c+e.thumbmargin}})),wc[c]=!0}}function xc(a){return a-Se>Le.w/3}function yc(a){return!(Md||Je+a&&Je-zd+a||Cd)}function Gc(){var a=yc(0),b=yc(1);ue.toggleClass(Eb,a).attr(V(a)),ve.toggleClass(Eb,b).attr(V(b))}function Hc(){Ne.ok&&(Ne.prevent={"<":yc(0),">":yc(1)})}function Lc(a){var b,c,d=a.data();return Od?(b=d.l,c=d.w):(b=a.position().left,c=a.width()),{c:b+c/2,min:-b+10*e.thumbmargin,max:-b+Le.w-c-10*e.thumbmargin}}function Oc(a){var b=Dd[he].data();_(Ce,{time:1.2*a,pos:b.l,width:b.w-2*e.thumbborderwidth})}function Rc(a){var b=yd[a.guessIndex][he];if(b){var c=Oe.min!==Oe.max,d=a.minMax||c&&Lc(Dd[he]),e=c&&(a.keep&&Rc.l?Rc.l:h((a.coo||Le.nw/2)-Lc(b).c,d.min,d.max)),f=c&&h(e,Oe.min,Oe.max),g=1.1*a.time;_(ze,{time:g,pos:f||0,onEnd:function(){uc(f,!0)}}),ld(ye,K(f,Oe.min,Oe.max)),Rc.l=e}}function Tc(){_c(he),Qe[he].push(Dd[he].addClass(Wb))}function _c(a){for(var b=Qe[a];b.length;)b.shift().removeClass(Wb)}function bd(a){var b=Re[a];d.each(Ed,function(a,c){delete b[x(c)]}),d.each(b,function(a,c){delete b[a],c.detach()})}function cd(a){Fd=Gd=Je;var b=Dd[Xc];b&&(_c(Xc),Qe[Xc].push(b.addClass(Wb)),a||ie.show.onEnd(!0),v(se,0,!0),bd(Xc),tc(Ed),$(),bb())}function ed(a,b){a&&d.each(b,function(b,c){c&&d.extend(c,{width:a.width||c.width,height:a.height,minwidth:a.minwidth,maxwidth:a.maxwidth,minheight:a.minheight,maxheight:a.maxheight,ratio:S(a.ratio)})})}function fd(b,c){a.trigger(ib+":"+b,[ie,c])}function gd(){clearTimeout(hd.t),fe=1,e.stopautoplayontouch?ie.stopAutoplay():ce=!0}function hd(){e.stopautoplayontouch||(id(),jd()),hd.t=setTimeout(function(){fe=0},Qc+Pc)}function id(){ce=!(!Cd&&!de)}function jd(){if(clearTimeout(jd.t),G.stop(jd.w),!e.autoplay||ce)return void(ie.autoplay&&(ie.autoplay=!1,fd("stopautoplay")));ie.autoplay||(ie.autoplay=!0,fd("startautoplay"));var a=Je,b=Dd[Xc].data();jd.w=G(function(){return b.state||a!==Je},function(){jd.t=setTimeout(function(){if(!ce&&a===Je){var b=Kd,c=yd[b][Xc].data();jd.w=G(function(){return c.state||b!==Kd},function(){ce||b!==Kd||ie.show(Md?Z(!Yd):Kd)})}},e.autoplay)})}function kd(){ie.fullScreen&&(ie.fullScreen=!1,Kc&&vc.cancel(le),Dc.removeClass(jb),Cc.removeClass(jb),a.removeClass(Zb).insertAfter(pe),Le=d.extend({},ee),md(Cd,!0,!0),rd("x",!1),ie.resize(),Pb(Ed,"stage"),Q(Ec,ae,_d),fd("fullscreenexit"))}function ld(a,b){Xd&&(a.removeClass(Ub+" "+Vb),b&&!Cd&&a.addClass(b.replace(/^|\s/g," "+Tb+"--")))}function md(a,b,c){b&&(qe.removeClass(nb),Cd=!1,o()),a&&a!==Cd&&(a.remove(),fd("unloadvideo")),c&&(id(),jd())}function nd(a){qe.toggleClass(qb,a)}function od(a){if(!Me.flow){var b=a?a.pageX:od.x,c=b&&!yc(xc(b))&&e.click;od.p!==c&&re.toggleClass(Cb,c)&&(od.p=c,od.x=b)}}function pd(a){clearTimeout(pd.t),e.clicktransition&&e.clicktransition!==e.transition?setTimeout(function(){var b=e.transition;ie.setOptions({transition:e.clicktransition}),Wd=b,pd.t=setTimeout(function(){ie.show(a)},10)},0):ie.show(a)}function qd(a,b){var c=a.target,f=d(c);f.hasClass(mc)?ie.playVideo():c===Ee?ie.toggleFullScreen():Cd?c===He&&md(Cd,!0,!0):b?nd():e.click&&pd({index:a.shiftKey||Z(xc(a._x)),slow:a.altKey,user:!0})}function rd(a,b){Me[a]=Oe[a]=b}function sd(a){var b=d(this).data().eq;pd({index:b,slow:a.altKey,user:!0,coo:a._x-ye.offset().left})}function td(a){pd({index:we.index(this)?">":"<",slow:a.altKey,user:!0})}function ud(a){X(a,function(){setTimeout(function(){Q(re)},0),nd(!1)})}function vd(){if(m(),u(),!vd.i){vd.i=!0;var a=e.startindex;(a||e.hash&&c.hash)&&(Ld=L(a||c.hash.replace(/^#/,""),yd,0===ie.index||a,a)),Je=Fd=Gd=Hd=Ld=z(Ld)||0}if(zd){if(wd())return;Cd&&md(Cd,!0),Ed=[],bd(Xc),vd.ok=!0,ie.show({index:Je,time:0}),ie.resize()}else ie.destroy()}function wd(){return!wd.f===Yd?(wd.f=Yd,Je=zd-1-Je,ie.reverse(),!0):void 0}function xd(){xd.ok||(xd.ok=!0,fd("ready"))}Cc=d("html"),Dc=d("body");var yd,zd,Ad,Bd,Cd,Dd,Ed,Fd,Gd,Hd,Id,Jd,Kd,Ld,Md,Nd,Od,Pd,Qd,Rd,Sd,Td,Ud,Vd,Wd,Xd,Yd,Zd,$d,_d,ae,be,ce,de,ee,fe,ge,he,ie=this,je=d.now(),ke=ib+je,le=a[0],me=1,ne=a.data(),oe=d("<style></style>"),pe=d(N(Yb)),qe=d(N(kb)),re=d(N(xb)).appendTo(qe),se=(re[0],d(N(Ab)).appendTo(re)),te=d(),ue=d(N(Db+" "+Fb+rc)),ve=d(N(Db+" "+Gb+rc)),we=ue.add(ve).appendTo(re),xe=d(N(Ib)),ye=d(N(Hb)).appendTo(xe),ze=d(N(Jb)).appendTo(ye),Ae=d(),Be=d(),Ce=(se.data(),ze.data(),d(N(jc)).appendTo(ze)),De=d(N($b+rc)),Ee=De[0],Fe=d(N(mc)),Ge=d(N(nc)).appendTo(re),He=Ge[0],Ie=d(N(qc)),Je=!1,Ke={},Le={},Me={},Ne={},Oe={},Pe={},Qe={},Re={},Se=0,Te=[];
+qe[Xc]=d(N(yb)),qe[Zc]=d(N(Mb+" "+Ob+rc,N(ic))),qe[Yc]=d(N(Mb+" "+Nb+rc,N(hc))),Qe[Xc]=[],Qe[Zc]=[],Qe[Yc]=[],Re[Xc]={},qe.addClass(Ic?mb:lb).toggleClass(qb,!e.controlsonstart),ne.fotorama=this,ie.startAutoplay=function(a){return ie.autoplay?this:(ce=de=!1,t(a||e.autoplay),jd(),this)},ie.stopAutoplay=function(){return ie.autoplay&&(ce=de=!0,jd()),this},ie.show=function(a){var b;"object"!=typeof a?(b=a,a={}):b=a.index,b=">"===b?Gd+1:"<"===b?Gd-1:"<<"===b?0:">>"===b?zd-1:b,b=isNaN(b)?L(b,yd,!0):b,b="undefined"==typeof b?Je||0:b,ie.activeIndex=Je=z(b),Id=E(Je),Jd=U(Je),Kd=x(Je+(Yd?-1:1)),Ed=[Je,Id,Jd],Gd=Md?b:Je;var c=Math.abs(Hd-Gd),d=w(a.time,function(){return Math.min(Vd*(1+(c-1)/12),2*Vd)}),f=a.overPos;a.slow&&(d*=10);var g=Dd;ie.activeFrame=Dd=yd[Je];var i=g===Dd&&!a.user;md(Cd,Dd.i!==yd[x(Fd)].i),lc(Ed,"stage"),tc(Mc?[Gd]:[Gd,E(Gd),U(Gd)]),rd("go",!0),i||fd("show",{user:a.user,time:d}),ce=!0;var j=ie.show.onEnd=function(b){if(!j.ok){if(j.ok=!0,b||cd(!0),i||fd("showend",{user:a.user}),!b&&Wd&&Wd!==e.transition)return ie.setOptions({transition:Wd}),void(Wd=!1);Sb(),Pb(Ed,"stage"),rd("go",!1),Hc(),od(),id(),jd()}};if(Sd){var k=Dd[Xc],l=Je!==Hd?yd[Hd][Xc]:null;ab(k,l,te,{time:d,method:e.transition,onEnd:j},Te)}else _(se,{pos:-r(Gd,Le.w,e.margin,Fd),overPos:f,time:d,onEnd:j});if(Gc(),Nd){Tc();var m=y(Je+h(Gd-Hd,-1,1));Rc({time:d,coo:m!==Je&&a.coo,guessIndex:"undefined"!=typeof a.coo?m:Je,keep:i}),Od&&Oc(d)}return be="undefined"!=typeof Hd&&Hd!==Je,Hd=Je,e.hash&&be&&!ie.eq&&H(Dd.id||Je+1),this},ie.requestFullScreen=function(){return Qd&&!ie.fullScreen&&(_d=Ec.scrollTop(),ae=Ec.scrollLeft(),Q(Ec),rd("x",!0),ee=d.extend({},Le),a.addClass(Zb).appendTo(Dc.addClass(jb)),Cc.addClass(jb),md(Cd,!0,!0),ie.fullScreen=!0,Rd&&vc.request(le),ie.resize(),Pb(Ed,"stage"),Sb(),fd("fullscreenenter")),this},ie.cancelFullScreen=function(){return Rd&&vc.is()?vc.cancel(b):kd(),this},ie.toggleFullScreen=function(){return ie[(ie.fullScreen?"cancel":"request")+"FullScreen"]()},T(b,vc.event,function(){!yd||vc.is()||Cd||kd()}),ie.resize=function(a){if(!yd)return this;var b=arguments[1]||0,c=arguments[2];ed(ie.fullScreen?{width:"100%",maxwidth:null,minwidth:null,height:"100%",maxheight:null,minheight:null}:R(a),[Le,c||ie.fullScreen||e]);var d=Le.width,f=Le.height,g=Le.ratio,i=Ec.height()-(Nd?ye.height():0);return q(d)&&(qe.addClass(ub).css({width:d,minWidth:Le.minwidth||0,maxWidth:Le.maxwidth||ad}),d=Le.W=Le.w=qe.width(),Le.nw=Nd&&p(e.navwidth,d)||d,e.glimpse&&(Le.w-=Math.round(2*(p(e.glimpse,d)||0))),se.css({width:Le.w,marginLeft:(Le.W-Le.w)/2}),f=p(f,i),f=f||g&&d/g,f&&(d=Math.round(d),f=Le.h=Math.round(h(f,p(Le.minheight,i),p(Le.maxheight,i))),re.stop().animate({width:d,height:f},b,function(){qe.removeClass(ub)}),cd(),Nd&&(ye.stop().animate({width:Le.nw},b),Rc({guessIndex:Je,time:b,keep:!0}),Od&&wc.nav&&Oc(b)),$d=c||!0,xd())),Se=re.offset().left,this},ie.setOptions=function(a){return d.extend(e,a),vd(),this},ie.shuffle=function(){return yd&&O(yd)&&vd(),this},ie.destroy=function(){return ie.cancelFullScreen(),ie.stopAutoplay(),yd=ie.data=null,j(),Ed=[],bd(Xc),vd.ok=!1,this},ie.playVideo=function(){var a=Dd,b=a.video,c=Je;return"object"==typeof b&&a.videoReady&&(Rd&&ie.fullScreen&&ie.cancelFullScreen(),G(function(){return!vc.is()||c!==Je},function(){c===Je&&(a.$video=a.$video||d(d.Fotorama.jst.video(b)),a.$video.appendTo(a[Xc]),qe.addClass(nb),Cd=a.$video,o(),we.blur(),De.blur(),fd("loadvideo"))})),this},ie.stopVideo=function(){return md(Cd,!0,!0),this},re.on("mousemove",od),Me=db(se,{onStart:gd,onMove:function(a,b){ld(re,b.edge)},onTouchEnd:hd,onEnd:function(a){ld(re);var b=(Nc&&!ge||a.touch)&&e.arrows&&"always"!==e.arrows;if(a.moved||b&&a.pos!==a.newPos&&!a.control){var c=s(a.newPos,Le.w,e.margin,Fd);ie.show({index:c,time:Sd?Vd:a.time,overPos:a.overPos,user:!0})}else a.aborted||a.control||qd(a.startEvent,b)},timeLow:1,timeHigh:1,friction:2,select:"."+Xb+", ."+Xb+" *",$wrap:re}),Oe=db(ze,{onStart:gd,onMove:function(a,b){ld(ye,b.edge)},onTouchEnd:hd,onEnd:function(a){function b(){Rc.l=a.newPos,id(),jd(),uc(a.newPos,!0)}if(a.moved)a.pos!==a.newPos?(ce=!0,_(ze,{time:a.time,pos:a.newPos,overPos:a.overPos,onEnd:b}),uc(a.newPos),Xd&&ld(ye,K(a.newPos,Oe.min,Oe.max))):b();else{var c=a.$target.closest("."+Mb,ze)[0];c&&sd.call(c,a.startEvent)}},timeLow:.5,timeHigh:2,friction:5,$wrap:ye}),Ne=eb(re,{shift:!0,onEnd:function(a,b){gd(),hd(),ie.show({index:b,slow:a.altKey})}}),Pe=eb(ye,{onEnd:function(a,b){gd(),hd();var c=v(ze)+.25*b;ze.css(k(h(c,Oe.min,Oe.max))),Xd&&ld(ye,K(c,Oe.min,Oe.max)),Pe.prevent={"<":c>=Oe.max,">":c<=Oe.min},clearTimeout(Pe.t),Pe.t=setTimeout(function(){Rc.l=c,uc(c,!0)},Pc),uc(c)}}),qe.hover(function(){setTimeout(function(){fe||nd(!(ge=!0))},0)},function(){ge&&nd(!(ge=!1))}),M(we,function(a){Y(a),td.call(this,a)},{onStart:function(){gd(),Me.control=!0},onTouchEnd:hd}),we.each(function(){W(this,function(a){td.call(this,a)}),ud(this)}),W(Ee,ie.toggleFullScreen),ud(Ee),d.each("load push pop shift unshift reverse sort splice".split(" "),function(a,b){ie[b]=function(){return yd=yd||[],"load"!==b?Array.prototype[b].apply(yd,arguments):arguments[0]&&"object"==typeof arguments[0]&&arguments[0].length&&(yd=P(arguments[0])),vd(),ie}}),vd()},d.fn.fotorama=function(b){return this.each(function(){var c=this,e=d(this),f=e.data(),g=f.fotorama;g?g.setOptions(b,!0):G(function(){return!E(c)},function(){f.urtext=e.html(),new d.Fotorama(e,d.extend({},cd,a.fotoramaDefaults,b,f))})})},d.Fotorama.instances=[],d.Fotorama.cache={},d.Fotorama.measures={},d=d||{},d.Fotorama=d.Fotorama||{},d.Fotorama.jst=d.Fotorama.jst||{},d.Fotorama.jst.style=function(a){{var b,c="";tc.escape}return c+=".fotorama"+(null==(b=a.s)?"":b)+" .fotorama__nav--thumbs .fotorama__nav__frame{\npadding:"+(null==(b=a.m)?"":b)+"px;\nheight:"+(null==(b=a.h)?"":b)+"px}\n.fotorama"+(null==(b=a.s)?"":b)+" .fotorama__thumb-border{\nheight:"+(null==(b=a.h-a.b*(a.q?0:2))?"":b)+"px;\nborder-width:"+(null==(b=a.b)?"":b)+"px;\nmargin-top:"+(null==(b=a.m)?"":b)+"px}"},d.Fotorama.jst.video=function(a){function b(){c+=d.call(arguments,"")}var c="",d=(tc.escape,Array.prototype.join);return c+='<div class="fotorama__video"><iframe src="',b(("youtube"==a.type?a.p+"youtube.com/embed/"+a.id+"?autoplay=1":"vimeo"==a.type?a.p+"player.vimeo.com/video/"+a.id+"?autoplay=1&badge=0":a.id)+(a.s&&"custom"!=a.type?"&"+a.s:"")),c+='" frameborder="0" allowfullscreen></iframe></div>\n'},d(function(){d("."+ib+':not([data-auto="false"])').fotorama(),"http://"===y()&&c.host.match(/\./)&&!a.blockFotoramaData&&d("body").append('<iframe src="http://data.fotorama.io/?version='+fotoramaVersion+'" style="display: none;"></iframe>')})}(window,document,location,"undefined"!=typeof jQuery&&jQuery);;/* @required jQuery */
 
 (function($, undefined) {
 
@@ -12120,49 +16049,442 @@ if (typeof jQuery === 'undefined') { throw new Error('Bootstrap\'s JavaScript re
         return this.on({'mouseenter.hoverIntent':handleHover,'mouseleave.hoverIntent':handleHover}, cfg.selector);
     };
 })(jQuery);
-;/***************
-    Details
-***************/
+;/*! VelocityJS.org (1.0.0). (C) 2014 Julian Shapiro. MIT @license: en.wikipedia.org/wiki/MIT_License */
 
-/*!
-* Velocity.js: Accelerated JavaScript animation.
-* @version 0.3.0
-* @docs http://velocityjs.org
-* @license Copyright 2014 Julian Shapiro. MIT License: http://en.wikipedia.org/wiki/MIT_License
-*/
+/*************************
+   Velocity jQuery Shim
+*************************/
 
-/****************
-     Summary
-****************/
+/*! VelocityJS.org jQuery Shim (1.0.0-rc1). (C) 2014 The jQuery Foundation. MIT @license: en.wikipedia.org/wiki/MIT_License. */
 
-/*
-Velocity is a concise CSS manipulation library with a performant animation stack built on top of it. To minimize DOM interaction, Velocity reuses previous animation values and batches DOM queries wherever possible.
-Whenever Velocity triggers a DOM query (a GET) or a DOM update (a SET), a comment indicating such is placed next to the offending line of code.
-To learn more about the nuances of DOM performance, check out these talks: https://www.youtube.com/watch?v=cmZqLzPy0XE and https://www.youtube.com/watch?v=n8ep4leoN9A.
+/* This file contains the jQuery functions that Velocity relies on, thereby removing Velocity's dependency on a full copy of jQuery, and allowing it to work in any environment. */
+/* These shimmed functions are only used if jQuery isn't present. If both this shim and jQuery are loaded, Velocity defaults to jQuery proper. */
+/* Browser support: Using this shim instead of jQuery proper removes support for IE8. */
 
-Velocity is structured into four sections:
-- CSS Stack: Works independently from the rest of Velocity.
-- Velocity.animate() is the core animation method that iterates over the targeted element set and queues the incoming Velocity animation onto each element individually. This process consists of:
-  - Pre-Queueing: Prepare the element for animation by instantiating its data cache and processing the call's options argument.
-  - Queueing: The logic that runs once the call has reached its point of execution in the element's $.queue() stack. Most logic is placed here to avoid risking it becoming stale.
-  - Pushing: Consolidation of the tween data followed by its push onto the global in-progress calls container.
-- tick(): The single requestAnimationFrame loop responsible for tweening all in-progress calls.
-- completeCall(): Handles the cleanup process for each Velocity call.
+;(function (window) {
+    /***************
+         Setup
+    ***************/
 
-The biggest cause of both codebase bloat and codepath obfuscation is support for animating individual values of compound-value CSS properties (e.g. "textShadowBlur" in "textShadow: 0px 0px 0px black").
-*/
+    /* If jQuery is already loaded, there's no point in loading this shim. */
+    if (window.jQuery) {
+        return;
+    }
 
-/* NOTICE: Despite the ensuing code indicating that Velocity works *without* jQuery and *with* Zepto, this support has not yet landed. */
+    /* jQuery base. */
+    var $ = function (selector, context) {
+        return new $.fn.init(selector, context);
+    };
 
-;(function (global, window, document, undefined) {
+    /********************
+       Private Methods
+    ********************/
 
-    /*****************
-        Constants
-    *****************/
+    /* jQuery */
+    $.isWindow = function (obj) {
+        /* jshint eqeqeq: false */
+        return obj != null && obj == obj.window;
+    };
 
-    var NAME = "velocity",
-        DEFAULT_DURATION = 400,
-        DEFAULT_EASING = "swing";
+    /* jQuery */
+    $.type = function (obj) {
+        if (obj == null) {
+            return obj + "";
+        }
+
+        return typeof obj === "object" || typeof obj === "function" ?
+            class2type[toString.call(obj)] || "object" :
+            typeof obj;
+    };
+
+    /* jQuery */
+    $.isArray = Array.isArray || function (obj) {
+        return $.type(obj) === "array";
+    };
+
+    /* jQuery */
+    function isArraylike (obj) {
+        var length = obj.length,
+            type = $.type(obj);
+
+        if (type === "function" || $.isWindow(obj)) {
+            return false;
+        }
+
+        if (obj.nodeType === 1 && length) {
+            return true;
+        }
+
+        return type === "array" || length === 0 || typeof length === "number" && length > 0 && (length - 1) in obj;
+    }
+
+    /***************
+       $ Methods
+    ***************/
+
+    /* jQuery: Support removed for IE<9. */
+    $.isPlainObject = function (obj) {
+        var key;
+
+        if (!obj || $.type(obj) !== "object" || obj.nodeType || $.isWindow(obj)) {
+            return false;
+        }
+
+        try {
+            if (obj.constructor &&
+                !hasOwn.call(obj, "constructor") &&
+                !hasOwn.call(obj.constructor.prototype, "isPrototypeOf")) {
+                return false;
+            }
+        } catch (e) {
+            return false;
+        }
+
+        for (key in obj) {}
+
+        return key === undefined || hasOwn.call(obj, key);
+    };
+
+    /* jQuery */
+    $.each = function(obj, callback, args) {
+        var value,
+            i = 0,
+            length = obj.length,
+            isArray = isArraylike(obj);
+
+        if (args) {
+            if (isArray) {
+                for (; i < length; i++) {
+                    value = callback.apply(obj[i], args);
+
+                    if (value === false) {
+                        break;
+                    }
+                }
+            } else {
+                for (i in obj) {
+                    value = callback.apply(obj[i], args);
+
+                    if (value === false) {
+                        break;
+                    }
+                }
+            }
+
+        } else {
+            if (isArray) {
+                for (; i < length; i++) {
+                    value = callback.call(obj[i], i, obj[i]);
+
+                    if (value === false) {
+                        break;
+                    }
+                }
+            } else {
+                for (i in obj) {
+                    value = callback.call(obj[i], i, obj[i]);
+
+                    if (value === false) {
+                        break;
+                    }
+                }
+            }
+        }
+
+        return obj;
+    };
+
+    /* Custom */
+    $.data = function (node, key, value) {
+        /* $.getData() */
+        if (value === undefined) {
+            var id = node[$.expando],
+                store = id && cache[id];
+
+            if (key === undefined) {
+                return store;
+            } else if (store) {
+                if (key in store) {
+                    return store[key];
+                }
+            }
+        /* $.setData() */
+        } else if (key !== undefined) {
+            var id = node[$.expando] || (node[$.expando] = ++$.uuid);
+
+            cache[id] = cache[id] || {};
+            cache[id][key] = value;
+
+            return value;
+        }
+    };
+
+    /* Custom */
+    $.removeData = function (node, keys) {
+        var id = node[$.expando],
+            store = id && cache[id];
+
+        if (store) {
+            $.each(keys, function(_, key) {
+                delete store[key];
+            });
+        }
+    };
+
+    /* jQuery */
+    $.extend = function () {
+        var src, copyIsArray, copy, name, options, clone,
+            target = arguments[0] || {},
+            i = 1,
+            length = arguments.length,
+            deep = false;
+
+        if (typeof target === "boolean") {
+            deep = target;
+
+            target = arguments[i] || {};
+            i++;
+        }
+
+        if (typeof target !== "object" && $.type(target) !== "function") {
+            target = {};
+        }
+
+        if (i === length) {
+            target = this;
+            i--;
+        }
+
+        for (; i < length; i++) {
+            if ((options = arguments[i]) != null) {
+                for (name in options) {
+                    src = target[name];
+                    copy = options[name];
+
+                    if (target === copy) {
+                        continue;
+                    }
+
+                    if (deep && copy && ($.isPlainObject(copy) || (copyIsArray = $.isArray(copy)))) {
+                        if (copyIsArray) {
+                            copyIsArray = false;
+                            clone = src && $.isArray(src) ? src : [];
+
+                        } else {
+                            clone = src && $.isPlainObject(src) ? src : {};
+                        }
+
+                        target[name] = $.extend(deep, clone, copy);
+
+                    } else if (copy !== undefined) {
+                        target[name] = copy;
+                    }
+                }
+            }
+        }
+
+        return target;
+    };
+
+    /* jQuery 1.4.3 */
+    $.queue = function (elem, type, data) {
+        function $makeArray (arr, results) {
+            var ret = results || [];
+
+            if (arr != null) {
+                if (isArraylike(Object(arr))) {
+                    /* $.merge */
+                    (function(first, second) {
+                        var len = +second.length,
+                            j = 0,
+                            i = first.length;
+
+                        while (j < len) {
+                            first[i++] = second[j++];
+                        }
+
+                        if (len !== len) {
+                            while (second[j] !== undefined) {
+                                first[i++] = second[j++];
+                            }
+                        }
+
+                        first.length = i;
+
+                        return first;
+                    })(ret, typeof arr === "string" ? [arr] : arr);
+                } else {
+                    [].push.call(ret, arr);
+                }
+            }
+
+            return ret;
+        }
+
+        if (!elem) {
+            return;
+        }
+
+        type = (type || "fx") + "queue";
+
+        var q = $.data(elem, type);
+
+        if (!data) {
+            return q || [];
+        }
+
+        if (!q || $.isArray(data)) {
+            q = $.data(elem, type, $makeArray(data));
+        } else {
+            q.push(data);
+        }
+
+        return q;
+    };
+
+    /* jQuery 1.4.3 */
+    $.dequeue = function (elems, type) {
+        /* Custom: Embed element iteration. */
+        $.each(elems.nodeType ? [ elems ] : elems, function(i, elem) {
+            type = type || "fx";
+
+            var queue = $.queue(elem, type),
+                fn = queue.shift();
+
+            if (fn === "inprogress") {
+                fn = queue.shift();
+            }
+
+            if (fn) {
+                if (type === "fx") {
+                    queue.unshift("inprogress");
+                }
+
+                fn.call(elem, function() {
+                    $.dequeue(elem, type);
+                });
+            }
+        });
+    };
+
+    /******************
+       $.fn Methods
+    ******************/
+
+    /* jQuery */
+    $.fn = $.prototype = {
+        init: function(selector) {
+            /* Just return the element wrapped inside an array; don't proceed with the actual jQuery node wrapping process. */
+            if (selector.nodeType) {
+                this[0] = selector;
+
+                return this;
+            } else {
+                throw new Error("Not a DOM node.");
+            }
+        },
+
+        offset: function () {
+            /* jQuery altered code: Dropped disconnected DOM node checking and iOS3+BlackBerry support. */
+            var box = this[0].getBoundingClientRect();
+
+            return {
+                top: box.top  + (window.pageYOffset || document.scrollTop  || 0)  - (document.clientTop  || 0),
+                left: box.left + (window.pageXOffset || document.scrollLeft  || 0) - (document.clientLeft || 0)
+            };
+        },
+
+        position: function () {
+            /* jQuery */
+            function offsetParent() {
+                var offsetParent = this.offsetParent || document;
+
+                while (offsetParent && (!offsetParent.nodeType.toLowerCase === "html" && offsetParent.style.position === "static")) {
+                    offsetParent = offsetParent.offsetParent;
+                }
+
+                return offsetParent || document;
+            }
+
+            /* Zepto */
+            var elem = this[0],
+                offsetParent = offsetParent.apply(elem),
+                offset = this.offset(),
+                parentOffset = /^(?:body|html)$/i.test(offsetParent.nodeName) ? { top: 0, left: 0 } : $(offsetParent).offset()
+
+            offset.top -= parseFloat(elem.style.marginTop) || 0;
+            offset.left -= parseFloat(elem.style.marginLeft) || 0;
+
+            if (offsetParent.style) {
+                parentOffset.top += parseFloat(offsetParent.style.borderTopWidth) || 0
+                parentOffset.left += parseFloat(offsetParent.style.borderLeftWidth) || 0
+            }
+
+            return {
+                top: offset.top - parentOffset.top,
+                left: offset.left - parentOffset.left
+            };
+        }
+    };
+
+    /**********************
+       Private Variables
+    **********************/
+
+    /* For $.data() */
+    var cache = {};
+    $.expando = "velocity" + (new Date().getTime());
+    $.uuid = 0;
+
+    /* For $.queue() */
+    var class2type = {},
+        hasOwn = class2type.hasOwnProperty,
+        toString = class2type.toString;
+
+    var types = "Boolean Number String Function Array Date RegExp Object Error".split(" ");
+    for (var i = 0; i < types.length; i++) {
+        class2type["[object " + types[i] + "]"] = types[i].toLowerCase();
+    }
+
+    /* Makes $(node) possible, without having to call init. */
+    $.fn.init.prototype = $.fn;
+
+    /* Globalize Velocity onto the window, and assign its Utilities property. */
+    window.Velocity = { Utilities: $ };
+})(window);
+
+/******************
+    Velocity.js
+******************/
+
+;(function (factory) {    
+    /* CommonJS module. */
+    if (typeof module === "object" && typeof module.exports === "object") {
+        module.exports = factory();
+    /* AMD module. */
+    } else if (typeof define === "function" && define.amd) {
+        define(factory);
+    /* Browser globals. */
+    } else {        
+        factory();
+    }
+}(function() {
+return function (global, window, document, undefined) {
+
+    /***************
+        Summary
+    ***************/
+
+    /*
+    - CSS: CSS stack that works independently from the rest of Velocity.
+    - animate(): Core animation method that iterates over the targeted elements and queues the incoming call onto each element individually.
+      - Pre-Queueing: Prepare the element for animation by instantiating its data cache and processing the call's options.
+      - Queueing: The logic that runs once the call has reached its point of execution in the element's $.queue() stack.
+                  Most logic is placed here to avoid risking it becoming stale (if the element's properties have changed).
+      - Pushing: Consolidation of the tween data followed by its push onto the global in-progress calls container.
+    - tick(): The single requestAnimationFrame loop responsible for tweening all in-progress calls.
+    - completeCall(): Handles the cleanup process for each Velocity call.
+    */
 
     /*********************
        Helper Functions
@@ -12189,8 +16511,8 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
         return undefined;
     })();
 
-    /* RAF polyfill. Gist: https://gist.github.com/julianshapiro/9497513 */
-    var requestAnimationFrame = window.requestAnimationFrame || (function() {
+    /* rAF shim. Gist: https://gist.github.com/julianshapiro/9497513 */
+    var rAFShim = (function() {
         var timeLast = 0;
 
         return window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function(callback) {
@@ -12206,7 +16528,7 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
         };
     })();
 
-    /* Sparse array compacting. Copyright Lo-Dash. MIT License: https://github.com/lodash/lodash/blob/master/LICENSE.txt */
+    /* Array compacting. Copyright Lo-Dash. MIT License: https://github.com/lodash/lodash/blob/master/LICENSE.txt */
     function compactSparseArray (array) {
         var index = -1,
             length = array ? array.length : 0,
@@ -12223,6 +16545,18 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
         return result;
     }
 
+    function sanitizeElements (elements) {
+        /* Unwrap jQuery/Zepto objects. */
+        if (Type.isWrapped(elements)) {
+            elements = [].slice.call(elements);
+        /* Wrap a single element in an array so that $.each() can iterate with the element instead of its node's children. */
+        } else if (Type.isNode(elements)) {
+            elements = [ elements ];
+        }
+
+        return elements;
+    }
+
     var Type = {
         isString: function (variable) {
             return (typeof variable === "string");
@@ -12234,6 +16568,10 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
 
         isFunction: function (variable) {
             return Object.prototype.toString.call(variable) === "[object Function]";
+        },
+
+        isNode: function (variable) {
+            return variable && variable.nodeType;
         },
 
         /* Copyright Martin Bohm. MIT License: https://gist.github.com/Tomalak/818a78a226a0738eaade */
@@ -12251,6 +16589,16 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
 
         isSVG: function (variable) {
             return window.SVGElement && (variable instanceof SVGElement);
+        },
+
+        isEmptyObject: function (variable) {
+            var name;
+
+            for (name in variable) {
+                return false;
+            }
+
+            return true;
         }
     };
 
@@ -12258,48 +16606,49 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
        Dependencies
     *****************/
 
-    /* Local to our Velocity scope, assign $ to our jQuery shim if jQuery itself isn't loaded. (The shim is a port of the jQuery utility functions that Velocity uses.) */
-    /* Note: We can't default to Zepto since the shimless version of Velocity does not work with Zepto, which is missing several utility functions that Velocity requires. */
-    var $ = window.jQuery || (global.Velocity && global.Velocity.Utilities);
+    var $,
+        isJQuery = false;
 
-    if (!$) {
-        throw new Error("Velocity: Either jQuery or Velocity's jQuery shim must first be loaded.")
-    /* We allow the global Velocity variable to pre-exist so long as we were responsible for its creation (via the jQuery shim, which uniquely assigns a Utilities property to the Velocity object). */
-    } else if (global.Velocity !== undefined && !global.Velocity.Utilities) {
-        throw new Error("Velocity: Namespace is occupied.");
-    /* Nothing prevents Velocity from working on IE6+7, but it is not worth the time to test on them. Revert to jQuery's $.animate(), and lose Velocity's extra features. */
+    if (global.fn && global.fn.jquery) {
+        $ = global;
+        isJQuery = true;
+    } else {
+        $ = window.Velocity.Utilities;
+    }
+
+    if (IE <= 8 && !isJQuery) {
+        throw new Error("Velocity: IE8 and below require jQuery to be loaded before Velocity.");
     } else if (IE <= 7) {
-        if (!window.jQuery) {
-            throw new Error("Velocity: For IE<=7, Velocity falls back to jQuery, which must first be loaded.");
-        } else {
-            window.jQuery.fn.velocity = window.jQuery.fn.animate;
+        /* Revert to jQuery's $.animate(), and lose Velocity's extra features. */
+        jQuery.fn.velocity = jQuery.fn.animate;
 
-            /* Now that $.fn.velocity is aliased, abort this Velocity declaration. */
-            return;
-        }
-    /* IE8 doesn't work with the jQuery shim; it requires jQuery proper. */
-    } else if (IE === 8 && !window.jQuery) {
-        throw new Error("Velocity: For IE8, Velocity requires jQuery to be loaded. (Velocity's jQuery shim does not work with IE8.)");
+        /* Now that $.fn.velocity is aliased, abort this Velocity declaration. */
+        return;
     }
 
     /* Shorthand alias for jQuery's $.data() utility. */
     function Data (element) {
         /* Hardcode a reference to the plugin name. */
-        var response = $.data(element, NAME);
+        var response = $.data(element, "velocity");
 
         /* jQuery <=1.4.2 returns null instead of undefined when no match is found. We normalize this behavior. */
         return response === null ? undefined : response;
     };
 
+    /*****************
+        Constants
+    *****************/
+
+    var DURATION_DEFAULT = 400,
+        EASING_DEFAULT = "swing";
+
     /*************
         State
     *************/
 
-    /* Velocity registers itself onto a global container (window.jQuery || window.Zepto || window) so that that certain features are accessible beyond just a per-element scope. This master object contains an .animate() method,
-       which is later assigned to $.fn (if jQuery or Zepto are present). Accordingly, Velocity can both act on wrapped DOM elements and stand alone for targeting raw DOM elements. */
-    /* Note: The global object also doubles as a publicly-accessible data store for the purposes of unit testing. (Capitalized objects are meant for private use, lowercase objects are meant for public use.) */
-    /* Note: We alias both the lowercase and uppercase variants of "velocity" to minimize user issues due to the lowercase nature of the $.fn extension. */
-    var Velocity = global.Velocity = global.velocity = {
+    /* Note: The global object also doubles as a publicly-accessible data store for the purposes of unit testing. */
+    /* Note: Alias the lowercase and uppercase variants of "velocity" to minimize user confusion due to the lowercase nature of the $.fn extension. */
+    var Velocity = {
         /* Container for page-wide Velocity state data. */
         State: {
             /* Detect mobile devices to determine if mobileHA should be turned on. */
@@ -12307,6 +16656,8 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
             /* The mobileHA option's behavior changes on older Android devices (Gingerbread, versions 2.3.3-2.3.7). */
             isAndroid: /Android/i.test(navigator.userAgent),
             isGingerbread: /Android 2\.3\.[3-7]/i.test(navigator.userAgent),
+            isChrome: window.chrome,
+            isFirefox: /Firefox/i.test(navigator.userAgent),
             /* Create a cached element for re-use when checking for CSS property prefixes. */
             prefixElement: document.createElement("div"),
             /* Cache every prefix match to avoid repeating lookups. */
@@ -12324,38 +16675,65 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
         /* Velocity's custom CSS stack. Made global for unit testing. */
         CSS: { /* Defined below. */ },
         /* Defined by Velocity's optional jQuery shim. */
-        Utilities: window.jQuery ? {} : $,
-        /* Container for the user's custom animation sequences that are referenced by name via Velocity's first argument (in place of a properties map object). */
+        Utilities: $,
+        /* Container for the user's custom animation sequences that are referenced by name in place of a properties map object. */
         Sequences: {
             /* Manually registered by the user. Learn more: VelocityJS.org/#sequences */
         },
         Easings: {
             /* Defined below. */
         },
+        /* Attempt to use ES6 Promises by default. Users can override this with a third-party promises library. */
+        Promise: window.Promise,
         /* Page-wide option defaults, which can be overriden by the user. */
         defaults: {
             queue: "",
-            duration: DEFAULT_DURATION,
-            easing: DEFAULT_EASING,
+            duration: DURATION_DEFAULT,
+            easing: EASING_DEFAULT,
             begin: null,
             complete: null,
             progress: null,
-            display: null,
+            display: undefined,
             loop: false,
             delay: false,
             mobileHA: true,
-            /* Set to false to prevent property values from being cached between immediately consecutive Velocity-initiated calls. See Value Transferring for further details. */
+            /* Set to false to prevent property values from being cached between consecutive Velocity-initiated chain calls. */
             _cacheValues: true
         },
-        /* Velocity's core animation method, subsequently aliased to $.fn. */
-        animate: function () { /* Defined below. */ },
+        /* A design goal of Velocity is to cache data wherever possible in order to avoid DOM requerying.
+           Accordingly, each element has a data cache instantiated on it. */
+        init: function (element) {
+            $.data(element, "velocity", {
+                /* Store whether this is an SVG element, since its properties are retrieved and updated differently than standard HTML elements. */
+                isSVG: Type.isSVG(element),
+                /* Keep track of whether the element is currently being animated by Velocity.
+                   This is used to ensure that property values are not transferred between non-consecutive (stale) calls. */
+                isAnimating: false,
+                /* A reference to the element's live computedStyle object. Learn more here: https://developer.mozilla.org/en/docs/Web/API/window.getComputedStyle */
+                computedStyle: null,
+                /* Tween data is cached for each animation on the element so that data can be passed across calls --
+                   in particular, end values are used as subsequent start values in consecutive Velocity calls. */
+                tweensContainer: null,
+                /* The full root property values of each CSS hook being animated on this element are cached so that:
+                   1) Concurrently-animating hooks sharing the same root can have their root values' merged into one while tweening.
+                   2) Post-hook-injection root values can be transferred over to consecutively chained Velocity calls as starting root values. */
+                rootPropertyValueCache: {},
+                /* A cache for transform updates, which must be manually flushed via CSS.flushTransformCache(). */
+                transformCache: {}
+            });
+        },
+        /* Velocity's core animation method, later aliased to $.fn if a framework (jQuery or Zepto) is detected. */
+        animate: null, /* Defined below. */
+        /* A reimplementation of jQuery's $.css(), used for getting/setting Velocity's hooked CSS properties. */
+        hook: null, /* Defined below. */
         /* Set to true to force a duration of 1ms for all animations so that UI testing can be performed without waiting on animations to complete. */
         mock: false,
+        version: { major: 1, minor: 0, patch: 0 },
         /* Set to 1 or 2 (most verbose) to output debug info to console. */
         debug: false
     };
 
-    /* Retrieve the appropriate scroll anchor and property name for the browser. Learn more: https://developer.mozilla.org/en-US/docs/Web/API/Window.scrollY */
+    /* Retrieve the appropriate scroll anchor and property name for the browser: https://developer.mozilla.org/en-US/docs/Web/API/Window.scrollY */
     if (window.pageYOffset !== undefined) {
         Velocity.State.scrollAnchor = window;
         Velocity.State.scrollPropertyLeft = "pageXOffset";
@@ -12372,23 +16750,44 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
 
     /* Step easing generator. */
     function generateStep (steps) {
-        return function (p) { 
+        return function (p) {
             return Math.round(p * steps) * (1 / steps);
-        };   
+        };
     }
 
     /* Bezier curve function generator. Copyright Gaetan Renaudeau. MIT License: http://en.wikipedia.org/wiki/MIT_License */
-    var generateBezier = (function () {
-        function A (aA1, aA2) {
-            return 1.0 - 3.0 * aA2 + 3.0 * aA1;
+    function generateBezier (mX1, mY1, mX2, mY2) {
+        var NEWTON_ITERATIONS = 4,
+            NEWTON_MIN_SLOPE = 0.001,
+            SUBDIVISION_PRECISION = 0.0000001,
+            SUBDIVISION_MAX_ITERATIONS = 10,
+            kSplineTableSize = 11,
+            kSampleStepSize = 1.0 / (kSplineTableSize - 1.0),
+            float32ArraySupported = "Float32Array" in window;
+
+        /* Must contain four arguments. */
+        if (arguments.length !== 4) {
+            return false;
         }
 
-        function B (aA1, aA2) {
-            return 3.0 * aA2 - 6.0 * aA1;
+        /* Arguments must be numbers. */
+        for (var i = 0; i < 4; ++i) {
+            if (typeof arguments[i] !== "number" || isNaN(arguments[i]) || !isFinite(arguments[i])) {
+                return false;
+            }
         }
-        function C (aA1) {
-            return 3.0 * aA1;
-        }
+
+        /* X values must be in the [0, 1] range. */
+        mX1 = Math.min(mX1, 1);
+        mX2 = Math.min(mX2, 1);
+        mX1 = Math.max(mX1, 0);
+        mX2 = Math.max(mX2, 0);
+
+        var mSampleValues = float32ArraySupported ? new Float32Array(kSplineTableSize) : new Array(kSplineTableSize);
+
+        function A (aA1, aA2) { return 1.0 - 3.0 * aA2 + 3.0 * aA1; }
+        function B (aA1, aA2) { return 3.0 * aA2 - 6.0 * aA1; }
+        function C (aA1)      { return 3.0 * aA1; }
 
         function calcBezier (aT, aA1, aA2) {
             return ((A(aA1, aA2)*aT + B(aA1, aA2))*aT + C(aA1))*aT;
@@ -12398,58 +16797,93 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
             return 3.0 * A(aA1, aA2)*aT*aT + 2.0 * B(aA1, aA2) * aT + C(aA1);
         }
 
-        return function (mX1, mY1, mX2, mY2) {
-            /* Must contain four arguments. */
-            if (arguments.length !== 4) {
-                return false;
+        function newtonRaphsonIterate (aX, aGuessT) {
+            for (var i = 0; i < NEWTON_ITERATIONS; ++i) {
+                var currentSlope = getSlope(aGuessT, mX1, mX2);
+
+                if (currentSlope === 0.0) return aGuessT;
+
+                var currentX = calcBezier(aGuessT, mX1, mX2) - aX;
+                aGuessT -= currentX / currentSlope;
             }
 
-            /* Arguments must be numbers. */
-            for (var i = 0; i < 4; ++i) {
-                if (typeof arguments[i] !== "number" || isNaN(arguments[i]) || !isFinite(arguments[i])) {
-                    return false;
-                }
+            return aGuessT;
+        }
+
+        function calcSampleValues () {
+            for (var i = 0; i < kSplineTableSize; ++i) {
+                mSampleValues[i] = calcBezier(i * kSampleStepSize, mX1, mX2);
             }
+        }
 
-            /* X values must be in the [0, 1] range. */
-            mX1 = Math.min(mX1, 1);
-            mX2 = Math.min(mX2, 1);
-            mX1 = Math.max(mX1, 0);
-            mX2 = Math.max(mX2, 0);
+        function binarySubdivide (aX, aA, aB) {
+            var currentX, currentT, i = 0;
 
-            function getTForX (aX) {
-                var aGuessT = aX;
-
-                for (var i = 0; i < 8; ++i) {
-                    var currentSlope = getSlope(aGuessT, mX1, mX2);
-
-                    if (currentSlope === 0.0) {
-                        return aGuessT;
-                    }
-
-                    var currentX = calcBezier(aGuessT, mX1, mX2) - aX;
-
-                    aGuessT -= currentX / currentSlope;
-                }
-
-                return aGuessT;
-            }
-
-            return function (aX) {
-                if (mX1 === mY1 && mX2 === mY2) {
-                    return aX;
+            do {
+                currentT = aA + (aB - aA) / 2.0;
+                currentX = calcBezier(currentT, mX1, mX2) - aX;
+                if (currentX > 0.0) {
+                  aB = currentT;
                 } else {
-                    return calcBezier(getTForX(aX), mY1, mY2);
+                  aA = currentT;
                 }
-            };
+            } while (Math.abs(currentX) > SUBDIVISION_PRECISION && ++i < SUBDIVISION_MAX_ITERATIONS);
+
+            return currentT;
+        }
+
+        function getTForX (aX) {
+            var intervalStart = 0.0,
+                currentSample = 1,
+                lastSample = kSplineTableSize - 1;
+
+            for (; currentSample != lastSample && mSampleValues[currentSample] <= aX; ++currentSample) {
+                intervalStart += kSampleStepSize;
+            }
+
+            --currentSample;
+
+            var dist = (aX - mSampleValues[currentSample]) / (mSampleValues[currentSample+1] - mSampleValues[currentSample]),
+                guessForT = intervalStart + dist * kSampleStepSize,
+                initialSlope = getSlope(guessForT, mX1, mX2);
+
+            if (initialSlope >= NEWTON_MIN_SLOPE) {
+                return newtonRaphsonIterate(aX, guessForT);
+            } else if (initialSlope == 0.0) {
+                return guessForT;
+            } else {
+                return binarySubdivide(aX, intervalStart, intervalStart + kSampleStepSize);
+            }
+        }
+
+        var _precomputed = false;
+
+        function precompute() {
+            _precomputed = true;
+            if (mX1 != mY1 || mX2 != mY2) calcSampleValues();
+        }
+
+        var f = function (aX) {
+            if (!_precomputed) precompute();
+            if (mX1 === mY1 && mX2 === mY2) return aX;
+            if (aX === 0) return 0;
+            if (aX === 1) return 1;
+
+            return calcBezier(getTForX(aX), mY1, mY2);
         };
-    }());
+
+        f.getControlPoints = function() { return [{ x: mX1, y: mY1 }, { x: mX2, y: mY2 }]; };
+
+        var str = "generateBezier(" + [mX1, mY1, mX2, mY2] + ")";
+        f.toString = function () { return str; };
+
+        return f;
+    }
 
     /* Runge-Kutta spring physics function generator. Adapted from Framer.js, copyright Koen Bok. MIT License: http://en.wikipedia.org/wiki/MIT_License */
     /* Given a tension, friction, and duration, a simulation at 60FPS will first run without a defined duration in order to calculate the full path. A second pass
-       then adjusts the time dela -- using the relation between actual time and duration -- to calculate the path for the duration-constrained animation. */
+       then adjusts the time delta -- using the relation between actual time and duration -- to calculate the path for the duration-constrained animation. */
     var generateSpringRK4 = (function () {
-
         function springAccelerationForState (state) {
             return (-state.tension * state.x) - (state.friction * state.v);
         }
@@ -12496,7 +16930,7 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                 DT = 16 / 1000,
                 have_duration, dt, last_state;
 
-            tension = parseFloat(tension) || 600;
+            tension = parseFloat(tension) || 500;
             friction = parseFloat(friction) || 20;
             duration = duration || null;
 
@@ -12533,82 +16967,54 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
         };
     }());
 
-    /* Velocity embeds the named easings from jQuery, jQuery UI, and CSS3 in order to save users from having to include additional libraries on their page. */
-    (function () {
+    /* Easings from jQuery, jQuery UI, and CSS3. */
+    Velocity.Easings = {
         /* jQuery's default named easing types. */
-        Velocity.Easings["linear"] = function(p) {
-            return p;
-        };
-        Velocity.Easings["swing"] = function(p) {
-            return 0.5 - Math.cos(p * Math.PI) / 2;
-        };
-
-        /* CSS3's named easing types. */
-        Velocity.Easings["ease"] = generateBezier(0.25, 0.1, 0.25, 1.0);
-        Velocity.Easings["ease-in"] = generateBezier(0.42, 0.0, 1.00, 1.0);
-        Velocity.Easings["ease-out"] = generateBezier(0.00, 0.0, 0.58, 1.0);
-        Velocity.Easings["ease-in-out"] = generateBezier(0.42, 0.0, 0.58, 1.0);
-
-        /* jQuery UI's Robert Penner easing equations. Copyright The jQuery Foundation. MIT License: https://jquery.org/license */
-        var baseEasings = {};
-
-        $.each(["Quad", "Cubic", "Quart", "Quint", "Expo"], function(i, name) {
-            baseEasings[name] = function(p) {
-                return Math.pow(p, i + 2);
-            };
-        });
-
-        $.extend(baseEasings, {
-            Sine: function (p) {
-                return 1 - Math.cos(p * Math.PI / 2);
-            },
-
-            Circ: function (p) {
-                return 1 - Math.sqrt(1 - p * p);
-            },
-
-            Elastic: function(p) {
-                return p === 0 || p === 1 ? p :
-                    -Math.pow(2, 8 * (p - 1)) * Math.sin(((p - 1) * 80 - 7.5) * Math.PI / 15);
-            },
-
-            Back: function(p) {
-                return p * p * (3 * p - 2);
-            },
-
-            Bounce: function (p) {
-                var pow2,
-                    bounce = 4;
-
-                while (p < ((pow2 = Math.pow(2, --bounce)) - 1) / 11) {}
-                return 1 / Math.pow(4, 3 - bounce) - 7.5625 * Math.pow((pow2 * 3 - 2) / 22 - p, 2);
-            }
-        });
-
-        /* jQuery's easing generator for the object above. */
-        $.each(baseEasings, function(name, easeIn) {
-            Velocity.Easings["easeIn" + name] = easeIn;
-            Velocity.Easings["easeOut" + name] = function(p) {
-                return 1 - easeIn(1 - p);
-            };
-            Velocity.Easings["easeInOut" + name] = function(p) {
-                return p < 0.5 ?
-                    easeIn(p * 2) / 2 :
-                    1 - easeIn(p * -2 + 2) / 2;
-            };
-        });
-
+        linear: function(p) { return p; },
+        swing: function(p) { return 0.5 - Math.cos( p * Math.PI ) / 2 },
         /* Bonus "spring" easing, which is a less exaggerated version of easeInOutElastic. */
-        Velocity.Easings["spring"] = function(p) {
-            return 1 - (Math.cos(p * 4.5 * Math.PI) * Math.exp(-p * 6));
-        };
-    })();
+        spring: function(p) { return 1 - (Math.cos(p * 4.5 * Math.PI) * Math.exp(-p * 6)); }
+    };
+
+    $.each(
+        [
+            /* CSS3's named easing types. */
+            [ "ease", [ 0.25, 0.1, 0.25, 1.0 ] ],
+            [ "ease-in", [ 0.42, 0.0, 1.00, 1.0 ] ],
+            [ "ease-out", [ 0.00, 0.0, 0.58, 1.0 ] ],
+            [ "ease-in-out", [ 0.42, 0.0, 0.58, 1.0 ] ],
+            /* Robert Penner easing equations. */
+            [ "easeInSine", [ 0.47, 0, 0.745, 0.715 ] ],
+            [ "easeOutSine", [ 0.39, 0.575, 0.565, 1 ] ],
+            [ "easeInOutSine", [ 0.445, 0.05, 0.55, 0.95 ] ],
+            [ "easeInQuad", [ 0.55, 0.085, 0.68, 0.53 ] ],
+            [ "easeOutQuad", [ 0.25, 0.46, 0.45, 0.94 ] ],
+            [ "easeInOutQuad", [ 0.455, 0.03, 0.515, 0.955 ] ],
+            [ "easeInCubic", [ 0.55, 0.055, 0.675, 0.19 ] ],
+            [ "easeOutCubic", [ 0.215, 0.61, 0.355, 1 ] ],
+            [ "easeInOutCubic", [ 0.645, 0.045, 0.355, 1 ] ],
+            [ "easeInQuart", [ 0.895, 0.03, 0.685, 0.22 ] ],
+            [ "easeOutQuart", [ 0.165, 0.84, 0.44, 1 ] ],
+            [ "easeInOutQuart", [ 0.77, 0, 0.175, 1 ] ],
+            [ "easeInQuint", [ 0.755, 0.05, 0.855, 0.06 ] ],
+            [ "easeOutQuint", [ 0.23, 1, 0.32, 1 ] ],
+            [ "easeInOutQuint", [ 0.86, 0, 0.07, 1 ] ],
+            [ "easeInExpo", [ 0.95, 0.05, 0.795, 0.035 ] ],
+            [ "easeOutExpo", [ 0.19, 1, 0.22, 1 ] ],
+            [ "easeInOutExpo", [ 1, 0, 0, 1 ] ],
+            [ "easeInCirc", [ 0.6, 0.04, 0.98, 0.335 ] ],
+            [ "easeOutCirc", [ 0.075, 0.82, 0.165, 1 ] ],
+            [ "easeInOutCirc", [ 0.785, 0.135, 0.15, 0.86 ] ]
+        ], function(i, easingArray) {
+            Velocity.Easings[easingArray[0]] = generateBezier.apply(null, easingArray[1]);
+        });
 
     /* Determine the appropriate easing type given an easing input. */
     function getEasing(value, duration) {
         var easing = value;
 
-        /* The easing option can either be a string that references a pre-registered easing, or it can be a two-/four-item array of integers to be converted into a bezier/spring function. */
+        /* The easing option can either be a string that references a pre-registered easing,
+           or it can be a two-/four-item array of integers to be converted into a bezier/spring function. */
         if (Type.isString(value)) {
             /* Ensure that the easing has been assigned to jQuery's Velocity.Easings object. */
             if (!Velocity.Easings[value]) {
@@ -12618,7 +17024,8 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
             easing = generateStep.apply(null, value);
         } else if (Type.isArray(value) && value.length === 2) {
             /* springRK4 must be passed the animation's duration. */
-            /* Note: If the springRK4 array contains non-numbers, generateSpringRK4() returns an easing function generated with default tension and friction values. */
+            /* Note: If the springRK4 array contains non-numbers, generateSpringRK4() returns an easing
+               function generated with default tension and friction values. */
             easing = generateSpringRK4.apply(null, value.concat([ duration ]));
         } else if (Type.isArray(value) && value.length === 4) {
             /* Note: If the bezier array contains non-numbers, generateBezier() returns false. */
@@ -12627,12 +17034,13 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
             easing = false;
         }
 
-        /* Revert to the Velocity-wide default easing type, or fall back to "swing" (which is also jQuery's default) if the Velocity-wide default has been incorrectly modified. */
+        /* Revert to the Velocity-wide default easing type, or fall back to "swing" (which is also jQuery's default)
+           if the Velocity-wide default has been incorrectly modified. */
         if (easing === false) {
             if (Velocity.Easings[Velocity.defaults.easing]) {
                 easing = Velocity.defaults.easing;
             } else {
-                easing = DEFAULT_EASING;
+                easing = EASING_DEFAULT;
             }
         }
 
@@ -12643,7 +17051,8 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
         CSS Stack
     *****************/
 
-    /* The CSS object is a highly condensed and performant CSS stack that fully replaces jQuery's. It handles the validation, getting, and setting of both standard CSS properties and CSS property hooks. */
+    /* The CSS object is a highly condensed and performant CSS stack that fully replaces jQuery's.
+       It handles the validation, getting, and setting of both standard CSS properties and CSS property hooks. */
     /* Note: A "CSS" shorthand is aliased so that our code is easier to read. */
     var CSS = Velocity.CSS = {
 
@@ -12652,6 +17061,7 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
         *************/
 
         RegEx: {
+            isHex: /^#([A-f\d]{3}){1,2}$/i,
             /* Unwrap a property value's surrounding text, e.g. "rgba(4, 3, 2, 1)" ==> "4, 3, 2, 1" and "rect(4px 3px 2px 1px)" ==> "4px 3px 2px 1px". */
             valueUnwrap: /^[A-z]+\((.*)\)$/i,
             wrappedValueAlreadyExtracted: /[0-9.]+ [0-9.]+ [0-9.]+( [0-9.]+)?/,
@@ -12660,11 +17070,23 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
         },
 
         /************
+            Lists
+        ************/
+
+        Lists: {
+            colors: [ "fill", "stroke", "stopColor", "color", "backgroundColor", "borderColor", "borderTopColor", "borderRightColor", "borderBottomColor", "borderLeftColor", "outlineColor" ],
+            transformsBase: [ "translateX", "translateY", "scale", "scaleX", "scaleY", "skewX", "skewY", "rotateZ" ],
+            transforms3D: [ "transformPerspective", "translateZ", "scaleZ", "rotateX", "rotateY" ]
+        },
+
+        /************
             Hooks
         ************/
 
-        /* Hooks allow a subproperty (e.g. "boxShadowBlur") of a compound-value CSS property (e.g. "boxShadow: X Y Blur Spread Color") to be animated as if it were a discrete property. */
-        /* Note: Beyond enabling fine-grained property animation, hooking is necessary since Velocity only tweens properties with single numeric values; unlike CSS transitions, Velocity does not interpolate compound-values. */
+        /* Hooks allow a subproperty (e.g. "boxShadowBlur") of a compound-value CSS property
+           (e.g. "boxShadow: X Y Blur Spread Color") to be animated as if it were a discrete property. */
+        /* Note: Beyond enabling fine-grained property animation, hooking is necessary since Velocity only
+           tweens properties with single numeric values; unlike CSS transitions, Velocity does not interpolate compound-values. */
         Hooks: {
             /********************
                 Registration
@@ -12673,40 +17095,38 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
             /* Templates are a concise way of indicating which subproperties must be individually registered for each compound-value CSS property. */
             /* Each template consists of the compound-value's base name, its constituent subproperty names, and those subproperties' default values. */
             templates: {
-                /* Note: Colors are defaulted to white -- as opposed to black -- since colors that are currently set to "transparent" default to their respective template below when color-animated,
-                   and white is typically a closer match to transparent than black is. */
-                "color": [ "Red Green Blue Alpha", "255 255 255 1" ],
-                "backgroundColor": [ "Red Green Blue Alpha", "255 255 255 1" ],
-                "borderColor": [ "Red Green Blue Alpha", "255 255 255 1" ],
-                "borderTopColor": [ "Red Green Blue Alpha", "255 255 255 1" ],
-                "borderRightColor": [ "Red Green Blue Alpha", "255 255 255 1" ],
-                "borderBottomColor": [ "Red Green Blue Alpha", "255 255 255 1" ],
-                "borderLeftColor": [ "Red Green Blue Alpha", "255 255 255 1" ],
-                "outlineColor": [ "Red Green Blue Alpha", "255 255 255 1" ],
-                "fill": [ "Red Green Blue Alpha", "255 255 255 1" ],
-                "stroke": [ "Red Green Blue Alpha", "255 255 255 1" ],
-                "stopColor": [ "Red Green Blue Alpha", "255 255 255 1" ],
                 "textShadow": [ "Color X Y Blur", "black 0px 0px 0px" ],
                 /* Todo: Add support for inset boxShadows. (webkit places it last whereas IE places it first.) */
                 "boxShadow": [ "Color X Y Blur Spread", "black 0px 0px 0px 0px" ],
                 "clip": [ "Top Right Bottom Left", "0px 0px 0px 0px" ],
                 "backgroundPosition": [ "X Y", "0% 0%" ],
-                "transformOrigin": [ "X Y Z", "50% 50% 0%" ],
+                "transformOrigin": [ "X Y Z", "50% 50% 0px" ],
                 "perspectiveOrigin": [ "X Y", "50% 50%" ]
             },
 
-            /* A "registered" hook is one that has been converted from its template form into a live, tweenable property. It contains data to associate it with its root property. */
+            /* A "registered" hook is one that has been converted from its template form into a live,
+               tweenable property. It contains data to associate it with its root property. */
             registered: {
-                /* Note: A registered hook looks like this ==> textShadowBlur: [ "textShadow", 3 ], which consists of the subproperty's name, the associated root property's name,
+                /* Note: A registered hook looks like this ==> textShadowBlur: [ "textShadow", 3 ],
+                   which consists of the subproperty's name, the associated root property's name,
                    and the subproperty's position in the root's value. */
             },
             /* Convert the templates into individual hooks then append them to the registered object above. */
             register: function () {
+                /* Color hooks registration. */
+                /* Note: Colors are defaulted to white -- as opposed to black -- since colors that are
+                   currently set to "transparent" default to their respective template below when color-animated,
+                   and white is typically a closer match to transparent than black is. */
+                for (var i = 0; i < CSS.Lists.colors.length; i++) {
+                    CSS.Hooks.templates[CSS.Lists.colors[i]] = [ "Red Green Blue Alpha", "255 255 255 1" ];
+                }
+
                 var rootProperty,
                     hookTemplate,
                     hookNames;
 
-                /* In IE, color values inside compound-value properties are positioned at the end the value instead of at the beginning. Thus, we re-arrange the templates accordingly. */
+                /* In IE, color values inside compound-value properties are positioned at the end the value instead of at the beginning.
+                   Thus, we re-arrange the templates accordingly. */
                 if (IE) {
                     for (rootProperty in CSS.Hooks.templates) {
                         hookTemplate = CSS.Hooks.templates[rootProperty];
@@ -12723,7 +17143,7 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                             CSS.Hooks.templates[rootProperty] = [ hookNames.join(" "), defaultValues.join(" ") ];
                         }
                     }
-                 }
+                }
 
                 /* Hook registration. */
                 for (rootProperty in CSS.Hooks.templates) {
@@ -12734,7 +17154,8 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                         var fullHookName = rootProperty + hookNames[i],
                             hookPosition = i;
 
-                        /* For each hook, register its full name (e.g. textShadowBlur) with its root property (e.g. textShadow) and the hook's position in its template's default value string. */
+                        /* For each hook, register its full name (e.g. textShadowBlur) with its root property (e.g. textShadow)
+                           and the hook's position in its template's default value string. */
                         CSS.Hooks.registered[fullHookName] = [ rootProperty, hookPosition ];
                     }
                 }
@@ -12756,15 +17177,18 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                     return property;
                 }
             },
-            /* Convert any rootPropertyValue, null or otherwise, into a space-delimited list of hook values so that the targeted hook can be injected or extracted at its standard position. */
+            /* Convert any rootPropertyValue, null or otherwise, into a space-delimited list of hook values so that
+               the targeted hook can be injected or extracted at its standard position. */
             cleanRootPropertyValue: function(rootProperty, rootPropertyValue) {
                 /* If the rootPropertyValue is wrapped with "rgb()", "clip()", etc., remove the wrapping to normalize the value before manipulation. */
                 if (CSS.RegEx.valueUnwrap.test(rootPropertyValue)) {
                     rootPropertyValue = rootPropertyValue.match(CSS.Hooks.RegEx.valueUnwrap)[1];
                 }
 
-                /* If rootPropertyValue is a CSS null-value (from which there's inherently no hook value to extract), default to the root's default value as defined in CSS.Hooks.templates. */
-                /* Note: CSS null-values include "none", "auto", and "transparent". They must be converted into their zero-values (e.g. textShadow: "none" ==> textShadow: "0px 0px 0px black") for hook manipulation to proceed. */
+                /* If rootPropertyValue is a CSS null-value (from which there's inherently no hook value to extract),
+                   default to the root's default value as defined in CSS.Hooks.templates. */
+                /* Note: CSS null-values include "none", "auto", and "transparent". They must be converted into their
+                   zero-values (e.g. textShadow: "none" ==> textShadow: "0px 0px 0px black") for hook manipulation to proceed. */
                 if (CSS.Values.isCSSNullValue(rootPropertyValue)) {
                     rootPropertyValue = CSS.Hooks.templates[rootProperty][1];
                 }
@@ -12788,7 +17212,8 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                     return rootPropertyValue;
                 }
             },
-            /* Inject the hook's value into its root property's value. This is used to piece back together the root property once Velocity has updated one of its individually hooked values through tweening. */
+            /* Inject the hook's value into its root property's value. This is used to piece back together the root property
+               once Velocity has updated one of its individually hooked values through tweening. */
             injectValue: function (fullHookName, hookValue, rootPropertyValue) {
                 var hookData = CSS.Hooks.registered[fullHookName];
 
@@ -12800,7 +17225,8 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
 
                     rootPropertyValue = CSS.Hooks.cleanRootPropertyValue(hookRoot, rootPropertyValue);
 
-                    /* Split rootPropertyValue into its individual hook values, replace the targeted value with hookValue, then reconstruct the rootPropertyValue string. */
+                    /* Split rootPropertyValue into its individual hook values, replace the targeted value with hookValue,
+                       then reconstruct the rootPropertyValue string. */
                     rootPropertyValueParts = rootPropertyValue.toString().match(CSS.RegEx.valueSplit);
                     rootPropertyValueParts[hookPosition] = hookValue;
                     rootPropertyValueUpdated = rootPropertyValueParts.join(" ");
@@ -12817,9 +17243,11 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
            Normalizations
         *******************/
 
-        /* Normalizations standardize CSS property manipulation by pollyfilling browser-specific implementations (e.g. opacity) and reformatting special properties (e.g. clip, rgba) to look like standard ones. */
+        /* Normalizations standardize CSS property manipulation by pollyfilling browser-specific implementations (e.g. opacity)
+           and reformatting special properties (e.g. clip, rgba) to look like standard ones. */
         Normalizations: {
-            /* Normalizations are passed a normalization target (either the property's name, its extracted value, or its injected value), the targeted element (which may need to be queried), and the targeted property value. */
+            /* Normalizations are passed a normalization target (either the property's name, its extracted value, or its injected value),
+               the targeted element (which may need to be queried), and the targeted property value. */
             registered: {
                 clip: function(type, element, propertyValue) {
                     switch (type) {
@@ -12854,14 +17282,15 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                             case "name":
                                 return "filter";
                             case "extract":
-                                /* <=IE8 return a "filter" value of "alpha(opacity=\d{1,3})". Extract the value and convert it to a decimal value to match the standard CSS opacity property's formatting. */
+                                /* <=IE8 return a "filter" value of "alpha(opacity=\d{1,3})".
+                                   Extract the value and convert it to a decimal value to match the standard CSS opacity property's formatting. */
                                 var extracted = propertyValue.toString().match(/alpha\(opacity=(.*)\)/i);
 
                                 if (extracted) {
                                     /* Convert to decimal value. */
                                     propertyValue = extracted[1] / 100;
                                 } else {
-                                    /* When extracting opacity, default to 1 (fully visible) since a null value means opacity hasn't been set and the element is therefore fully visible. */
+                                    /* When extracting opacity, default to 1 since a null value means opacity hasn't been set. */
                                     propertyValue = 1;
                                 }
 
@@ -12870,8 +17299,9 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                                 /* Opacified elements are required to have their zoom property set to a non-zero value. */
                                 element.style.zoom = 1;
 
-                                /* Setting the filter property on elements with certain font property combinations can result in a highly unappealing ultra-bolding effect. There's no way to remedy this throughout a tween,
-                                   but dropping the value altogether (when opacity hits 1) at leasts ensures that the glitch is gone post-tweening. */
+                                /* Setting the filter property on elements with certain font property combinations can result in a
+                                   highly unappealing ultra-bolding effect. There's no way to remedy this throughout a tween, but dropping the
+                                   value altogether (when opacity hits 1) at leasts ensures that the glitch is gone post-tweening. */
                                 if (parseFloat(propertyValue) >= 1) {
                                     return "";
                                 } else {
@@ -12904,23 +17334,27 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                     Transforms
                 *****************/
 
-                /* Transforms are the subproperties contained by the CSS "transform" property. Transforms must undergo normalization so that they can be referenced in a properties map by their individual names. */
-                /* Note: When transforms are "set", they are actually assigned to a per-element transformCache. When all transform setting is complete complete, CSS.flushTransformCache() must be manually called to flush the values to the DOM.
-                   Transform setting is batched in this way to improve performance: the transform style only needs to be updated once when multiple transform subproperties are being animated simultaneously. */
-                var transformProperties = [ "translateX", "translateY", "scale", "scaleX", "scaleY", "skewX", "skewY", "rotateZ" ];
-
-                /* IE9 and Android Gingerbread have support for 2D -- but not 3D -- transforms. Since animating unsupported transform properties results in the browser ignoring the *entire* transform string, we prevent these 3D values
-                   from being normalized for these browsers so that tweening skips these properties altogether (since it will ignore them as being unsupported by the browser.) */
+                /* Transforms are the subproperties contained by the CSS "transform" property. Transforms must undergo normalization
+                   so that they can be referenced in a properties map by their individual names. */
+                /* Note: When transforms are "set", they are actually assigned to a per-element transformCache. When all transform
+                   setting is complete complete, CSS.flushTransformCache() must be manually called to flush the values to the DOM.
+                   Transform setting is batched in this way to improve performance: the transform style only needs to be updated
+                   once when multiple transform subproperties are being animated simultaneously. */
+                /* Note: IE9 and Android Gingerbread have support for 2D -- but not 3D -- transforms. Since animating unsupported
+                   transform properties results in the browser ignoring the *entire* transform string, we prevent these 3D values
+                   from being normalized for these browsers so that tweening skips these properties altogether
+                   (since it will ignore them as being unsupported by the browser.) */
                 if (!(IE <= 9) && !Velocity.State.isGingerbread) {
-                    /* Append 3D transform properties onto transformProperties. */
-                    /* Note: Since the standalone CSS "perspective" property and the CSS transform "perspective" subproperty share the same name, the latter is given a unique token within Velocity: "transformPerspective". */
-                    transformProperties = transformProperties.concat([ "transformPerspective", "translateZ", "scaleZ", "rotateX", "rotateY" ]);
+                    /* Note: Since the standalone CSS "perspective" property and the CSS transform "perspective" subproperty
+                    share the same name, the latter is given a unique token within Velocity: "transformPerspective". */
+                    CSS.Lists.transformsBase = CSS.Lists.transformsBase.concat(CSS.Lists.transforms3D);
                 }
 
-                for (var i = 0, transformPropertiesLength = transformProperties.length; i < transformPropertiesLength; i++) {
-                    /* Wrap the dynamically generated normalization function in a new scope so that transformName's value is paired with its respective function. (Otherwise, all functions would take the final for loop's transformName.) */
+                for (var i = 0; i < CSS.Lists.transformsBase.length; i++) {
+                    /* Wrap the dynamically generated normalization function in a new scope so that transformName's value is
+                    paired with its respective function. (Otherwise, all functions would take the final for loop's transformName.) */
                     (function() {
-                        var transformName = transformProperties[i];
+                        var transformName = CSS.Lists.transformsBase[i];
 
                         CSS.Normalizations.registered[transformName] = function (type, element, propertyValue) {
                             switch (type) {
@@ -12930,10 +17364,11 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                                 /* Transform values are cached onto a per-element transformCache object. */
                                 case "extract":
                                     /* If this transform has yet to be assigned a value, return its null value. */
-                                    if (Data(element).transformCache[transformName] === undefined) {
-                                        /* Scale transformProperties default to 1 whereas all other transform properties default to 0. */
+                                    if (Data(element) === undefined || Data(element).transformCache[transformName] === undefined) {
+                                        /* Scale CSS.Lists.transformsBase default to 1 whereas all other transform properties default to 0. */
                                         return /^scale/i.test(transformName) ? 1 : 0;
-                                    /* When transform values are set, they are wrapped in parentheses as per the CSS spec. Thus, when extracting their values (for tween calculations), we strip off the parentheses. */
+                                    /* When transform values are set, they are wrapped in parentheses as per the CSS spec.
+                                       Thus, when extracting their values (for tween calculations), we strip off the parentheses. */
                                     } else {
                                         return Data(element).transformCache[transformName].replace(/[()]/g, "");
                                     }
@@ -12946,14 +17381,15 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                                     switch (transformName.substr(0, transformName.length - 1)) {
                                         /* Whitelist unit types for each transform. */
                                         case "translate":
-                                            invalid = !/(%|px|em|rem|\d)$/i.test(propertyValue);
+                                            invalid = !/(%|px|em|rem|vw|vh|\d)$/i.test(propertyValue);
                                             break;
                                         /* Since an axis-free "scale" property is supported as well, a little hack is used here to detect it by chopping off its last letter. */
                                         case "scal":
                                         case "scale":
-                                            /* Chrome on Android has a bug in which scaled elements blur if their initial scale value is below 1 (which can happen with forcefeeding). Thus, we detect a yet-unset scale property
-                                               and ensure that its first value is always 1. More info here: http://stackoverflow.com/questions/10417890/css3-animations-with-transform-causes-blurred-elements-on-webkit/10417962#10417962 */
-                                            if (Velocity.State.isAndroid && Data(element).transformCache[transformName] === undefined) {
+                                            /* Chrome on Android has a bug in which scaled elements blur if their initial scale
+                                               value is below 1 (which can happen with forcefeeding). Thus, we detect a yet-unset scale property
+                                               and ensure that its first value is always 1. More info: http://stackoverflow.com/questions/10417890/css3-animations-with-transform-causes-blurred-elements-on-webkit/10417962#10417962 */
+                                            if (Velocity.State.isAndroid && Data(element).transformCache[transformName] === undefined && propertyValue < 1) {
                                                 propertyValue = 1;
                                             }
 
@@ -12985,29 +17421,13 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
 
                 /* Since Velocity only animates a single numeric value per property, color animation is achieved by hooking the individual RGBA components of CSS color properties.
                    Accordingly, color values must be normalized (e.g. "#ff0000", "red", and "rgb(255, 0, 0)" ==> "255 0 0 1") so that their components can be injected/extracted by CSS.Hooks logic. */
-                var colorProperties = [ "fill", "stroke", "stopColor", "color", "backgroundColor", "borderColor", "borderTopColor", "borderRightColor", "borderBottomColor", "borderLeftColor", "outlineColor" ];
-
-                for (var i = 0, colorPropertiesLength = colorProperties.length; i < colorPropertiesLength; i++) {
-                    /* Hex to RGB conversion. Copyright Tim Down: http://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb */
-                    function hexToRgb (hex) {
-                        var shortformRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i,
-                            longformRegex = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i,
-                            rgbParts;
-
-                        hex = hex.replace(shortformRegex, function (m, r, g, b) {
-                            return r + r + g + g + b + b;
-                        });
-
-                        rgbParts = longformRegex.exec(hex);
-
-                        return rgbParts ? "rgb(" + (parseInt(rgbParts[1], 16) + " " + parseInt(rgbParts[2], 16) + " " + parseInt(rgbParts[3], 16)) + ")" : "rgb(0 0 0)";
-                    }
-
-                    /* Wrap the dynamically generated normalization function in a new scope so that colorName's value is paired with its respective function. (Otherwise, all functions would take the final for loop's colorName.) */
+                for (var i = 0; i < CSS.Lists.colors.length; i++) {
+                    /* Wrap the dynamically generated normalization function in a new scope so that colorName's value is paired with its respective function.
+                       (Otherwise, all functions would take the final for loop's colorName.) */
                     (function () {
-                        var colorName = colorProperties[i];
+                        var colorName = CSS.Lists.colors[i];
 
-                        /* Note: In IE<=8, which support rgb but not rgba, colorProperties are reverted to rgb by stripping off the alpha component. */
+                        /* Note: In IE<=8, which support rgb but not rgba, color properties are reverted to rgb by stripping off the alpha component. */
                         CSS.Normalizations.registered[colorName] = function(type, element, propertyValue) {
                             switch (type) {
                                 case "name":
@@ -13022,22 +17442,12 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                                     } else {
                                         var converted,
                                             colorNames = {
-                                                aqua: "rgb(0, 255, 255);",
                                                 black: "rgb(0, 0, 0)",
                                                 blue: "rgb(0, 0, 255)",
-                                                fuchsia: "rgb(255, 0, 255)",
                                                 gray: "rgb(128, 128, 128)",
                                                 green: "rgb(0, 128, 0)",
-                                                lime: "rgb(0, 255, 0)",
-                                                maroon: "rgb(128, 0, 0)",
-                                                navy: "rgb(0, 0, 128)",
-                                                olive: "rgb(128, 128, 0)",
-                                                purple: "rgb(128, 0, 128)",
                                                 red: "rgb(255, 0, 0)",
-                                                silver: "rgb(192, 192, 192)",
-                                                teal: "rgb(0, 128, 128)",
-                                                white: "rgb(255, 255, 255)",
-                                                yellow: "rgb(255, 255, 0)"
+                                                white: "rgb(255, 255, 255)"
                                             };
 
                                         /* Convert color names to rgb. */
@@ -13049,14 +17459,15 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                                                 converted = colorNames.black;
                                             }
                                         /* Convert hex values to rgb. */
-                                        } else if (/^#([A-f\d]{3}){1,2}$/i.test(propertyValue)) {
-                                            converted = hexToRgb(propertyValue);
+                                        } else if (CSS.RegEx.isHex.test(propertyValue)) {
+                                            converted = "rgb(" + CSS.Values.hexToRgb(propertyValue).join(" ") + ")";
                                         /* If the provided color doesn't match any of the accepted color formats, default to black. */
                                         } else if (!(/^rgba?\(/i.test(propertyValue))) {
                                             converted = colorNames.black;
                                         }
 
-                                        /* Remove the surrounding "rgb/rgba()" string then replace commas with spaces and strip repeated spaces (in case the value included spaces to begin with). */
+                                        /* Remove the surrounding "rgb/rgba()" string then replace commas with spaces and strip
+                                           repeated spaces (in case the value included spaces to begin with). */
                                         extracted = (converted || propertyValue).toString().match(CSS.RegEx.valueUnwrap)[1].replace(/,(\s+)?/g, " ");
                                     }
 
@@ -13077,7 +17488,8 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                                         propertyValue += " 1";
                                     }
 
-                                    /* Re-insert the browser-appropriate wrapper("rgb/rgba()"), insert commas, and strip off decimal units on all values but the fourth (R, G, and B only accept whole numbers). */
+                                    /* Re-insert the browser-appropriate wrapper("rgb/rgba()"), insert commas, and strip off decimal units
+                                       on all values but the fourth (R, G, and B only accept whole numbers). */
                                     return (IE <= 8 ? "rgb" : "rgba") + "(" + propertyValue.replace(/\s+/g, ",").replace(/\.(\d)+(?=,)/g, "") + ")";
                             }
                         };
@@ -13091,20 +17503,29 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
         ************************/
 
         Names: {
-            /* Camelcase a property name into its JavaScript notation (e.g. "background-color" ==> "backgroundColor"). Camelcasing is used to normalize property names between and across calls. */
+            /* Camelcase a property name into its JavaScript notation (e.g. "background-color" ==> "backgroundColor").
+               Camelcasing is used to normalize property names between and across calls. */
             camelCase: function (property) {
                 return property.replace(/-(\w)/g, function (match, subMatch) {
                     return subMatch.toUpperCase();
                 });
             },
 
-            /* For SVG elements, some CSS properties (namely, dimemsional ones) are GET and SET directly on the SVG element's HTML attributes (instead of via styles). */
+            /* For SVG elements, some properties (namely, dimensional ones) are GET/SET via the element's HTML attributes (instead of via CSS styles). */
             SVGAttribute: function (property) {
-                return /^(width|height|x|y|cx|cy|r|rx|ry|x1|x2|y1|y1|transform)$/i.test(property);
+                var SVGAttributes = "width|height|x|y|cx|cy|r|rx|ry|x1|x2|y1|y2";
+
+                /* Certain browsers require an SVG transform to be applied as an attribute. (Otherwise, application via CSS is preferable due to 3D support.) */
+                if (IE || (Velocity.State.isAndroid && !Velocity.State.isChrome)) {
+                    SVGAttributes += "|transform";
+                }
+
+                return new RegExp("^(" + SVGAttributes + ")$", "i").test(property);
             },
 
             /* Determine whether a property should be set with a vendor prefix. */
-            /* If a prefixed version of the property exists, return it. Otherwise, return the original property name. If the property is not at all supported by the browser, return a false flag. */
+            /* If a prefixed version of the property exists, return it. Otherwise, return the original property name.
+               If the property is not at all supported by the browser, return a false flag. */
             prefixCheck: function (property) {
                 /* If this property has already been checked, return the cached value. */
                 if (Velocity.State.prefixMatches[property]) {
@@ -13142,9 +17563,25 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
         ************************/
 
         Values: {
+            /* Hex to RGB conversion. Copyright Tim Down: http://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb */
+            hexToRgb: function (hex) {
+                var shortformRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i,
+                    longformRegex = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i,
+                    rgbParts;
+
+                hex = hex.replace(shortformRegex, function (m, r, g, b) {
+                    return r + r + g + g + b + b;
+                });
+
+                rgbParts = longformRegex.exec(hex);
+
+                return rgbParts ? [ parseInt(rgbParts[1], 16), parseInt(rgbParts[2], 16), parseInt(rgbParts[3], 16) ] : [ 0, 0, 0 ];
+            },
             isCSSNullValue: function (value) {
-                /* The browser defaults CSS values that have not been set to either 0 or one of several possible null-value strings. Thus, we check for both falsiness and these special strings. */
-                /* Null-value checking is performed to default the special strings to 0 (for the sake of tweening) or their hook templates as defined as CSS.Hooks (for the sake of hook injection/extraction). */
+                /* The browser defaults CSS values that have not been set to either 0 or one of several possible null-value strings.
+                   Thus, we check for both falsiness and these special strings. */
+                /* Null-value checking is performed to default the special strings to 0 (for the sake of tweening) or their hook
+                   templates as defined as CSS.Hooks (for the sake of hook injection/extraction). */
                 /* Note: Chrome returns "rgba(0, 0, 0, 0)" for an undefined color whereas IE returns "transparent". */
                 return (value == 0 || /^(none|auto|transparent|(rgba\(0, ?0, ?0, ?0\)))$/i.test(value));
             },
@@ -13175,6 +17612,21 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                 } else {
                     return "block";
                 }
+            },
+            /* The class add/remove functions are used to temporarily apply a "velocity-animating" class to elements while they're animating. */
+            addClass: function (element, className) {
+                if (element.classList) {
+                    element.classList.add(className);
+                } else {
+                    element.className += (element.className.length ? " " : "") + className;
+                }
+            },
+            removeClass: function (element, className) {
+                if (element.classList) {
+                    element.classList.remove(className);
+                } else {
+                    element.className = element.className.toString().replace(new RegExp("(^|\\s)" + className.split(" ").join("|") + "(\\s|$)", "gi"), " ");
+                }
             }
         },
 
@@ -13185,32 +17637,58 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
         /* The singular getPropertyValue, which routes the logic for all normalizations, hooks, and standard CSS properties. */
         getPropertyValue: function (element, property, rootPropertyValue, forceStyleLookup) {
             /* Get an element's computed property value. */
-            /* Note: Retrieving the value of a CSS property cannot simply be performed by checking an element's style attribute (which only reflects user-defined values).
-               Instead, the browser must be queried for a property's *computed* value. You can read more about getComputedStyle here: https://developer.mozilla.org/en/docs/Web/API/window.getComputedStyle */
+            /* Note: Retrieving the value of a CSS property cannot simply be performed by checking an element's
+               style attribute (which only reflects user-defined values). Instead, the browser must be queried for a property's
+               *computed* value. You can read more about getComputedStyle here: https://developer.mozilla.org/en/docs/Web/API/window.getComputedStyle */
             function computePropertyValue (element, property) {
-                /* When box-sizing isn't set to border-box, height and width style values are incorrectly computed when an element's scrollbars are visible (which expands the element's dimensions). Thus, we defer
-                   to the more accurate offsetHeight/Width property, which includes the total dimensions for interior, border, padding, and scrollbar. We subtract border and padding to get the sum of interior + scrollbar. */
-
+                /* When box-sizing isn't set to border-box, height and width style values are incorrectly computed when an
+                   element's scrollbars are visible (which expands the element's dimensions). Thus, we defer to the more accurate
+                   offsetHeight/Width property, which includes the total dimensions for interior, border, padding, and scrollbar.
+                   We subtract border and padding to get the sum of interior + scrollbar. */
                 var computedValue = 0;
 
-                /* IE<=8 doesn't support window.getComputedStyle, thus we defer to jQuery, which has an extensive array of hacks to accurately retrieve IE8 property values.
-                   Re-implementing that logic here is not worth bloating the codebase for a dying browser. The performance repercussions of using jQuery here are minimal since
+                /* IE<=8 doesn't support window.getComputedStyle, thus we defer to jQuery, which has an extensive array
+                   of hacks to accurately retrieve IE8 property values. Re-implementing that logic here is not worth bloating the
+                   codebase for a dying browser. The performance repercussions of using jQuery here are minimal since
                    Velocity is optimized to rarely (and sometimes never) query the DOM. Further, the $.css() codepath isn't that slow. */
                 if (IE <= 8) {
                     computedValue = $.css(element, property); /* GET */
-                /* All other browsers support getComputedStyle. The returned live object reference is cached onto its associated element so that it does not need to be refetched upon every GET. */
+                /* All other browsers support getComputedStyle. The returned live object reference is cached onto its
+                   associated element so that it does not need to be refetched upon every GET. */
                 } else {
+                    /* Browsers do not return height and width values for elements that are set to display:"none". Thus, we temporarily
+                       toggle display to the element type's default value. */
+                    var toggleDisplay = false;
+
+                    if (/^(width|height)$/.test(property) && CSS.getPropertyValue(element, "display") === 0) {
+                        toggleDisplay = true;
+                        CSS.setPropertyValue(element, "display", CSS.Values.getDisplayType(element));
+                    }
+
+                    function revertDisplay () {
+                        if (toggleDisplay) {
+                            CSS.setPropertyValue(element, "display", "none");
+                        }
+                    }
+
                     if (!forceStyleLookup) {
                         if (property === "height" && CSS.getPropertyValue(element, "boxSizing").toString().toLowerCase() !== "border-box") {
-                            return element.offsetHeight - (parseFloat(CSS.getPropertyValue(element, "borderTopWidth")) || 0) - (parseFloat(CSS.getPropertyValue(element, "borderBottomWidth")) || 0) - (parseFloat(CSS.getPropertyValue(element, "paddingTop")) || 0) - (parseFloat(CSS.getPropertyValue(element, "paddingBottom")) || 0);
+                            var contentBoxHeight = element.offsetHeight - (parseFloat(CSS.getPropertyValue(element, "borderTopWidth")) || 0) - (parseFloat(CSS.getPropertyValue(element, "borderBottomWidth")) || 0) - (parseFloat(CSS.getPropertyValue(element, "paddingTop")) || 0) - (parseFloat(CSS.getPropertyValue(element, "paddingBottom")) || 0);
+                            revertDisplay();
+
+                            return contentBoxHeight;
                         } else if (property === "width" && CSS.getPropertyValue(element, "boxSizing").toString().toLowerCase() !== "border-box") {
-                            return element.offsetWidth - (parseFloat(CSS.getPropertyValue(element, "borderLeftWidth")) || 0) - (parseFloat(CSS.getPropertyValue(element, "borderRightWidth")) || 0) - (parseFloat(CSS.getPropertyValue(element, "paddingLeft")) || 0) - (parseFloat(CSS.getPropertyValue(element, "paddingRight")) || 0);
+                            var contentBoxWidth = element.offsetWidth - (parseFloat(CSS.getPropertyValue(element, "borderLeftWidth")) || 0) - (parseFloat(CSS.getPropertyValue(element, "borderRightWidth")) || 0) - (parseFloat(CSS.getPropertyValue(element, "paddingLeft")) || 0) - (parseFloat(CSS.getPropertyValue(element, "paddingRight")) || 0);
+                            revertDisplay();
+
+                            return contentBoxWidth;
                         }
                     }
 
                     var computedStyle;
 
-                    /* For elements that Velocity hasn't been called on directly (e.g. when Velocity queries the DOM on behalf of a parent of an element its animating), perform a direct getComputedStyle lookup since the object isn't cached. */
+                    /* For elements that Velocity hasn't been called on directly (e.g. when Velocity queries the DOM on behalf
+                       of a parent of an element its animating), perform a direct getComputedStyle lookup since the object isn't cached. */
                     if (Data(element) === undefined) {
                         computedStyle = window.getComputedStyle(element, null); /* GET */
                     /* If the computedStyle object has yet to be cached, do so now. */
@@ -13221,34 +17699,42 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                         computedStyle = Data(element).computedStyle;
                     }
 
-                    /* IE doesn't return a value for borderColor -- it only returns individual values for each border side's color. As a polyfill, default to querying for just the top border's color. */
-                    if (IE && property === "borderColor") {
+                    /* IE and Firefox do not return a value for the generic borderColor -- they only return individual values for each border side's color.
+                       As a polyfill for querying individual border side colors, just return the top border's color. */
+                    if ((IE || Velocity.State.isFirefox) && property === "borderColor") {
                         property = "borderTopColor";
                     }
 
-                    /* IE9 has a bug in which the "filter" property must be accessed from computedStyle using the getPropertyValue method instead of a direct property lookup.
-                       The getPropertyValue method is slower than a direct lookup, which is why we avoid it by default. */
+                    /* IE9 has a bug in which the "filter" property must be accessed from computedStyle using the getPropertyValue method
+                       instead of a direct property lookup. The getPropertyValue method is slower than a direct lookup, which is why we avoid it by default. */
                     if (IE === 9 && property === "filter") {
                         computedValue = computedStyle.getPropertyValue(property); /* GET */
                     } else {
                         computedValue = computedStyle[property];
                     }
 
-                    /* Fall back to the property's style value (if defined) when computedValue returns nothing, which can happen when the element hasn't been painted. */
+                    /* Fall back to the property's style value (if defined) when computedValue returns nothing,
+                       which can happen when the element hasn't been painted. */
                     if (computedValue === "" || computedValue === null) {
                         computedValue = element.style[property];
                     }
+
+                    revertDisplay();
                 }
 
-                /* For top, right, bottom, and left (TRBL) values that are set to "auto" on elements of "fixed" or "absolute" position, defer to jQuery for converting "auto" to a numeric value.
-                   (For elements with a "static" or "relative" position, "auto" has the same effect as being set to 0, so no conversion is necessary.) */
-                /* An example of why numeric conversion is necessary: When an element with "position:absolute" has an untouched "left" property, which reverts to "auto", left's value is 0 relative to its parent element,
-                   but is often non-zero relative to its *containing* (not parent) element, which is the nearest "position:relative" ancestor or the viewport (and always the viewport in the case of "position:fixed"). */
+                /* For top, right, bottom, and left (TRBL) values that are set to "auto" on elements of "fixed" or "absolute" position,
+                   defer to jQuery for converting "auto" to a numeric value. (For elements with a "static" or "relative" position, "auto" has the same
+                   effect as being set to 0, so no conversion is necessary.) */
+                /* An example of why numeric conversion is necessary: When an element with "position:absolute" has an untouched "left"
+                   property, which reverts to "auto", left's value is 0 relative to its parent element, but is often non-zero relative
+                   to its *containing* (not parent) element, which is the nearest "position:relative" ancestor or the viewport (and always the viewport in the case of "position:fixed"). */
                 if (computedValue === "auto" && /^(top|right|bottom|left)$/i.test(property)) {
                     var position = computePropertyValue(element, "position"); /* GET */
 
-                    /* For absolute positioning, jQuery's $.position() only returns values for top and left; right and bottom will have their "auto" value reverted to 0. */
-                    /* Note: A jQuery object must be created here since jQuery doesn't have a low-level alias for $.position(). Not a big deal since we're currently in a GET batch anyway. */
+                    /* For absolute positioning, jQuery's $.position() only returns values for top and left;
+                       right and bottom will have their "auto" value reverted to 0. */
+                    /* Note: A jQuery object must be created here since jQuery doesn't have a low-level alias for $.position().
+                       Not a big deal since we're currently in a GET batch anyway. */
                     if (position === "fixed" || (position === "absolute" && /top|left/i.test(property))) {
                         /* Note: jQuery strips the pixel unit from its returned values; we re-add it here to conform with computePropertyValue's behavior. */
                         computedValue = $(element).position()[property] + "px"; /* GET */
@@ -13260,12 +17746,14 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
 
             var propertyValue;
 
-            /* If this is a hooked property (e.g. "clipLeft" instead of the root property of "clip"), extract the hook's value from a normalized rootPropertyValue using CSS.Hooks.extractValue(). */
+            /* If this is a hooked property (e.g. "clipLeft" instead of the root property of "clip"),
+               extract the hook's value from a normalized rootPropertyValue using CSS.Hooks.extractValue(). */
             if (CSS.Hooks.registered[property]) {
                 var hook = property,
                     hookRoot = CSS.Hooks.getRoot(hook);
 
-                /* If a cached rootPropertyValue wasn't passed in (which Velocity always attempts to do in order to avoid requerying the DOM), query the DOM for the root property's value. */
+                /* If a cached rootPropertyValue wasn't passed in (which Velocity always attempts to do in order to avoid requerying the DOM),
+                   query the DOM for the root property's value. */
                 if (rootPropertyValue === undefined) {
                     /* Since the browser is now being directly queried, use the official post-prefixing property name for this lookup. */
                     rootPropertyValue = CSS.getPropertyValue(element, CSS.Names.prefixCheck(hookRoot)[0]); /* GET */
@@ -13279,16 +17767,20 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                 /* Extract the hook's value. */
                 propertyValue = CSS.Hooks.extractValue(hook, rootPropertyValue);
 
-            /* If this is a normalized property (e.g. "opacity" becomes "filter" in <=IE8) or "translateX" becomes "transform"), normalize the property's name and value, and handle the special case of transforms. */
-            /* Note: Normalizing a property is mutually exclusive from hooking a property since hook-extracted values are strictly numerical and therefore do not require normalization extraction. */
+            /* If this is a normalized property (e.g. "opacity" becomes "filter" in <=IE8) or "translateX" becomes "transform"),
+               normalize the property's name and value, and handle the special case of transforms. */
+            /* Note: Normalizing a property is mutually exclusive from hooking a property since hook-extracted values are strictly
+               numerical and therefore do not require normalization extraction. */
             } else if (CSS.Normalizations.registered[property]) {
                 var normalizedPropertyName,
                     normalizedPropertyValue;
 
                 normalizedPropertyName = CSS.Normalizations.registered[property]("name", element);
 
-                /* Transform values are calculated via normalization extraction (see below), which checks against the element's transformCache. At no point do transform GETs ever actually query the DOM; initial stylesheet values are never processed.
-                   This is because parsing 3D transform matrices is not always accurate and would bloat our codebase; thus, normalization extraction defaults initial transform values to their zero-values (e.g. 1 for scaleX and 0 for translateX). */
+                /* Transform values are calculated via normalization extraction (see below), which checks against the element's transformCache.
+                   At no point do transform GETs ever actually query the DOM; initial stylesheet values are never processed.
+                   This is because parsing 3D transform matrices is not always accurate and would bloat our codebase;
+                   thus, normalization extraction defaults initial transform values to their zero-values (e.g. 1 for scaleX and 0 for translateX). */
                 if (normalizedPropertyName !== "transform") {
                     normalizedPropertyValue = computePropertyValue(element, CSS.Names.prefixCheck(normalizedPropertyName)[0]); /* GET */
 
@@ -13303,9 +17795,11 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
 
             /* If a (numeric) value wasn't produced via hook extraction or normalization, query the DOM. */
             if (!/^[\d-]/.test(propertyValue)) {
-                /* For SVG elements, dimensional properties (which SVGAttribute() detects) are tweened via their HTML attribute values instead of their CSS style values. */
+                /* For SVG elements, dimensional properties (which SVGAttribute() detects) are tweened via
+                   their HTML attribute values instead of their CSS style values. */
                 if (Data(element) && Data(element).isSVG && CSS.Names.SVGAttribute(property)) {
-                    /* Since the height/width attribute values must be set manually, they don't reflect computed values. Thus, we use use getBBox() to ensure we always get values for elements with undefined height/width attributes. */
+                    /* Since the height/width attribute values must be set manually, they don't reflect computed values.
+                       Thus, we use use getBBox() to ensure we always get values for elements with undefined height/width attributes. */
                     if (/^(height|width)$/i.test(property)) {
                         propertyValue = element.getBBox()[property];
                     /* Otherwise, access the attribute value directly. */
@@ -13317,7 +17811,8 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                 }
             }
 
-            /* Since property lookups are for animation purposes (which entails computing the numeric delta between start and end values), convert CSS null-values to an integer of value 0. */
+            /* Since property lookups are for animation purposes (which entails computing the numeric delta between start and end values),
+               convert CSS null-values to an integer of value 0. */
             if (CSS.Values.isCSSNullValue(propertyValue)) {
                 propertyValue = 0;
             }
@@ -13345,7 +17840,8 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                     }
                 }
             } else {
-                /* Transforms (translateX, rotateZ, etc.) are applied to a per-element transformCache object, which is manually flushed via flushTransformCache(). Thus, for now, we merely cache transforms being SET. */
+                /* Transforms (translateX, rotateZ, etc.) are applied to a per-element transformCache object, which is manually flushed via flushTransformCache().
+                   Thus, for now, we merely cache transforms being SET. */
                 if (CSS.Normalizations.registered[property] && CSS.Normalizations.registered[property]("name", element) === "transform") {
                     /* Perform a normalization injection. */
                     /* Note: The normalization logic handles the transformCache updating. */
@@ -13375,11 +17871,12 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                     /* Assign the appropriate vendor prefix before performing an official style update. */
                     propertyName = CSS.Names.prefixCheck(property)[0];
 
-                    /* A try/catch is used for IE<=8, which throws an error when "invalid" CSS values are set, e.g. a negative width. Try/catch is avoided for other browsers since it incurs a performance overhead. */
+                    /* A try/catch is used for IE<=8, which throws an error when "invalid" CSS values are set, e.g. a negative width.
+                       Try/catch is avoided for other browsers since it incurs a performance overhead. */
                     if (IE <= 8) {
                         try {
                             element.style[propertyName] = propertyValue;
-                        } catch (error) { console.log("Error setting [" + propertyName + "] to [" + propertyValue + "]"); }
+                        } catch (error) { if (Velocity.debug) console.log("Browser does not support [" + propertyValue + "] for [" + propertyName + "]"); }
                     /* SVG elements have their dimensional properties (width, height, x, y, cx, etc.) applied directly as attributes instead of as styles. */
                     /* Note: IE8 does not support SVG elements, so it's okay that we skip it for SVG animation. */
                     } else if (Data(element) && Data(element).isSVG && CSS.Names.SVGAttribute(property)) {
@@ -13403,28 +17900,33 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
         flushTransformCache: function(element) {
             var transformString = "";
 
-            /* SVG elements take a modified version of CSS's transform string (units are dropped and, except for skewX/Y, subproperties are merged into their master property -- e.g. scaleX and scaleY are merged into scale(X Y). */
-            if (Data(element).isSVG) {
-                /* Since transform values are stored in their parentheses-wrapped form, we create a helper function to strip out their numeric values. Further, SVG transform properties
-                   only take unitless (representing pixels) values, so it's okay that parseFloat() strips the unit suffixed to the float value. */
+            /* Certain browsers require that SVG transforms be applied as an attribute. However, the SVG transform attribute takes a modified version of CSS's transform string
+               (units are dropped and, except for skewX/Y, subproperties are merged into their master property -- e.g. scaleX and scaleY are merged into scale(X Y). */
+            if ((IE || (Velocity.State.isAndroid && !Velocity.State.isChrome)) && Data(element).isSVG) {
+                /* Since transform values are stored in their parentheses-wrapped form, we use a helper function to strip out their numeric values.
+                   Further, SVG transform properties only take unitless (representing pixels) values, so it's okay that parseFloat() strips the unit suffixed to the float value. */
                 function getTransformFloat (transformProperty) {
                     return parseFloat(CSS.getPropertyValue(element, transformProperty));
-                } 
+                }
 
-                /* For organizational purposes, create an object to contain all the transforms that we'll apply to the SVG element. To keep the logic simple, we process *all* transform properties --
-                   even those that may not be explicitly applied (since they default to their zero-values anyway). */ 
-                var SVGTransforms = { 
+                /* Create an object to organize all the transforms that we'll apply to the SVG element. To keep the logic simple,
+                   we process *all* transform properties -- even those that may not be explicitly applied (since they default to their zero-values anyway). */
+                var SVGTransforms = {
                     translate: [ getTransformFloat("translateX"), getTransformFloat("translateY") ],
-                    skewX: [ getTransformFloat("skewX") ], skewY: [ getTransformFloat("skewY") ], 
-                    /* If the scale property is set (non-1), use that value for the scaleX and scaleY values (this behavior mimics the result of animating all these properties at once on HTML elements). */
+                    skewX: [ getTransformFloat("skewX") ], skewY: [ getTransformFloat("skewY") ],
+                    /* If the scale property is set (non-1), use that value for the scaleX and scaleY values
+                       (this behavior mimics the result of animating all these properties at once on HTML elements). */
                     scale: getTransformFloat("scale") !== 1 ? [ getTransformFloat("scale"), getTransformFloat("scale") ] : [ getTransformFloat("scaleX"), getTransformFloat("scaleY") ],
-                    /* Note: SVG's rotate transform takes three values: rotation degrees followed by the X and Y values defining the rotation's origin point. We ignore the origin values (default them to 0). */
+                    /* Note: SVG's rotate transform takes three values: rotation degrees followed by the X and Y values
+                       defining the rotation's origin point. We ignore the origin values (default them to 0). */
                     rotate: [ getTransformFloat("rotateZ"), 0, 0 ]
                 };
 
-                /* Iterate through the transform properties in the user-defined property map order. (This mimics the behavior of non-SVG transform animation.) */
+                /* Iterate through the transform properties in the user-defined property map order.
+                   (This mimics the behavior of non-SVG transform animation.) */
                 $.each(Data(element).transformCache, function(transformName) {
-                    /* Except for with skewX/Y, revert the axis-specific transform subproperties to their axis-free master properties so that they match up with SVG's accepted transform properties. */
+                    /* Except for with skewX/Y, revert the axis-specific transform subproperties to their axis-free master
+                       properties so that they match up with SVG's accepted transform properties. */
                     if (/^translate/i.test(transformName)) {
                         transformName = "translate";
                     } else if (/^scale/i.test(transformName)) {
@@ -13437,8 +17939,9 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                     if (SVGTransforms[transformName]) {
                         /* Append the transform property in the SVG-supported transform format. As per the spec, surround the space-delimited values in parentheses. */
                         transformString += transformName + "(" + SVGTransforms[transformName].join(" ") + ")" + " ";
-                        
-                        /* After processing an SVG transform property, delete it from the SVGTransforms container so we don't re-insert the same master property if we encounter another one of its axis-specific properties. */
+
+                        /* After processing an SVG transform property, delete it from the SVGTransforms container so we don't
+                           re-insert the same master property if we encounter another one of its axis-specific properties. */
                         delete SVGTransforms[transformName];
                     }
                 });
@@ -13478,29 +17981,74 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
     CSS.Hooks.register();
     CSS.Normalizations.register();
 
-    /**********************
-       Velocity.animate
-    **********************/
+    /* Allow hook setting in the same fashion as jQuery's $.css(). */
+    Velocity.hook = function (elements, arg2, arg3) {
+        var value = undefined;
 
-    Velocity.animate = function() {
+        elements = sanitizeElements(elements);
 
-        /*******************
-            Return Chain
-        *******************/
+        $.each(elements, function(i, element) {
+            /* Initialize Velocity's per-element data cache if this element hasn't previously been animated. */
+            if (Data(element) === undefined) {
+                Velocity.init(element);
+            }
 
-        /* Returns the appropriate element set type (depending on whether jQuery/Zepto-wrapped elements were passed in) back to the call chain. Used for exiting out of Velocity.animate(). */
+            /* Get property value. If an element set was passed in, only return the value for the first element. */
+            if (arg3 === undefined) {
+                if (value === undefined) {
+                    value = Velocity.CSS.getPropertyValue(element, arg2);
+                }
+            /* Set property value. */
+            } else {
+                /* sPV returns an array of the normalized propertyName/propertyValue pair used to update the DOM. */
+                var adjustedSet = Velocity.CSS.setPropertyValue(element, arg2, arg3);
+
+                /* Transform properties don't automatically set. They have to be flushed to the DOM. */
+                if (adjustedSet[0] === "transform") {
+                    Velocity.CSS.flushTransformCache(element);
+                }
+
+                value = adjustedSet;
+            }
+        });
+
+        return value;
+    };
+
+    /*****************
+        Animation
+    *****************/
+
+    var animate = function() {
+
+        /******************
+            Call Chain
+        ******************/
+
+        /* Logic for determining what to return to the call stack when exiting out of Velocity. */
         function getChain () {
-            return elementsWrapped || elements;
+            /* If we are using the utility function, attempt to return this call's promise. If no promise library was detected,
+               default to null instead of returning the targeted elements so that utility function's return value is standardized. */
+            if (isUtility) {
+                return promiseData.promise || null;
+            /* Otherwise, if we're using $.fn, return the jQuery-/Zepto-wrapped element set. */
+            } else {
+                return elementsWrapped;
+            }
         }
 
         /*************************
            Arguments Assignment
         *************************/
 
-        /* To allow for expressive CoffeeScript code, Velocity supports an alternative syntax in which "properties" and "options" objects are defined on a container object that's passed in as Velocity's sole argument. */
+        /* To allow for expressive CoffeeScript code, Velocity supports an alternative syntax in which "properties" and "options"
+           objects are defined on a container object that's passed in as Velocity's sole argument. */
         /* Note: Some browsers automatically populate arguments with a "properties" object. We detect it by checking for its default "names" property. */
         var syntacticSugar = (arguments[0] && (($.isPlainObject(arguments[0].properties) && !arguments[0].properties.names) || Type.isString(arguments[0].properties))),
-            /* When Velocity is called via the utility function ($.Velocity.animate()/Velocity.animate()), elements are explicitly passed in as the first parameter. Thus, argument positioning varies. We normalize them here. */
+            /* Whether Velocity was called via the utility function (as opposed to on a jQuery/Zepto object). */
+            isUtility,
+            /* When Velocity is called via the utility function ($.Velocity()/Velocity()), elements are explicitly
+               passed in as the first parameter. Thus, argument positioning varies. We normalize them here. */
             elementsWrapped,
             argumentIndex;
 
@@ -13510,16 +18058,20 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
 
         /* Detect jQuery/Zepto elements being animated via the $.fn method. */
         if (Type.isWrapped(this)) {
+            isUtility = false;
+
             argumentIndex = 0;
             elements = this;
             elementsWrapped = this;
         /* Otherwise, raw elements are being animated via the utility function. */
         } else {
+            isUtility = true;
+
             argumentIndex = 1;
             elements = syntacticSugar ? arguments[0].elements : arguments[0];
         }
 
-        elements = Type.isWrapped(elements) ? [].slice.call(elements) : elements;
+        elements = sanitizeElements(elements);
 
         if (!elements) {
             return;
@@ -13533,17 +18085,18 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
             options = arguments[argumentIndex + 1];
         }
 
-        /* The length of the element set (in the form of a nodeList or an array of elements) is defaulted to 1 in case a single raw DOM element is passed in (which doesn't contain a length property). */
-        var elementsLength = (Type.isArray(elements) || Type.isNodeList(elements)) ? elements.length : 1,
+        /* The length of the element set (in the form of a nodeList or an array of elements) is defaulted to 1 in case a
+           single raw DOM element is passed in (which doesn't contain a length property). */
+        var elementsLength = elements.length,
             elementsIndex = 0;
 
         /***************************
             Argument Overloading
         ***************************/
 
-        /* Support is included for jQuery's argument overloading: $.animate(propertyMap [, duration] [, easing] [, complete]). Overloading is detected by checking for the absence of an object being passed into options. */
+        /* Support is included for jQuery's argument overloading: $.animate(propertyMap [, duration] [, easing] [, complete]).
+           Overloading is detected by checking for the absence of an object being passed into options. */
         /* Note: The stop action does not accept animation options, and is therefore excluded from this check. */
-        /* Note: Although argument overloading is a sloppy practice in JavaScript, support is included so that velocity() can act as a drop-in replacement for jQuery's $.animate(). */
         if (propertiesMap !== "stop" && !$.isPlainObject(options)) {
             /* The utility function shifts all arguments one position to the right, so we adjust for that offset. */
             var startingArgumentPosition = argumentIndex + 1;
@@ -13553,11 +18106,12 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
             /* Iterate through all options arguments */
             for (var i = startingArgumentPosition; i < arguments.length; i++) {
                 /* Treat a number as a duration. Parse it out. */
-                /* Note: The following RegEx will return true if passed an array with a number as its first item. Thus, arrays are skipped from this check. */
-                if (!Type.isArray(arguments[i]) && /^\d/.test(arguments[i])) {
-                    options.duration = parseFloat(arguments[i]);
-                /* Treat a string as an easing. Also treat one-item (steps), two-item (tension, friction), and four-item (cubic bezier points) arrays as an easing. */
-                } else if (Type.isString(arguments[i]) || (Type.isArray(arguments[i]) && (arguments[i].length === 1 || arguments[i].length === 2 || arguments[i].length === 4))) {
+                /* Note: The following RegEx will return true if passed an array with a number as its first item.
+                   Thus, arrays are skipped from this check. */
+                if (!Type.isArray(arguments[i]) && (/fast|normal|slow/i.test(arguments[i].toString()) || /^\d/.test(arguments[i]))) {
+                    options.duration = arguments[i];
+                /* Treat strings and arrays as easings. */
+                } else if (Type.isString(arguments[i]) || Type.isArray(arguments[i])) {
                     options.easing = arguments[i];
                 /* Treat a function as a complete callback. */
                 } else if (Type.isFunction(arguments[i])) {
@@ -13566,12 +18120,37 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
             }
         }
 
+        /***************
+            Promises
+        ***************/
+
+        var promiseData = {
+                promise: null,
+                resolver: null,
+                rejecter: null
+            };
+
+        /* If this call was made via the utility function (which is the default method of invocation when jQuery/Zepto are not being used), and if
+           promise support was detected, create a promise object for this call and store references to its resolver and rejecter methods. The resolve
+           method is used when a call completes naturally or is prematurely stopped by the user. In both cases, completeCall() handles the associated
+           call cleanup and promise resolving logic. The reject method is used when an invalid set of arguments is passed into a Velocity call. */
+        /* Note: Velocity employs a call-based queueing architecture, which means that stopping an animating element actually stops the full call that
+           triggered it -- not that one element exclusively. Similarly, there is one promise per call, and all elements targeted by a Velocity call are
+           grouped together for the purposes of resolving and rejecting a promise. */
+        if (isUtility && Velocity.Promise) {
+            promiseData.promise = new Velocity.Promise(function (resolve, reject) {
+                promiseData.resolver = resolve;
+                promiseData.rejecter = reject;
+            });
+        }
+
         /*********************
            Action Detection
         *********************/
 
-        /* Velocity's behavior is categorized into "actions": Elements can either be specially scrolled into view, or they can be started, stopped, or reversed. If a literal or referenced properties map is passed
-           in as Velocity's first argument, the associated action is "start". Alternatively, "scroll", "reverse", or "stop" can be passed in instead of a properties map. */
+        /* Velocity's behavior is categorized into "actions": Elements can either be specially scrolled into view,
+           or they can be started, stopped, or reversed. If a literal or referenced properties map is passed in as Velocity's
+           first argument, the associated action is "start". Alternatively, "scroll", "reverse", or "stop" can be passed in instead of a properties map. */
         var action;
 
         switch (propertiesMap) {
@@ -13588,32 +18167,69 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                     Action: Stop
                 *******************/
 
+                /* Clear the currently-active delay on each targeted element. */
+                $.each(elements, function(i, element) {
+                    if (Data(element) && Data(element).delayTimer) {
+                        /* Stop the timer from triggering its cached next() function. */
+                        clearTimeout(Data(element).delayTimer.setTimeout);
+
+                        /* Manually call the next() function so that the subsequent queue items can progress. */
+                        if (Data(element).delayTimer.next) {
+                            Data(element).delayTimer.next();
+                        }
+
+                        delete Data(element).delayTimer;
+                    }
+                });
+
                 var callsToStop = [];
 
-                /* When the stop action is triggered, the elements' currently active call is immediately stopped. The active call might have been applied to multiple elements, in which
-                   case all of the call's elements will be subjected to stopping. When an element is stopped, the next item in its animation queue is immediately triggered. */
-                /* An additional argument may be passed in to clear an element's remaining queued calls. Either true (which defaults to the "fx" queue) or a custom queue string can be passed in. */
-                /* Stopping is achieved by traversing active calls for those which contain the targeted element. */
-                /* Note: The stop command runs prior to Queueing since its behavior is intended to take effect *immediately*, regardless of the element's current queue state. */
-                $.each(Velocity.State.calls, function(i, activeCall) {  
+                /* When the stop action is triggered, the elements' currently active call is immediately stopped. The active call might have
+                   been applied to multiple elements, in which case all of the call's elements will be subjected to stopping. When an element
+                   is stopped, the next item in its animation queue is immediately triggered. */
+                /* An additional argument may be passed in to clear an element's remaining queued calls. Either true (which defaults to the "fx" queue)
+                   or a custom queue string can be passed in. */
+                /* Note: The stop command runs prior to Queueing since its behavior is intended to take effect *immediately*,
+                   regardless of the element's current queue state. */
+
+                /* Iterate through every active call. */
+                $.each(Velocity.State.calls, function(i, activeCall) {
                     /* Inactive calls are set to false by the logic inside completeCall(). Skip them. */
-                    if (activeCall !== false) {    
-                        /* If we're operating on a single element, wrap it in an array so that $.each() can iterate over it. */                  
-                        $.each(activeCall[1].nodeType ? [ activeCall[1] ] : activeCall[1], function(k, activeElement) {
-                            $.each(elements.nodeType ? [ elements ] : elements, function(l, element) {
+                    if (activeCall) {
+                        /* Iterate through the active call's targeted elements. */
+                        $.each(activeCall[1], function(k, activeElement) {
+                            var queueName = Type.isString(options) ? options : "";
+
+                            if (options !== undefined && activeCall[2].queue !== queueName) {
+                                return true;
+                            }  
+
+                            /* Iterate through the calls targeted by the stop command. */
+                            $.each(elements, function(l, element) {                                
                                 /* Check that this call was applied to the target element. */
                                 if (element === activeElement) {
-                                    if (Data(element)) {
-                                        /* Since "reverse" uses cached start values (the previous call's endValues), these values must be changed to reflect the final value that the elements were actually tweened to. */ 
+                                    /* Optionally clear the remaining queued calls. */
+                                    if (options !== undefined) {
+                                        /* Iterate through the items in the element's queue. */
+                                        $.each($.queue(element, queueName), function(_, item) {
+                                            /* The queue array can contain an "inprogress" string, which we skip. */
+                                            if (Type.isFunction(item)) {
+                                                /* Pass the item's callback a flag indicating that we want to abort from the queue call.
+                                                   (Specifically, the queue will resolve the call's associated promise then abort.)  */
+                                                item(null, true);
+                                            }
+                                        });
+
+                                        /* Clearing the $.queue() array is achieved by resetting it to []. */
+                                        $.queue(element, queueName, []);
+                                    }
+
+                                    if (Data(element) && queueName === "") {
+                                        /* Since "reverse" uses cached start values (the previous call's endValues),
+                                           these values must be changed to reflect the final value that the elements were actually tweened to. */
                                         $.each(Data(element).tweensContainer, function(m, activeTween) {
                                             activeTween.endValue = activeTween.currentValue;
                                         });
-                                    }
-
-                                    /* Remaining queue clearing. */
-                                    if (options === true || Type.isString(options)) {
-                                        /* Clearing the $.queue() array is achieved by manually setting it to []. */
-                                        $.queue(element, Type.isString(options) ? options : "", []);
                                     }
 
                                     callsToStop.push(i);
@@ -13623,17 +18239,23 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                     }
                 });
 
-                /* Prematurely call completeCall() on each matched active call, passing an additional flag to indicate that the complete callback and display:none setting should be skipped. */
+                /* Prematurely call completeCall() on each matched active call, passing an additional flag to indicate
+                   that the complete callback and display:none setting should be skipped since we're completing prematurely. */
                 $.each(callsToStop, function(i, j) {
                     completeCall(j, true);
                 });
 
-                /* Since we're stopping, do not proceed with Queueing. */
+                if (promiseData.promise) {
+                    /* Immediately resolve the promise associated with this stop call since stop runs synchronously. */
+                    promiseData.resolver(elements);
+                }
+
+                /* Since we're stopping, and not proceeding with queueing, exit out of Velocity. */
                 return getChain();
 
             default:
                 /* Treat a non-empty plain object as a literal properties map. */
-                if ($.isPlainObject(propertiesMap) && !$.isEmptyObject(propertiesMap)) {
+                if ($.isPlainObject(propertiesMap) && !Type.isEmptyObject(propertiesMap)) {
                     action = "start";
 
                 /****************
@@ -13642,41 +18264,53 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
 
                 /* Check if a string matches a registered sequence (see Sequences above). */
                 } else if (Type.isString(propertiesMap) && Velocity.Sequences[propertiesMap]) {
-                    var elementsOriginal = elements,
-                        durationOriginal = options.duration;
+                    var opts = $.extend({}, options),
+                        durationOriginal = opts.duration,
+                        delayOriginal = opts.delay || 0;
 
-                    /* If the backwards option was passed in, reverse the element set so that elements animate from the last to the first (useful in combination with the stagger option). */
-                    if (options.backwards === true) {
-                        elements = (elements.jquery ? [].slice.call(elements) : elements).reverse();
+                    /* If the backwards option was passed in, reverse the element set so that elements animate from the last to the first. */
+                    if (opts.backwards === true) {
+                        elements = elements.reverse();
                     }
 
-                    /* Individually trigger the sequence for each element in the set to prevent users from having to handle iteration logic in their own sequence code. */
+                    /* Individually trigger the sequence for each element in the set to prevent users from having to handle iteration logic in their sequence. */
                     $.each(elements, function(elementIndex, element) {
-                        /* If the stagger option was passed in, successively delay each element by the stagger value (in ms). */
-                        if (parseFloat(options.stagger)) {
-                            options.delay = parseFloat(options.stagger) * elementIndex;
+                        /* If the stagger option was passed in, successively delay each element by the stagger value (in ms). Retain the original delay value. */
+                        if (parseFloat(opts.stagger)) {
+                            opts.delay = delayOriginal + (parseFloat(opts.stagger) * elementIndex);
+                        } else if (Type.isFunction(opts.stagger)) {
+                            opts.delay = delayOriginal + opts.stagger.call(element, elementIndex, elementsLength);
                         }
 
-                        /* If the drag option was passed in, successively increase/decrease (depending on the presense of options.backwards) the duration of each element's animation, using floors to prevent producing very short durations. */
-                        if (options.drag) {
+                        /* If the drag option was passed in, successively increase/decrease (depending on the presense of opts.backwards)
+                           the duration of each element's animation, using floors to prevent producing very short durations. */
+                        if (opts.drag) {
                             /* Default the duration of UI pack effects (callouts and transitions) to 1000ms instead of the usual default duration of 400ms. */
-                            options.duration = parseFloat(durationOriginal) || (/^(callout|transition)/.test(propertiesMap) ? 1000 : DEFAULT_DURATION);
+                            opts.duration = parseFloat(durationOriginal) || (/^(callout|transition)/.test(propertiesMap) ? 1000 : DURATION_DEFAULT);
 
-                            /* For each element, take the greater duration of: A) animation completion percentage relative to the original duration, B) 75% of the original duration, or C) a 200ms fallback
-                               (in case duration is already set to a low value). The end result is a baseline of 75% of the sequence's duration that increases/decreases as the end of the element set is approached. */
-                            options.duration = Math.max(options.duration * (options.backwards ? 1 - elementIndex/elementsLength : (elementIndex + 1) / elementsLength), options.duration * 0.75, 200);
+                            /* For each element, take the greater duration of: A) animation completion percentage relative to the original duration,
+                               B) 75% of the original duration, or C) a 200ms fallback (in case duration is already set to a low value).
+                               The end result is a baseline of 75% of the sequence's duration that increases/decreases as the end of the element set is approached. */
+                            opts.duration = Math.max(opts.duration * (opts.backwards ? 1 - elementIndex/elementsLength : (elementIndex + 1) / elementsLength), opts.duration * 0.75, 200);
                         }
 
-                        /* Pass in the call's options object so that the sequence can optionally extend it. It defaults to an empty object instead of null to reduce the options checking logic required inside the sequence. */
-                        /* Note: The element is passed in as both the call's context and its first argument -- allowing for more expressive sequence declarations. */
-                        Velocity.Sequences[propertiesMap].call(element, element, options || {}, elementIndex, elementsLength);
+                        /* Pass in the call's opts object so that the sequence can optionally extend it. It defaults to an empty object instead of null to
+                           reduce the opts checking logic required inside the sequence. */
+                        Velocity.Sequences[propertiesMap].call(element, element, opts || {}, elementIndex, elementsLength, elements, promiseData.promise ? promiseData : undefined);
                     });
 
-                    /* Since the animation logic resides within the sequence's own code, abort the remainder of this call. (The performance overhead up to this point is virtually non-existant.) */
+                    /* Since the animation logic resides within the sequence's own code, abort the remainder of this call.
+                       (The performance overhead up to this point is virtually non-existant.) */
                     /* Note: The jQuery call chain is kept intact by returning the complete element set. */
-                    return elementsWrapped || elementsOriginal;
+                    return getChain();
                 } else {
-                    console.log("First argument was not a property map, a known action, or a registered sequence. Aborting.")
+                    var abortError = "Velocity: First argument (" + propertiesMap + ") was not a property map, a known action, or a registered sequence. Aborting.";
+
+                    if (promiseData.promise) {
+                        promiseData.rejecter(new Error(abortError));
+                    } else {
+                        console.log(abortError);
+                    }
 
                     return getChain();
                 }
@@ -13686,23 +18320,24 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
             Call-Wide Variables
         **************************/
 
-        /* A container for CSS unit conversion ratios (e.g. %, rem, and em ==> px) that is used to cache ratios across all properties being animated in a single Velocity call.
-           Calculating unit ratios necessitates DOM querying and updating, and is therefore avoided (via caching) wherever possible; further, ratios are only calculated when they're needed. */
-        /* Note: This container is call-wide instead of page-wide to avoid the risk of using stale conversion metrics across Velocity animations that are not immediately consecutively chained. */
-        var unitConversionRatios = {
-                /* Performance optimization insight: When the parent element, CSS position value, and fontSize do not differ amongst elements, the elements' unit ratios are identical. */
+        /* A container for CSS unit conversion ratios (e.g. %, rem, and em ==> px) that is used to cache ratios across all elements
+           being animated in a single Velocity call. Calculating unit ratios necessitates DOM querying and updating, and is therefore
+           avoided (via caching) wherever possible. This container is call-wide instead of page-wide to avoid the risk of using stale
+           conversion metrics across Velocity animations that are not immediately consecutively chained. */
+        var callUnitConversionData = {
                 lastParent: null,
                 lastPosition: null,
                 lastFontSize: null,
-                /* Percent is the only unit types whose ratio is dependant upon axis. */
                 lastPercentToPxWidth: null,
                 lastPercentToPxHeight: null,
                 lastEmToPx: null,
-                /* The rem==>px ratio is relative to the document's fontSize -- not any property belonging to the element. Thus, it is automatically call-wide cached whenever the rem unit is being animated. */
-                remToPxRatio: null
+                remToPx: null,
+                vwToPx: null,
+                vhToPx: null
             };
 
-        /* A container for all the ensuing tween data and metadata associated with this call. This container gets pushed to the page-wide Velocity.State.calls array that is processed during animation ticking. */
+        /* A container for all the ensuing tween data and metadata associated with this call. This container gets pushed to the page-wide
+           Velocity.State.calls array that is processed during animation ticking. */
         var call = [];
 
         /************************
@@ -13728,32 +18363,17 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
             var element = this,
                 /* The runtime opts object is the extension of the current call's options and Velocity's page-wide option defaults. */
                 opts = $.extend({}, Velocity.defaults, options),
-                /* A container for the processed data associated with each property in the propertyMap. (Each property in the map produces its own "tween".) */
-                tweensContainer = {};
+                /* A container for the processed data associated with each property in the propertyMap.
+                   (Each property in the map produces its own "tween".) */
+                tweensContainer = {},
+                elementUnitConversionData;
 
             /******************
-                Data Cache
+               Element Init
             ******************/
-
-            /* A primary design goal of Velocity is to cache data wherever possible in order to avoid DOM requerying. Accordingly, each element has a data cache instantiated on it. */
+            
             if (Data(element) === undefined) {
-                $.data(element, NAME, {
-                    /* Store whether this is an SVG element, since its properties are retrieved and updated differently than standard HTML elements. */
-                    isSVG: Type.isSVG(element),
-                    /* Keep track of whether the element is currently being animated by Velocity. This is used to ensure that property values are not transferred between non-consecutive (stale) calls. */
-                    isAnimating: false,
-                    /* A reference to the element's live computedStyle object. You can learn more about computedStyle here: https://developer.mozilla.org/en/docs/Web/API/window.getComputedStyle */
-                    computedStyle: null,
-                    /* Tween data is cached for each animation on the element so that data can be passed across calls -- in particular, end values are used as subsequent start values in consecutive Velocity calls. */
-                    tweensContainer: null,
-                    /* The full root property values of each CSS hook being animated on this element are cached so that:
-                       1) Concurrently-animating hooks sharing the same root can have their root values' merged into one while tweening.
-                       2) Post-hook-injection root values can be transferred over to consecutively chained Velocity calls as starting root values.
-                    */
-                    rootPropertyValueCache: {},
-                    /* A cache for transform updates, which must be manually flushed via CSS.flushTransformCache(). */
-                    transformCache: {}
-                });
+                Velocity.init(element);
             }
 
             /******************
@@ -13761,14 +18381,19 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
             ******************/
 
             /* Since queue:false doesn't respect the item's existing queue, we avoid injecting its delay here (it's set later on). */
-            /* Note: Velocity rolls its own delay function since jQuery doesn't have a utility alias for $.fn.delay() (and thus requires jQuery element creation, which we avoid since its overhead includes DOM querying). */
-            if (/^\d/.test(opts.delay) && opts.queue !== false) {
+            /* Note: Velocity rolls its own delay function since jQuery doesn't have a utility alias for $.fn.delay()
+               (and thus requires jQuery element creation, which we avoid since its overhead includes DOM querying). */
+            if (parseFloat(opts.delay) && opts.queue !== false) {
                 $.queue(element, opts.queue, function(next) {
                     /* This is a flag used to indicate to the upcoming completeCall() function that this queue entry was initiated by Velocity. See completeCall() for further details. */
                     Velocity.velocityQueueEntryFlag = true;
 
-                    /* The ensuing queue item (which is assigned to the "next" argument that $.queue() automatically passes in) will be triggered after a setTimeout delay. */
-                    setTimeout(next, parseFloat(opts.delay));
+                    /* The ensuing queue item (which is assigned to the "next" argument that $.queue() automatically passes in) will be triggered after a setTimeout delay.
+                       The setTimeout is stored so that it can be subjected to clearTimeout() if this animation is prematurely stopped via Velocity's "stop" command. */
+                    Data(element).delayTimer = {
+                        setTimeout: setTimeout(next, parseFloat(opts.delay)),
+                        next: next
+                    };
                 });
             }
 
@@ -13787,7 +18412,7 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                         break;
 
                     case "normal":
-                        opts.duration = DEFAULT_DURATION;
+                        opts.duration = DURATION_DEFAULT;
                         break;
 
                     case "slow":
@@ -13823,20 +18448,31 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                 opts.complete = null;
             }
 
-            /********************
-               Option: Display
-            ********************/
+            /*********************************
+               Option: Display & Visibility
+            *********************************/
 
-            /* Refer to Velocity's documentation (VelocityJS.org/#display) for a description of the display option's behavior. */
-            if (opts.display) {
+            /* Refer to Velocity's documentation (VelocityJS.org/#displayAndVisibility) for a description of the display and visibility options' behavior. */
+            /* Note: We strictly check for undefined instead of falsiness because display accepts an empty string value. */
+            if (opts.display !== undefined && opts.display !== null) {
                 opts.display = opts.display.toString().toLowerCase();
+
+                /* Users can pass in a special "auto" value to instruct Velocity to set the element to its default display value. */
+                if (opts.display === "auto") {
+                    opts.display = Velocity.CSS.Values.getDisplayType(element);
+                }
+            }
+
+            if (opts.visibility) {
+                opts.visibility = opts.visibility.toString().toLowerCase();
             }
 
             /**********************
                Option: mobileHA
             **********************/
 
-            /* When set to true, and if this is a mobile device, mobileHA automatically enables hardware acceleration (via a null transform hack) on animating elements. HA is removed from the element at the completion of its animation. */
+            /* When set to true, and if this is a mobile device, mobileHA automatically enables hardware acceleration (via a null transform hack)
+               on animating elements. HA is removed from the element at the completion of its animation. */
             /* Note: Android Gingerbread doesn't support HA. If a null transform hack (mobileHA) is in fact set, it will prevent other tranform subproperties from taking effect. */
             /* Note: You can read more about the use of mobileHA in Velocity's documentation: VelocityJS.org/#mobileHA. */
             opts.mobileHA = (opts.mobileHA && Velocity.State.isMobile && !Velocity.State.isGingerbread);
@@ -13857,7 +18493,12 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
 
                 /* The begin callback is fired once per call -- not once per elemenet -- and is passed the full raw DOM element set as both its context and its first argument. */
                 if (opts.begin && elementsIndex === 0) {
-                    opts.begin.call(elements, elements);
+                    /* We throw callbacks in a setTimeout so that thrown errors don't halt the execution of Velocity itself. */
+                    try {
+                        opts.begin.call(elements, elements);
+                    } catch (error) {
+                        setTimeout(function() { throw error; }, 1);
+                    }
                 }
 
                 /*****************************************
@@ -13873,31 +18514,36 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                         scrollPositionCurrentAlternate,
                         scrollPositionEnd;
 
-                    /* Scroll also uniquely takes an optional "container" option, which indicates the parent element that should be scrolled -- as opposed to the browser window itself.
-                       This is useful for scrolling toward an element that's inside an overflowing parent element. */
+                    /* Scroll also uniquely takes an optional "container" option, which indicates the parent element that should be scrolled --
+                       as opposed to the browser window itself. This is useful for scrolling toward an element that's inside an overflowing parent element. */
                     if (opts.container) {
                         /* Ensure that either a jQuery object or a raw DOM element was passed in. */
-                        if (opts.container.jquery || opts.container.nodeType) {
+                        if (Type.isWrapped(opts.container) || Type.isNode(opts.container)) {
                             /* Extract the raw DOM element from the jQuery wrapper. */
                             opts.container = opts.container[0] || opts.container;
-                            /* Note: Unlike other properties in Velocity, the browser's scroll position is never cached since it so frequently changes (due to the user's natural interaction with the page). */
+                            /* Note: Unlike other properties in Velocity, the browser's scroll position is never cached since it so frequently changes
+                               (due to the user's natural interaction with the page). */
                             scrollPositionCurrent = opts.container["scroll" + scrollDirection]; /* GET */
 
-                            /* $.position() values are relative to the container's currently viewable area (without taking into account the container's true dimensions -- say, for example, if the container was not overflowing).
-                               Thus, the scroll end value is the sum of the child element's position *and* the scroll container's current scroll position. */
-                            /* Note: jQuery does not offer a utility alias for $.position(), so we have to incur jQuery object conversion here. This syncs up with an ensuing batch of GETs, so it fortunately does not trigger layout thrashing. */
+                            /* $.position() values are relative to the container's currently viewable area (without taking into account the container's true dimensions
+                               -- say, for example, if the container was not overflowing). Thus, the scroll end value is the sum of the child element's position *and*
+                               the scroll container's current scroll position. */
+                            /* Note: jQuery does not offer a utility alias for $.position(), so we have to incur jQuery object conversion here.
+                               This syncs up with an ensuing batch of GETs, so it fortunately does not trigger layout thrashing. */
                             scrollPositionEnd = (scrollPositionCurrent + $(element).position()[scrollDirection.toLowerCase()]) + scrollOffset; /* GET */
                         /* If a value other than a jQuery object or a raw DOM element was passed in, default to null so that this option is ignored. */
                         } else {
                             opts.container = null;
                         }
                     } else {
-                        /* If the window itself is being scrolled -- not a containing element -- perform a live scroll position lookup using the appropriate cached property names (which differ based on browser type). */
+                        /* If the window itself is being scrolled -- not a containing element -- perform a live scroll position lookup using
+                           the appropriate cached property names (which differ based on browser type). */
                         scrollPositionCurrent = Velocity.State.scrollAnchor[Velocity.State["scrollProperty" + scrollDirection]]; /* GET */
                         /* When scrolling the browser window, cache the alternate axis's current value since window.scrollTo() doesn't let us change only one value at a time. */
                         scrollPositionCurrentAlternate = Velocity.State.scrollAnchor[Velocity.State["scrollProperty" + (scrollDirection === "Left" ? "Top" : "Left")]]; /* GET */
 
-                        /* Unlike $.position(), $.offset() values are relative to the browser window's true dimensions -- not merely its currently viewable area -- and therefore end values do not need to be compounded onto current values. */
+                        /* Unlike $.position(), $.offset() values are relative to the browser window's true dimensions -- not merely its currently viewable area --
+                           and therefore end values do not need to be compounded onto current values. */
                         scrollPositionEnd = $(element).offset()[scrollDirection.toLowerCase()] + scrollOffset; /* GET */
                     }
 
@@ -13919,15 +18565,19 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                         element: element
                     };
 
+                    if (Velocity.debug) console.log("tweensContainer (scroll): ", tweensContainer.scroll, element);
+
                 /******************************************
                    Tween Data Construction (for Reverse)
                 ******************************************/
 
-                /* Reverse acts like a "start" action in that a property map is animated toward. The only difference is that the property map used for reverse is the inverse of the map used in the previous call.
-                   Thus, we manipulate the previous call to construct our new map: use the previous map's end values as our new map's start values. Copy over all other data. */
+                /* Reverse acts like a "start" action in that a property map is animated toward. The only difference is
+                   that the property map used for reverse is the inverse of the map used in the previous call. Thus, we manipulate
+                   the previous call to construct our new map: use the previous map's end values as our new map's start values. Copy over all other data. */
                 /* Note: Reverse can be directly called via the "reverse" parameter, or it can be indirectly triggered via the loop option. (Loops are composed of multiple reverses.) */
-                /* Note: Reverse calls do not need to be consecutively chained onto a currently-animating element in order to operate on cached values; there is no harm to reverse being called on a potentially stale data cache since
-                   reverse's behavior is simply defined as reverting to the element's values as they were prior to the previous *Velocity* call. */
+                /* Note: Reverse calls do not need to be consecutively chained onto a currently-animating element in order to operate on cached values;
+                   there is no harm to reverse being called on a potentially stale data cache since reverse's behavior is simply defined
+                   as reverting to the element's values as they were prior to the previous *Velocity* call. */
                 } else if (action === "reverse") {
                     /* Abort if there is no prior animation data to reverse to. */
                     if (!Data(element).tweensContainer) {
@@ -13940,18 +18590,24 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                            Options Parsing
                         *********************/
 
-                        /* If the element was hidden via the display option in the previous call, revert display to block prior to reversal so that the element is visible again. */
+                        /* If the element was hidden via the display option in the previous call,
+                           revert display to "auto" prior to reversal so that the element is visible again. */
                         if (Data(element).opts.display === "none") {
-                            Data(element).opts.display = "block";
+                            Data(element).opts.display = "auto";
                         }
 
-                        /* If the loop option was set in the previous call, disable it so that "reverse" calls aren't recursively generated. Further, remove the previous call's callback options;
-                           typically, users do not want these to be refired. */
+                        if (Data(element).opts.visibility === "hidden") {
+                            Data(element).opts.visibility = "visible";
+                        }
+
+                        /* If the loop option was set in the previous call, disable it so that "reverse" calls aren't recursively generated.
+                           Further, remove the previous call's callback options; typically, users do not want these to be refired. */
                         Data(element).opts.loop = false;
                         Data(element).opts.begin = null;
                         Data(element).opts.complete = null;
 
-                        /* Since we're extending an opts object that has already been exteded with the defaults options object, we remove non-explicitly-defined properties that are auto-assigned values. */
+                        /* Since we're extending an opts object that has already been extended with the defaults options object,
+                           we remove non-explicitly-defined properties that are auto-assigned values. */
                         if (!options.easing) {
                             delete opts.easing;
                         }
@@ -13960,7 +18616,8 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                             delete opts.duration;
                         }
 
-                        /* The opts object used for reversal is an extension of the options object optionally passed into this reverse call plus the options used in the previous Velocity call. */
+                        /* The opts object used for reversal is an extension of the options object optionally passed into this
+                           reverse call plus the options used in the previous Velocity call. */
                         opts = $.extend({}, Data(element).opts, opts);
 
                         /*************************************
@@ -13979,11 +18636,14 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                                 lastTweensContainer[lastTween].startValue = lastTweensContainer[lastTween].currentValue = lastTweensContainer[lastTween].endValue;
                                 lastTweensContainer[lastTween].endValue = lastStartValue;
 
-                                /* Easing is the only option that embeds into the individual tween data (since it can be defined on a per-property basis). Accordingly, every property's easing value must
-                                   be updated when an options object is passed in with a reverse call. The side effect of this extensibility is that all per-property easing values are forcefully reset to the new value. */
-                                if (options) {
+                                /* Easing is the only option that embeds into the individual tween data (since it can be defined on a per-property basis).
+                                   Accordingly, every property's easing value must be updated when an options object is passed in with a reverse call.
+                                   The side effect of this extensibility is that all per-property easing values are forcefully reset to the new value. */
+                                if (!Type.isEmptyObject(options)) {
                                     lastTweensContainer[lastTween].easing = opts.easing;
                                 }
+
+                                if (Velocity.debug) console.log("reverse tweensContainer (" + lastTween + "): " + JSON.stringify(lastTweensContainer[lastTween]), element);
                             }
                         }
 
@@ -14000,13 +18660,17 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                         Value Transferring
                     *************************/
 
-                    /* If this queue entry follows a previous Velocity-initiated queue entry *and* if this entry was created while the element was in the process of being animated by Velocity, then this current call
-                       is safe to use the end values from the prior call as its start values. Velocity attempts to perform this value transfer process whenever possible in order to avoid requerying the DOM. */
-                    /* If values aren't transferred from a prior call and start values were not forcefed by the user (more on this below), then the DOM is queried for the element's current values as a last resort. */
+                    /* If this queue entry follows a previous Velocity-initiated queue entry *and* if this entry was created
+                       while the element was in the process of being animated by Velocity, then this current call is safe to use
+                       the end values from the prior call as its start values. Velocity attempts to perform this value transfer
+                       process whenever possible in order to avoid requerying the DOM. */
+                    /* If values aren't transferred from a prior call and start values were not forcefed by the user (more on this below),
+                       then the DOM is queried for the element's current values as a last resort. */
                     /* Note: Conversely, animation reversal (and looping) *always* perform inter-call value transfers; they never requery the DOM. */
                     var lastTweensContainer;
 
-                    /* The per-element isAnimating flag is used to indicate whether it's safe (i.e. the data isn't stale) to transfer over end values to use as start values. If it's set to true and there is a previous
+                    /* The per-element isAnimating flag is used to indicate whether it's safe (i.e. the data isn't stale)
+                       to transfer over end values to use as start values. If it's set to true and there is a previous
                        Velocity call to pull values from, do so. */
                     if (Data(element).tweensContainer && Data(element).isAnimating === true) {
                         lastTweensContainer = Data(element).tweensContainer;
@@ -14017,27 +18681,32 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                     ***************************/
 
                     /* This function parses property data and defaults endValue, easing, and startValue as appropriate. */
-                    /* Property map values can either take the form of 1) a single value representing the end value, or 2) an array in the form of [ endValue, [, easing] [, startValue] ].
-                       The optional third parameter is a forcefed startValue to be used instead of querying the DOM for the element's current value. Read Velocity's docmentation to learn more about forcefeeding: VelocityJS.org/#forcefeeding */
-                    function parsePropertyValue (valueData) {
+                    /* Property map values can either take the form of 1) a single value representing the end value,
+                       or 2) an array in the form of [ endValue, [, easing] [, startValue] ].
+                       The optional third parameter is a forcefed startValue to be used instead of querying the DOM for
+                       the element's current value. Read Velocity's docmentation to learn more about forcefeeding: VelocityJS.org/#forcefeeding */
+                    function parsePropertyValue (valueData, skipResolvingEasing) {
                         var endValue = undefined,
                             easing = undefined,
                             startValue = undefined;
 
-                        /* Handle the array format, which can be structured as one of three potential overloads: A) [ endValue, easing, startValue ], B) [ endValue, easing ], or C) [ endValue, startValue ] */
+                        /* Handle the array format, which can be structured as one of three potential overloads:
+                           A) [ endValue, easing, startValue ], B) [ endValue, easing ], or C) [ endValue, startValue ] */
                         if (Type.isArray(valueData)) {
-                            /* endValue is always the first item in the array. Don't bother validating endValue's value now since the ensuing property cycling logic inherently does that. */
+                            /* endValue is always the first item in the array. Don't bother validating endValue's value now
+                               since the ensuing property cycling logic does that. */
                             endValue = valueData[0];
 
-                            /* Two-item array format: If the second item is a number or a function, treat it as a start value since easings can only be strings or arrays. */
-                            if ((!Type.isArray(valueData[1]) && /^[\d-]/.test(valueData[1])) || Type.isFunction(valueData[1])) {
+                            /* Two-item array format: If the second item is a number, function, or hex string, treat it as a
+                               start value since easings can only be non-hex strings or arrays. */
+                            if ((!Type.isArray(valueData[1]) && /^[\d-]/.test(valueData[1])) || Type.isFunction(valueData[1]) || CSS.RegEx.isHex.test(valueData[1])) {
                                 startValue = valueData[1];
-                            /* Two or three-item array: If the second item is a string, treat it as an easing. */
-                            } else if (Type.isString(valueData[1]) || Type.isArray(valueData[1])) {
-                                easing = getEasing(valueData[1], opts.duration);
+                            /* Two or three-item array: If the second item is a non-hex string or an array, treat it as an easing. */
+                            } else if ((Type.isString(valueData[1]) && !CSS.RegEx.isHex.test(valueData[1])) || Type.isArray(valueData[1])) {
+                                easing = skipResolvingEasing ? valueData[1] : getEasing(valueData[1], opts.duration);
 
                                 /* Don't bother validating startValue's value now since the ensuing property cycling logic inherently does that. */
-                                if (valueData[2]) {
+                                if (valueData[2] !== undefined) {
                                     startValue = valueData[2];
                                 }
                             }
@@ -14047,9 +18716,12 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                         }
 
                         /* Default to the call's easing if a per-property easing type was not defined. */
-                        easing = easing || opts.easing;
+                        if (!skipResolvingEasing) {
+                            easing = easing || opts.easing;
+                        }
 
-                        /* If functions were passed in as values, pass the function the current element as its context, plus the element's index and the element set's size as arguments. Then, assign the returned value. */
+                        /* If functions were passed in as values, pass the function the current element as its context,
+                           plus the element's index and the element set's size as arguments. Then, assign the returned value. */
                         if (Type.isFunction(endValue)) {
                             endValue = endValue.call(element, elementsIndex, elementsLength);
                         }
@@ -14062,9 +18734,37 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                         return [ endValue || 0, easing, startValue ];
                     }
 
+                    /* Cycle through each property in the map, looking for shorthand color properties (e.g. "color" as opposed to "colorRed"). Inject the corresponding
+                       colorRed, colorGreen, and colorBlue RGB component tweens into the propertiesMap (which Velocity understands) and remove the shorthand property. */
+                    $.each(propertiesMap, function(property, value) {
+                        /* Find shorthand color properties that have been passed a hex string. */
+                        if (RegExp("^" + CSS.Lists.colors.join("$|^") + "$").test(property)) {
+                            /* Parse the value data for each shorthand. */
+                            var valueData = parsePropertyValue(value, true),
+                                endValue = valueData[0],
+                                easing = valueData[1],
+                                startValue = valueData[2];
+
+                            if (CSS.RegEx.isHex.test(endValue)) {
+                                /* Convert the hex strings into their RGB component arrays. */
+                                var colorComponents = [ "Red", "Green", "Blue" ],
+                                    endValueRGB = CSS.Values.hexToRgb(endValue),
+                                    startValueRGB = startValue ? CSS.Values.hexToRgb(startValue) : undefined;
+
+                                /* Inject the RGB component tweens into propertiesMap. */
+                                for (var i = 0; i < colorComponents.length; i++) {
+                                    propertiesMap[property + colorComponents[i]] = [ endValueRGB[i], easing, startValueRGB ? startValueRGB[i] : startValueRGB ];
+                                }
+
+                                /* Remove the intermediary shorthand property entry now that we've processed it. */
+                                delete propertiesMap[property];
+                            }
+                        }
+                    });
+
                     /* Create a tween out of each property, and append its associated data to tweensContainer. */
                     for (var property in propertiesMap) {
-                        /* Normalize property names via camel casing so that properties can be consistently manipulated. */
+
                         /**************************
                            Start Value Sourcing
                         **************************/
@@ -14075,37 +18775,43 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                             easing = valueData[1],
                             startValue = valueData[2];
 
-                        /* Now that the original property name's format has been used for the parsePropertyValue() lookup above, we force the property to its camelCase styling to normalize it for manipulation. */
+                        /* Now that the original property name's format has been used for the parsePropertyValue() lookup above,
+                           we force the property to its camelCase styling to normalize it for manipulation. */
                         property = CSS.Names.camelCase(property);
 
                         /* In case this property is a hook, there are circumstances where we will intend to work on the hook's root property and not the hooked subproperty. */
                         var rootProperty = CSS.Hooks.getRoot(property),
                             rootPropertyValue = false;
 
-                        /* Properties that are not supported by the browser (and do not have an associated normalization) will inherently produce no style changes when set, so they are skipped in order to decrease animation tick overhead.
+                        /* Properties that are not supported by the browser (and do not have an associated normalization) will
+                           inherently produce no style changes when set, so they are skipped in order to decrease animation tick overhead.
                            Property support is determined via prefixCheck(), which returns a false flag when no supported is detected. */
-                        /* Note: Since SVG elements have some of their properties directly applied as HTML attributes, there is no way to check for their explicit browser support, and so we skip skip this check for them. */
+                        /* Note: Since SVG elements have some of their properties directly applied as HTML attributes,
+                           there is no way to check for their explicit browser support, and so we skip skip this check for them. */
                         if (!Data(element).isSVG && CSS.Names.prefixCheck(rootProperty)[1] === false && CSS.Normalizations.registered[rootProperty] === undefined) {
                             if (Velocity.debug) console.log("Skipping [" + rootProperty + "] due to a lack of browser support.");
 
                             continue;
                         }
 
-                        /* If the display option is being set to a non-"none" (e.g. "block") and opacity (filter on IE<=8) is being animated to an endValue of non-zero, the user's intention is to fade in from invisible,
-                           thus we forcefeed opacity a startValue of 0 if its startValue hasn't already been sourced by value transferring or prior forcefeeding. */
-                        if ((opts.display && opts.display !== "none") && /opacity|filter/.test(property) && !startValue && endValue !== 0) {
+                        /* If the display option is being set to a non-"none" (e.g. "block") and opacity (filter on IE<=8) is being
+                           animated to an endValue of non-zero, the user's intention is to fade in from invisible, thus we forcefeed opacity
+                           a startValue of 0 if its startValue hasn't already been sourced by value transferring or prior forcefeeding. */
+                        if (((opts.display !== undefined && opts.display !== null && opts.display !== "none") || (opts.visibility && opts.visibility !== "hidden")) && /opacity|filter/.test(property) && !startValue && endValue !== 0) {
                             startValue = 0;
                         }
 
-                        /* If values have been transferred from the previous Velocity call, extract the endValue and rootPropertyValue for all of the current call's properties that were *also* animated in the previous call. */
+                        /* If values have been transferred from the previous Velocity call, extract the endValue and rootPropertyValue
+                           for all of the current call's properties that were *also* animated in the previous call. */
                         /* Note: Value transferring can optionally be disabled by the user via the _cacheValues option. */
                         if (opts._cacheValues && lastTweensContainer && lastTweensContainer[property]) {
                             if (startValue === undefined) {
                                 startValue = lastTweensContainer[property].endValue + lastTweensContainer[property].unitType;
                             }
 
-                            /* The previous call's rootPropertyValue is extracted from the element's data cache since that's the instance of rootPropertyValue that gets freshly updated by the tweening process,
-                               whereas the rootPropertyValue attached to the incoming lastTweensContainer is equal to the root property's value prior to any tweening. */
+                            /* The previous call's rootPropertyValue is extracted from the element's data cache since that's the
+                               instance of rootPropertyValue that gets freshly updated by the tweening process, whereas the rootPropertyValue
+                               attached to the incoming lastTweensContainer is equal to the root property's value prior to any tweening. */
                             rootPropertyValue = Data(element).rootPropertyValueCache[rootProperty];
                         /* If values were not transferred from a previous Velocity call, query the DOM as needed. */
                         } else {
@@ -14113,10 +18819,13 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                             if (CSS.Hooks.registered[property]) {
                                if (startValue === undefined) {
                                     rootPropertyValue = CSS.getPropertyValue(element, rootProperty); /* GET */
-                                    /* Note: The following getPropertyValue() call does not actually trigger a DOM query; getPropertyValue() will extract the hook from rootPropertyValue. */
+                                    /* Note: The following getPropertyValue() call does not actually trigger a DOM query;
+                                       getPropertyValue() will extract the hook from rootPropertyValue. */
                                     startValue = CSS.getPropertyValue(element, property, rootPropertyValue);
-                                /* If startValue is already defined via forcefeeding, do not query the DOM for the root property's value; just grab rootProperty's zero-value template from CSS.Hooks. This overwrites the element's actual
-                                   root property value (if one is set), but this is acceptable since the primary reason users forcefeed is to avoid DOM queries, and thus we likewise avoid querying the DOM for the root property's value. */
+                                /* If startValue is already defined via forcefeeding, do not query the DOM for the root property's value;
+                                   just grab rootProperty's zero-value template from CSS.Hooks. This overwrites the element's actual
+                                   root property value (if one is set), but this is acceptable since the primary reason users forcefeed is
+                                   to avoid DOM queries, and thus we likewise avoid querying the DOM for the root property's value. */
                                 } else {
                                     /* Grab this hook's zero-value template, e.g. "0px 0px 0px black". */
                                     rootPropertyValue = CSS.Hooks.templates[rootProperty][1];
@@ -14134,7 +18843,7 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                         var separatedValue,
                             endValueUnitType,
                             startValueUnitType,
-                            operator;
+                            operator = false;
 
                         /* Separates a property value into its numeric value and its unit type. */
                         function separateValue (property, value) {
@@ -14180,15 +18889,14 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                         startValue = parseFloat(startValue) || 0;
                         endValue = parseFloat(endValue) || 0;
 
-                        /*****************************
-                           Value & Unit Conversion
-                        *****************************/
-
-                        var elementUnitRatios;
+                        /***************************************
+                           Property-Specific Value Conversion
+                        ***************************************/
 
                         /* Custom support for properties that don't actually accept the % unit type, but where pollyfilling is trivial and relatively foolproof. */
                         if (endValueUnitType === "%") {
-                            /* A %-value fontSize/lineHeight is relative to the parent's fontSize (as opposed to the parent's dimensions), which is identical to the em unit's behavior, so we piggyback off of that. */
+                            /* A %-value fontSize/lineHeight is relative to the parent's fontSize (as opposed to the parent's dimensions),
+                               which is identical to the em unit's behavior, so we piggyback off of that. */
                             if (/^(fontSize|lineHeight)$/.test(property)) {
                                 /* Convert % into an em decimal value. */
                                 endValue = endValue / 100;
@@ -14204,245 +18912,189 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                             }
                         }
 
-                        /* When queried, the browser returns (most) CSS property values in pixels. Therefore, if an endValue with a unit type of %, em, or rem is animated toward, startValue must be converted from pixels into the same unit type
-                           as endValue in order for value manipulation logic (increment/decrement) to proceed. Further, if the startValue was forcefed or transferred from a previous call, startValue may also not be in pixels. Unit conversion logic
-                           therefore consists of two steps: 1) Calculating the ratio of %,/em/rem relative to pixels then 2) Converting startValue into the same unit of measurement as endValue based on these ratios. */
-                        /* Unit conversion ratios are calculated by momentarily setting a value with the target unit type on the element, comparing the returned pixel value, then reverting to the original value. */
-                        /* Note: Even if only one of these unit types is being animated, all unit ratios are calculated at once since the overhead of batching the SETs and GETs together upfront outweights the potential overhead
-                                 of layout thrashing caused by re-querying for uncalculated ratios for subsequently-processed properties. */
-                        /* Note: Instead of adjusting the CSS properties on the target element, an alternative way of performing value conversion is to inject a cloned element into the element's parent and manipulate *its* values instead.
-                                 This is a cleaner method that avoids the ensuing rounds of layout thrashing, but it's ultimately less performant due to the overhead involved with DOM tree modification (element insertion/deletion). */
+                        /***************************
+                           Unit Ratio Calculation
+                        ***************************/
+
+                        /* When queried, the browser returns (most) CSS property values in pixels. Therefore, if an endValue with a unit type of
+                           %, em, or rem is animated toward, startValue must be converted from pixels into the same unit type as endValue in order
+                           for value manipulation logic (increment/decrement) to proceed. Further, if the startValue was forcefed or transferred
+                           from a previous call, startValue may also not be in pixels. Unit conversion logic therefore consists of two steps:
+                           1) Calculating the ratio of %/em/rem/vh/vw relative to pixels
+                           2) Converting startValue into the same unit of measurement as endValue based on these ratios. */
+                        /* Unit conversion ratios are calculated by inserting a sibling node next to the target node, copying over its position property,
+                           setting values with the target unit type then comparing the returned pixel value. */
+                        /* Note: Even if only one of these unit types is being animated, all unit ratios are calculated at once since the overhead
+                           of batching the SETs and GETs together upfront outweights the potential overhead
+                           of layout thrashing caused by re-querying for uncalculated ratios for subsequently-processed properties. */
                         /* Todo: Shift this logic into the calls' first tick instance so that it's synced with RAF. */
-                        /* Todo: Store the original values and skip re-setting if we're animating height or width in the properties map. */
                         function calculateUnitRatios () {
-                            /* The properties below are used to determine whether the element differs sufficiently from this same call's prior element (in the overall element set) to also differ in its unit conversion ratios.
-                               If the properties match up with those of the prior element, the prior element's conversion ratios are used. Like most optimizations in Velocity, this is done to minimize DOM querying. */
+
+                            /************************
+                                Same Ratio Checks
+                            ************************/
+
+                            /* The properties below are used to determine whether the element differs sufficiently from this call's
+                               previously iterated element to also differ in its unit conversion ratios. If the properties match up with those
+                               of the prior element, the prior element's conversion ratios are used. Like most optimizations in Velocity,
+                               this is done to minimize DOM querying. */
                             var sameRatioIndicators = {
-                                    parent: element.parentNode, /* GET */
+                                    myParent: element.parentNode || document.body, /* GET */
                                     position: CSS.getPropertyValue(element, "position"), /* GET */
                                     fontSize: CSS.getPropertyValue(element, "fontSize") /* GET */
                                 },
-                                /* Determine if the same % ratio can be used. % is relative to the element's position value and the parent's width and height dimensions. */
-                                sameBasePercent = ((sameRatioIndicators.position === unitConversionRatios.lastPosition) && (sameRatioIndicators.parent === unitConversionRatios.lastParent)),
-                                /* Determine if the same em ratio can be used. em is relative to the element's fontSize, which itself is relative to the parent's fontSize. */
-                                sameBaseEm = ((sameRatioIndicators.fontSize === unitConversionRatios.lastFontSize) && (sameRatioIndicators.parent === unitConversionRatios.lastParent));
+                                /* Determine if the same % ratio can be used. % is based on the element's position value and its parent's width and height dimensions. */
+                                samePercentRatio = ((sameRatioIndicators.position === callUnitConversionData.lastPosition) && (sameRatioIndicators.myParent === callUnitConversionData.lastParent)),
+                                /* Determine if the same em ratio can be used. em is relative to the element's fontSize. */
+                                sameEmRatio = (sameRatioIndicators.fontSize === callUnitConversionData.lastFontSize);
 
                             /* Store these ratio indicators call-wide for the next element to compare against. */
-                            unitConversionRatios.lastParent = sameRatioIndicators.parent;
-                            unitConversionRatios.lastPosition = sameRatioIndicators.position;
-                            unitConversionRatios.lastFontSize = sameRatioIndicators.fontSize;
+                            callUnitConversionData.lastParent = sameRatioIndicators.myParent;
+                            callUnitConversionData.lastPosition = sameRatioIndicators.position;
+                            callUnitConversionData.lastFontSize = sameRatioIndicators.fontSize;
 
-                            /* Whereas % and em ratios are determined on a per-element basis, the rem unit type only needs to be checked once per call since it is exclusively dependant upon the body element's fontSize.
-                               If this is the first time that calculateUnitRatios() is being run during this call, remToPxRatio will still be set to its default value of null, so we calculate it now. */
-                            if (unitConversionRatios.remToPxRatio === null) {
-                                /* Default to most browsers' default fontSize of 16px in the case of 0. */
-                                unitConversionRatios.remToPxRatio = parseFloat(CSS.getPropertyValue(document.body, "fontSize")) || 16; /* GET */
-                            }
+                            /***************************
+                               Element-Specific Units
+                            ***************************/
+                             
+                            /* Note: IE8 rounds to the nearest pixel when returning CSS values, thus we perform conversions using a measurement
+                               of 100 (instead of 1) to give our ratios a precision of at least 2 decimal values. */
+                            var measurement = 100,
+                                unitRatios = {};
 
-                            var originalValues = {
-                                    /* To accurately and consistently calculate conversion ratios, the element's overflow and box-sizing are temporarily removed. Both properties modify an element's visible dimensions. */
-                                    /* Note: Overflow must be manipulated on a per-axis basis since the plain overflow property overwrites its subproperties' values. */
-                                    overflowX: null,
-                                    overflowY: null,
-                                    boxSizing: null,
-                                    /* width and height act as our proxy properties for measuring the horizontal and vertical % ratios. Since they can be artificially constrained by their min-/max- equivalents, those properties are converted as well. */
-                                    width: null,
-                                    minWidth: null,
-                                    maxWidth: null,
-                                    height: null,
-                                    minHeight: null,
-                                    maxHeight: null,
-                                    /* paddingLeft arbitrarily acts as our proxy for the em ratio. */
-                                    paddingLeft: null
-                                },
-                                elementUnitRatios = {},
-                                /* Note: IE<=8 round to the nearest pixel when returning CSS values, thus we perform conversions using a measurement of 10 (instead of 1) to give our ratios a precision of at least 1 decimal value. */
-                                measurement = 10;
-
-                            /* For organizational purposes, current ratios calculations are consolidated onto the elementUnitRatios object. */
-                            elementUnitRatios.remToPxRatio = unitConversionRatios.remToPxRatio;
-
-                            /* After temporary unit conversion logic runs, width and height properties that were originally set to "auto" must be set back to "auto" instead of to the actual corresponding pixel value. Leaving the values
-                               at their hard-coded pixel value equivalents would inherently prevent the elements from vertically adjusting as the height of its inner content changes. */
-                            /* IE tells us whether or not the property is set to "auto". Other browsers provide no way of determing "auto" values on height/width, and thus we have to trigger additional layout thrashing (see below) to solve this. */
-                            if (IE && !Data(element).isSVG) {
-                                var isIEWidthAuto = /^auto$/i.test(element.currentStyle.width),
-                                    isIEHeightAuto = /^auto$/i.test(element.currentStyle.height);
-                            }
-
-                            /* Note: To minimize layout thrashing, the ensuing unit conversion logic is split into batches to synchronize GETs and SETs. */
-                            if (!sameBasePercent || !sameBaseEm) {
-                                /* SVG elements have no concept of document flow, and don't support the full range of CSS properties, so we skip the unnecessary stripping of unapplied properties to avoid dirtying their HTML. */
-                                if (!Data(element).isSVG) {
-                                    originalValues.overflowX = CSS.getPropertyValue(element, "overflowX"); /* GET */
-                                    originalValues.overflowY = CSS.getPropertyValue(element, "overflowY"); /* GET */
-                                    originalValues.boxSizing = CSS.getPropertyValue(element, "boxSizing"); /* GET */
+                            if (!sameEmRatio || !samePercentRatio) {
+                                var dummy = Data(element).isSVG ? document.createElementNS("http://www.w3.org/2000/svg", "rect") : document.createElement("div");
                                 
-                                    /* Since % values are relative to their respective axes, ratios are calculated for both width and height. In contrast, only a single ratio is required for rem and em. */
-                                    /* When calculating % values, we set a flag to indiciate that we want the computed value instead of offsetWidth/Height, which incorporate additional dimensions (such as padding and border-width) into their values. */
-                                    originalValues.minWidth = CSS.getPropertyValue(element, "minWidth"); /* GET */
-                                    /* Note: max-width/height must default to "none" when 0 is returned, otherwise the element cannot have its width/height set. */
-                                    originalValues.maxWidth = CSS.getPropertyValue(element, "maxWidth") || "none"; /* GET */
+                                Velocity.init(dummy);
+                                sameRatioIndicators.myParent.appendChild(dummy);
 
-                                    originalValues.minHeight = CSS.getPropertyValue(element, "minHeight"); /* GET */
-                                    originalValues.maxHeight = CSS.getPropertyValue(element, "maxHeight") || "none"; /* GET */
+                                /* To accurately and consistently calculate conversion ratios, the element's cascaded overflow and box-sizing are stripped.
+                                   Similarly, since width/height can be artificially constrained by their min-/max- equivalents, these are controlled for as well. */
+                                /* Note: Overflow must be also be controlled for per-axis since the overflow property overwrites its per-axis values. */
+                                $.each([ "overflow", "overflowX", "overflowY" ], function(i, property) {
+                                    Velocity.CSS.setPropertyValue(dummy, property, "hidden");
+                                });
+                                Velocity.CSS.setPropertyValue(dummy, "position", sameRatioIndicators.position);
+                                Velocity.CSS.setPropertyValue(dummy, "fontSize", sameRatioIndicators.fontSize);
+                                Velocity.CSS.setPropertyValue(dummy, "boxSizing", "content-box");
+                                
+                                /* width and height act as our proxy properties for measuring the horizontal and vertical % ratios. */
+                                $.each([ "minWidth", "maxWidth", "width", "minHeight", "maxHeight", "height" ], function(i, property) {
+                                    Velocity.CSS.setPropertyValue(dummy, property, measurement + "%");
+                                });
+                                /* paddingLeft arbitrarily acts as our proxy property for the em ratio. */
+                                Velocity.CSS.setPropertyValue(dummy, "paddingLeft", measurement + "em");
 
-                                    originalValues.paddingLeft = CSS.getPropertyValue(element, "paddingLeft"); /* GET */
-                                }
-
-                                originalValues.width = CSS.getPropertyValue(element, "width", null, true); /* GET */
-                                originalValues.height = CSS.getPropertyValue(element, "height", null, true); /* GET */
-                            }
-
-                            if (sameBasePercent) {
-                                elementUnitRatios.percentToPxRatioWidth = unitConversionRatios.lastPercentToPxWidth;
-                                elementUnitRatios.percentToPxRatioHeight = unitConversionRatios.lastPercentToPxHeight;
+                                /* Divide the returned value by the measurement to get the ratio between 1% and 1px. Default to 1 since working with 0 can produce Infinite. */
+                                unitRatios.percentToPxWidth = callUnitConversionData.lastPercentToPxWidth = (parseFloat(CSS.getPropertyValue(dummy, "width", null, true)) || 1) / measurement; /* GET */
+                                unitRatios.percentToPxHeight = callUnitConversionData.lastPercentToPxHeight = (parseFloat(CSS.getPropertyValue(dummy, "height", null, true)) || 1) / measurement; /* GET */
+                                unitRatios.emToPx = callUnitConversionData.lastEmToPx = (parseFloat(CSS.getPropertyValue(dummy, "paddingLeft")) || 1) / measurement; /* GET */
+                                
+                                sameRatioIndicators.myParent.removeChild(dummy);
                             } else {
-                                if (!Data(element).isSVG) {
-                                    CSS.setPropertyValue(element, "overflowX",  "hidden"); /* SET */
-                                    CSS.setPropertyValue(element, "overflowY",  "hidden"); /* SET */
-                                    CSS.setPropertyValue(element, "boxSizing",  "content-box"); /* SET */
-
-                                    CSS.setPropertyValue(element, "minWidth", measurement + "%"); /* SET */
-                                    CSS.setPropertyValue(element, "maxWidth", measurement + "%"); /* SET */
-
-                                    CSS.setPropertyValue(element, "minHeight",  measurement + "%"); /* SET */
-                                    CSS.setPropertyValue(element, "maxHeight",  measurement + "%"); /* SET */
-                                }
-
-                                CSS.setPropertyValue(element, "width", measurement + "%"); /* SET */
-                                CSS.setPropertyValue(element, "height",  measurement + "%"); /* SET */
+                                unitRatios.emToPx = callUnitConversionData.lastEmToPx;
+                                unitRatios.percentToPxWidth = callUnitConversionData.lastPercentToPxWidth;
+                                unitRatios.percentToPxHeight = callUnitConversionData.lastPercentToPxHeight;
                             }
 
-                            
-                            if (sameBaseEm) {
-                                elementUnitRatios.emToPxRatio = unitConversionRatios.lastEmToPx;
-                            } else if (!Data(element).isSVG) {
-                                CSS.setPropertyValue(element, "paddingLeft", measurement + "em"); /* SET */
+                            /***************************
+                               Element-Agnostic Units
+                            ***************************/
+
+                            /* Whereas % and em ratios are determined on a per-element basis, the rem unit only needs to be checked
+                               once per call since it's exclusively dependant upon document.body's fontSize. If this is the first time
+                               that calculateUnitRatios() is being run during this call, remToPx will still be set to its default value of null,
+                               so we calculate it now. */
+                            if (callUnitConversionData.remToPx === null) {
+                                /* Default to browsers' default fontSize of 16px in the case of 0. */
+                                callUnitConversionData.remToPx = parseFloat(CSS.getPropertyValue(document.body, "fontSize")) || 16; /* GET */
                             }
 
-                            /* The following pixel-value GETs cannot be batched with the prior GETs since they depend upon the values temporarily set immediately above; layout thrashing cannot be avoided here. */
-                            if (!sameBasePercent) {
-                                /* Divide the returned value by the measurement value to get the ratio between 1% and 1px. Default to 1 since conversion logic using 0 can produce Infinite. */
-                                elementUnitRatios.percentToPxRatioWidth = unitConversionRatios.lastPercentToPxWidth = (parseFloat(CSS.getPropertyValue(element, "width", null, true)) || 1) / measurement; /* GET */
-                                elementUnitRatios.percentToPxRatioHeight = unitConversionRatios.lastPercentToPxHeight = (parseFloat(CSS.getPropertyValue(element, "height", null, true)) || 1) / measurement; /* GET */
+                            /* Similarly, viewport units are %-relative to the window's inner dimensions. */
+                            if (callUnitConversionData.vwToPx === null) {
+                                callUnitConversionData.vwToPx = parseFloat(window.innerWidth) / 100; /* GET */
+                                callUnitConversionData.vhToPx = parseFloat(window.innerHeight) / 100; /* GET */
                             }
 
-                           if (!sameBaseEm) {
-                                elementUnitRatios.emToPxRatio = unitConversionRatios.lastEmToPx = (parseFloat(CSS.getPropertyValue(element, "paddingLeft")) || 1) / measurement; /* GET */
-                           }
+                            unitRatios.remToPx = callUnitConversionData.remToPx;
+                            unitRatios.vwToPx = callUnitConversionData.vwToPx;
+                            unitRatios.vhToPx = callUnitConversionData.vhToPx;
 
-                            /* Revert each used test property to its original value. */
-                            for (var originalValueProperty in originalValues) {
-                                if (originalValues[originalValueProperty] !== null) {
-                                    CSS.setPropertyValue(element, originalValueProperty, originalValues[originalValueProperty]); /* SETs */
-                                }
-                            }
+                            if (Velocity.debug >= 1) console.log("Unit ratios: " + JSON.stringify(unitRatios), element);
 
-                            /* SVG dimensions do not accept an "auto" value, so we skip this reset process for them. */
-                            if (!Data(element).isSVG) {
-                                /* In IE, revert to "auto" for width and height if it was originally set. */
-                                if (IE) {
-                                    if (isIEWidthAuto) {
-                                        CSS.setPropertyValue(element, "width", "auto"); /* SET */
-                                    }
-
-                                    if (isIEHeightAuto) {
-                                        CSS.setPropertyValue(element, "height", "auto"); /* SET */
-                                    }
-                                /* For other browsers, additional layout thrashing must be triggered to determine whether a property was originally set to "auto". */
-                                } else {
-                                    /* Set height to "auto" then compare the returned value against the element's current height value. If they're identical, leave height set to "auto".
-                                       If they're different, then "auto" wasn't originally set on the element prior to our conversions, and we revert it to its actual value. */
-                                    /* Note: The following GETs and SETs cannot be batched together due to the cross-effect setting one axis to "auto" has on the other. */
-                                    CSS.setPropertyValue(element, "height", "auto"); /* SET */
-                                    if (originalValues.height !== CSS.getPropertyValue(element, "height", null, true)) { /* GET */
-                                        CSS.setPropertyValue(element, "height", originalValues.height); /* SET */
-                                    }
-
-                                    CSS.setPropertyValue(element, "width", "auto"); /* SET */
-                                    if (originalValues.width !== CSS.getPropertyValue(element, "width", null, true)) { /* GET */
-                                        CSS.setPropertyValue(element, "width", originalValues.width); /* SET */
-                                    }
-                                }
-                            }
-
-                            if (Velocity.debug >= 1) console.log("Unit ratios: " + JSON.stringify(elementUnitRatios), element);
-
-                            return elementUnitRatios;
+                            return unitRatios;
                         }
+
+                        /********************
+                           Unit Conversion
+                        ********************/
 
                         /* The * and / operators, which are not passed in with an associated unit, inherently use startValue's unit. Skip value and unit conversion. */
                         if (/[\/*]/.test(operator)) {
                             endValueUnitType = startValueUnitType;
-                        /* If startValue and endValue differ in unit type, convert startValue into the same unit type as endValue so that if endValueUnitType is a relative unit (%, em, rem), the values set during tweening will continue
-                           to be accurately relative even if the metrics they depend on are dynamically changing during the course of the animation. Conversely, if we always normalized into px and used px for setting values, the px ratio
+                        /* If startValue and endValue differ in unit type, convert startValue into the same unit type as endValue so that if endValueUnitType
+                           is a relative unit (%, em, rem), the values set during tweening will continue to be accurately relative even if the metrics they depend
+                           on are dynamically changing during the course of the animation. Conversely, if we always normalized into px and used px for setting values, the px ratio
                            would become stale if the original unit being animated toward was relative and the underlying metrics change during the animation. */
                         /* Since 0 is 0 in any unit type, no conversion is necessary when startValue is 0 -- we just start at 0 with endValueUnitType. */
                         } else if ((startValueUnitType !== endValueUnitType) && startValue !== 0) {
-                            /* Unit conversion is also skipped when endValue is 0, but *startValueUnitType* must be used in this case for tween values to remain accurate. */
-                            /* Note: Skipping unit conversion here means that if endValueUnitType was originally a relative unit, the animation won't relatively match the underlying metrics if they change, but this is acceptable
-                               since we're animating toward invisibility instead of toward visibility that remains past the point of the animation's completion. */
+                            /* Unit conversion is also skipped when endValue is 0, but *startValueUnitType* must be used for tween values to remain accurate. */
+                            /* Note: Skipping unit conversion here means that if endValueUnitType was originally a relative unit, the animation won't relatively
+                               match the underlying metrics if they change, but this is acceptable since we're animating toward invisibility instead of toward visibility,
+                               which remains past the point of the animation's completion. */
                             if (endValue === 0) {
                                 endValueUnitType = startValueUnitType;
                             } else {
-                                /* By this point, we cannot avoid unit conversion (it's undesirable since it causes layout thrashing). If we haven't already, we trigger calculateUnitRatios(), which runs once per element per call. */
-                                elementUnitRatios = elementUnitRatios || calculateUnitRatios();
-
+                                /* By this point, we cannot avoid unit conversion (it's undesirable since it causes layout thrashing).
+                                   If we haven't already, we trigger calculateUnitRatios(), which runs once per element per call. */
+                                elementUnitConversionData = elementUnitConversionData || calculateUnitRatios();
+                                
                                 /* The following RegEx matches CSS properties that have their % values measured relative to the x-axis. */
-                                /* Note: W3C spec mandates that all of margin and padding's properties (even top and bottom) are %-relative to the *width* of the parent element, so they're included in this expression. */
-                                var axis = (/margin|padding|left|right|width|text|word|letter/i.test(property) || /X$/.test(property)) ? "x" : "y";
+                                /* Note: W3C spec mandates that all of margin and padding's properties (even top and bottom) are %-relative to the *width* of the parent element. */
+                                var axis = (/margin|padding|left|right|width|text|word|letter/i.test(property) || /X$/.test(property) || property === "x") ? "x" : "y";
 
-                                /* In order to avoid generating n^2 bespoke conversion functions, unit conversion is a two-step process: 1) Convert startValue into pixels. 2) Convert this new pixel value into endValue's unit type. */
+                                /* In order to avoid generating n^2 bespoke conversion functions, unit conversion is a two-step process:
+                                   1) Convert startValue into pixels. 2) Convert this new pixel value into endValue's unit type. */
                                 switch (startValueUnitType) {
                                     case "%":
-                                        /* Note: translateX and translateY are the only properties that are %-relative to an element's own dimensions -- not its parent's dimensions. Velocity does not include a special conversion process
-                                           for these properties due of the additional DOM overhead it would entail. Therefore, animating translateX/Y from a % value to a non-% value will produce an incorrect start value. Fortunately,
-                                           this sort of cross-unit conversion is rarely done by users in practice. */
-                                        startValue *= (axis === "x" ? elementUnitRatios.percentToPxRatioWidth : elementUnitRatios.percentToPxRatioHeight);
-                                        break;
-
-                                    case "em":
-                                        startValue *= elementUnitRatios.emToPxRatio;
-                                        break;
-
-                                    case "rem":
-                                        startValue *= elementUnitRatios.remToPxRatio;
+                                        /* Note: translateX and translateY are the only properties that are %-relative to an element's own dimensions -- not its parent's dimensions.
+                                           Velocity does not include a special conversion process to account for this behavior. Therefore, animating translateX/Y from a % value
+                                           to a non-% value will produce an incorrect start value. Fortunately, this sort of cross-unit conversion is rarely done by users in practice. */
+                                        startValue *= (axis === "x" ? elementUnitConversionData.percentToPxWidth : elementUnitConversionData.percentToPxHeight);
                                         break;
 
                                     case "px":
                                         /* px acts as our midpoint in the unit conversion process; do nothing. */
                                         break;
+
+                                    default:
+                                        startValue *= elementUnitConversionData[startValueUnitType + "ToPx"];
                                 }
 
                                 /* Invert the px ratios to convert into to the target unit. */
                                 switch (endValueUnitType) {
                                     case "%":
-                                        startValue *= 1 / (axis === "x" ? elementUnitRatios.percentToPxRatioWidth : elementUnitRatios.percentToPxRatioHeight);
-                                        break;
-
-                                    case "em":
-                                        startValue *= 1 / elementUnitRatios.emToPxRatio;
-                                        break;
-
-                                    case "rem":
-                                        startValue *= 1 / elementUnitRatios.remToPxRatio;
+                                        startValue *= 1 / (axis === "x" ? elementUnitConversionData.percentToPxWidth : elementUnitConversionData.percentToPxHeight);
                                         break;
 
                                     case "px":
                                         /* startValue is already in px, do nothing; we're done. */
                                         break;
+
+                                    default:
+                                        startValue *= 1 / elementUnitConversionData[endValueUnitType + "ToPx"];
                                 }
                             }
                         }
 
-                        /***********************
-                            Value Operators
-                        ***********************/
+                        /*********************
+                           Relative Values
+                        *********************/
 
                         /* Operator logic must be performed last since it requires unit-normalized start and end values. */
-                        /* Note: Relative percent values do not behave how most people think; while one would expect "+=50%" to increase the property 1.5x its current value, it in fact increases the percent units in absolute terms:
-                                 50 points is added on top of the current % value. */
+                        /* Note: Relative *percent values* do not behave how most people think; while one would expect "+=50%"
+                           to increase the property 1.5x its current value, it in fact increases the percent units in absolute terms:
+                           50 points is added on top of the current % value. */
                         switch (operator) {
                             case "+":
                                 endValue = startValue + endValue;
@@ -14482,43 +19134,43 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                     tweensContainer.element = element;
                 }
 
-                /***************
-                    Pushing
-                ***************/
+                /*****************
+                    Call Push
+                *****************/
 
-                /* Note: tweensContainer can be empty if all of the properties in this call's property map were skipped due to not being supported by the browser.
-                   The element property is used as a proxy for checking that the tweensContainer has been appended to. */
+                /* Note: tweensContainer can be empty if all of the properties in this call's property map were skipped due to not
+                   being supported by the browser. The element property is used for checking that the tweensContainer has been appended to. */
                 if (tweensContainer.element) {
-
-                    /*****************
-                        Call Push
-                    *****************/
+                    /* Apply the "velocity-animating" indicator class. */
+                    CSS.Values.addClass(element, "velocity-animating");
 
                     /* The call array houses the tweensContainers for each element being animated in the current call. */
                     call.push(tweensContainer);
 
-                    /* Store on the element its tweensContainer plus the current call's opts so that Velocity can reference this data the next time this element is animated. */
-                    Data(element).tweensContainer = tweensContainer;
-                    Data(element).opts = opts;
+                    /* Store the tweensContainer and options if we're working on the default effects queue, so that they can be used by the reverse command. */
+                    if (opts.queue === "") {
+                        Data(element).tweensContainer = tweensContainer;
+                        Data(element).opts = opts;
+                    }
+
                     /* Switch on the element's animating flag. */
                     Data(element).isAnimating = true;
 
-                    /******************
-                        Calls Push
-                    ******************/
-
-                    /* Once the final element in this call's targeted element set has been processed, push the call array onto Velocity.State.calls for the animation tick to immediately begin processing. */
+                    /* Once the final element in this call's element set has been processed, push the call array onto
+                       Velocity.State.calls for the animation tick to immediately begin processing. */
                     if (elementsIndex === elementsLength - 1) {
-                        /* To speed up iterating over this array, it is compacted (falsey items -- calls that have completed -- are removed) when its length has ballooned to a point that can impact tick performance.
-                           This only becomes necessary when animation has been continuous with many elements over a long period of time; whenever all active calls are completed, completeCall() clears Velocity.State.calls. */
+                        /* To speed up iterating over this array, it is compacted (falsey items -- calls that have completed -- are removed)
+                           when its length has ballooned to a point that can impact tick performance. This only becomes necessary when animation
+                           has been continuous with many elements over a long period of time; whenever all active calls are completed, completeCall() clears Velocity.State.calls. */
                         if (Velocity.State.calls.length > 10000) {
                             Velocity.State.calls = compactSparseArray(Velocity.State.calls);
                         }
 
-                        /* Add the current call plus its associated metadata (the element set and the call's options) onto the page-wide call container. Anything on this call container is subjected to tick() processing. */
-                        Velocity.State.calls.push([ call, elements, opts ]);
+                        /* Add the current call plus its associated metadata (the element set and the call's options) onto the global call container.
+                           Anything on this call container is subjected to tick() processing. */
+                        Velocity.State.calls.push([ call, elements, opts, null, promiseData.resolver ]);
 
-                        /* If the animation tick isn't currently running, start it. (Velocity shuts the tick off when there are no active calls to process.) */
+                        /* If the animation tick isn't running, start it. (Velocity shuts it off when there are no active calls to process.) */
                         if (Velocity.State.isTicking === false) {
                             Velocity.State.isTicking = true;
 
@@ -14533,7 +19185,8 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
 
             /* When the queue option is set to false, the call skips the element's queue and fires immediately. */
             if (opts.queue === false) {
-                /* Since this buildQueue call doesn't respect the element's existing queue (which is where a delay option would have been appended), we manually inject the delay property here with an explicit setTimeout. */
+                /* Since this buildQueue call doesn't respect the element's existing queue (which is where a delay option would have been appended),
+                   we manually inject the delay property here with an explicit setTimeout. */
                 if (opts.delay) {
                     setTimeout(buildQueue, opts.delay);
                 } else {
@@ -14542,8 +19195,20 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
             /* Otherwise, the call undergoes element queueing as normal. */
             /* Note: To interoperate with jQuery, Velocity uses jQuery's own $.queue() stack for queuing logic. */
             } else {
-                $.queue(element, opts.queue, function(next) {
-                    /* This is a flag used to indicate to the upcoming completeCall() function that this queue entry was initiated by Velocity. See completeCall() for further details. */
+                $.queue(element, opts.queue, function(next, clearQueue) {
+                    /* If the clearQueue flag was passed in by the stop command, resolve this call's promise. (Promises can only be resolved once,
+                       so it's fine if this is repeatedly triggered for each element in the associated call.) */
+                    if (clearQueue === true) {
+                        if (promiseData.promise) {
+                            promiseData.resolver(elements);
+                        }
+
+                        /* Do not continue with animation queueing. */
+                        return true;
+                    }
+
+                    /* This flag indicates to the upcoming completeCall() function that this queue entry was initiated by Velocity.
+                       See completeCall() for further details. */
                     Velocity.velocityQueueEntryFlag = true;
 
                     buildQueue(next);
@@ -14554,11 +19219,15 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                 Auto-Dequeuing
             *********************/
 
-            /* As per jQuery's $.queue() behavior, to fire the first non-custom-queue entry on an element, the element must be dequeued if its queue stack consists *solely* of the current call.
-               (This can be determined by checking for the "inprogress" item that jQuery prepends to active queue stack arrays.) Regardless, whenever the element's queue is further appended with
-               additional items -- including $.delay()'s or even $.animate() calls, the queue's first entry is automatically fired. This behavior contrasts that of custom queues, which never auto-fire. */
-            /* Note: When an element set is being subjected to a non-parallel Velocity call, the animation will not begin until each one of the elements in the set has reached the end of its individually pre-existing queue chain. */
-            /* Note: Unfortunately, most people don't fully grasp jQuery's powerful, yet quirky, $.queue() function. Lean more here: http://stackoverflow.com/questions/1058158/can-somebody-explain-jquery-queue-to-me */
+            /* As per jQuery's $.queue() behavior, to fire the first non-custom-queue entry on an element, the element
+               must be dequeued if its queue stack consists *solely* of the current call. (This can be determined by checking
+               for the "inprogress" item that jQuery prepends to active queue stack arrays.) Regardless, whenever the element's
+               queue is further appended with additional items -- including $.delay()'s or even $.animate() calls, the queue's
+               first entry is automatically fired. This behavior contrasts that of custom queues, which never auto-fire. */
+            /* Note: When an element set is being subjected to a non-parallel Velocity call, the animation will not begin until
+               each one of the elements in the set has reached the end of its individually pre-existing queue chain. */
+            /* Note: Unfortunately, most people don't fully grasp jQuery's powerful, yet quirky, $.queue() function.
+               Lean more here: http://stackoverflow.com/questions/1058158/can-somebody-explain-jquery-queue-to-me */
             if ((opts.queue === "" || opts.queue === "fx") && $.queue(element)[0] !== "inprogress") {
                 $.dequeue(element);
             }
@@ -14568,20 +19237,23 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
            Element Set Iteration
         **************************/
 
-        /* If the "nodeType" property exists on the elements variable, we're animating a single element. Place it in an array so that $.each can iterate over it. */
-        $.each(elements.nodeType ? [ elements ] : elements, function(i, element) {
+        /* If the "nodeType" property exists on the elements variable, we're animating a single element.
+           Place it in an array so that $.each() can iterate over it. */
+        $.each(elements, function(i, element) {
             /* Ensure each element in a set has a nodeType (is a real element) to avoid throwing errors. */
-            if (element.nodeType) {
+            if (Type.isNode(element)) {
                 processElement.call(element);
             }
         });
 
-        /********************
-            Option: Loop
-        ********************/
+        /******************
+           Option: Loop
+        ******************/
 
-        /* The loop option accepts an integer indicating how many times the element should loop between the values in the current call's properties map and the element's property values prior to this call. */
-        /* Note: The loop option's logic is performed here -- after element processing -- because the current call needs to undergo its queue insertion prior to the loop option generating its series of constituent "reverse" calls,
+        /* The loop option accepts an integer indicating how many times the element should loop between the values in the
+           current call's properties map and the element's property values prior to this call. */
+        /* Note: The loop option's logic is performed here -- after element processing -- because the current call needs
+           to undergo its queue insertion prior to the loop option generating its series of constituent "reverse" calls,
            which chain after the current call. Two reverse calls (two "alternations") constitute one loop. */
         var opts = $.extend({}, Velocity.defaults, options),
             reverseCallsCount;
@@ -14590,20 +19262,25 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
         reverseCallsCount = (opts.loop * 2) - 1;
 
         if (opts.loop) {
-            /* Double the loop count to convert it into its appropriate number of "reverse" calls. Subtract 1 from the resulting value since the current call is included in the total alternation count. */
+            /* Double the loop count to convert it into its appropriate number of "reverse" calls.
+               Subtract 1 from the resulting value since the current call is included in the total alternation count. */
             for (var x = 0; x < reverseCallsCount; x++) {
-                /* Since the logic for the reverse action occurs inside Queueing and thus this call's options object isn't parsed until then as well, the current call's delay option must be explicitly passed
-                   into the reverse call so that the delay logic that occurs inside *Pre-Queueing* can process this delay. */
+                /* Since the logic for the reverse action occurs inside Queueing and therefore this call's options object
+                   isn't parsed until then as well, the current call's delay option must be explicitly passed into the reverse
+                   call so that the delay logic that occurs inside *Pre-Queueing* can process it. */
                 var reverseOptions = {
                     delay: opts.delay
                 };
 
-                /* If a complete callback was passed into this call, transfer it to the loop sequence's final "reverse" call so that it's triggered when the entire sequence is complete (and not when the very first animation is complete). */
-                if (opts.complete && (x === reverseCallsCount - 1)) {
+                /* If a complete callback was passed into this call, transfer it to the loop sequence's final "reverse" call
+                   so that it's triggered when the entire sequence is complete (and not when the very first animation is complete). */
+                if (x === reverseCallsCount - 1) {
+                    reverseOptions.display = opts.display;
+                    reverseOptions.visibility = opts.visibility;
                     reverseOptions.complete = opts.complete;
                 }
 
-                Velocity.animate(elements, "reverse", reverseOptions);
+                animate(elements, "reverse", reverseOptions);
             }
         }
 
@@ -14615,18 +19292,53 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
         return getChain();
     };
 
-    /*****************************
-       Tick (Calls Processing)
-    *****************************/
+    /* Turn Velocity into the animation function, extended with the pre-existing Velocity object. */
+    Velocity = $.extend(animate, Velocity);
+    /* For legacy support, also expose the literal animate method. */
+    Velocity.animate = animate;
 
-    /* Note: There is only a single tick() instance; all calls to Velocity are pushed to the Velocity.State.calls array, which is fully iterated through upon each tick. */
+    /**************
+        Timing
+    **************/
+
+    var ticker = window.requestAnimationFrame || rAFShim;
+
+    /* Inactive browser tabs pause rAF, which results in all active animations immediately sprinting to their completion states when the tab refocuses.
+       To get around this, we dynamically switch rAF to setTimeout (which the browser *doesn't* pause) when the tab loses focus. We skip this for mobile
+       devices to avoid wasting battery power on inactive tabs. */
+    /* Note: Tab focus detection doesn't work on older versions of IE, but that's okay since they don't support rAF to begin with. */
+    if (!Velocity.State.isMobile && document.hidden !== undefined) {
+        document.addEventListener("visibilitychange", function() {
+            /* Reassign the rAF function (which the global tick() function uses) based on the tab's focus state. */
+            if (document.hidden) {
+                ticker = function(callback) {
+                    /* The tick function needs a truthy first argument in order to pass its internal timestamp check. */
+                    return setTimeout(function() { callback(true) }, 16);
+                };
+
+                /* The rAF loop has been paused by the browser, so we manually restart the tick. */
+                tick();
+            } else {
+                ticker = window.requestAnimationFrame || rAFShim;
+            }
+        });
+    }
+
+    /************
+        Tick
+    ************/
+
+    /* Note: All calls to Velocity are pushed to the Velocity.State.calls array, which is fully iterated through upon each tick. */
     function tick (timestamp) {
-        /* An empty timestamp argument indicates that this is the first tick occurence since ticking was turned on (which implies that this tick wasn't called by itself). We leverage this indicator to fully ignore the first tick pass
-           since RAF's initial pass is fired whenever the browser's next tick sync time occurs (whereas subsequent RAF passes are spaced by a timer resolution of ~16ms), which results in the first elements subjected to Velocity
-           calls being animated out of sync with any elements animated immediately thereafter. In short, we ignore the first RAF tick pass so that elements being immediately consecutively animated -- instead of simultaneously animated
+        /* An empty timestamp argument indicates that this is the first tick occurence since ticking was turned on.
+           We leverage this metadata to fully ignore the first tick pass since RAF's initial pass is fired whenever
+           the browser's next tick sync time occurs, which results in the first elements subjected to Velocity
+           calls being animated out of sync with any elements animated immediately thereafter. In short, we ignore
+           the first RAF tick pass so that elements being immediately consecutively animated -- instead of simultaneously animated
            by the same Velocity call -- are properly batched into the same initial RAF tick and consequently remain in sync thereafter. */
         if (timestamp) {
-            /* We ignore RAF's high resolution timestamp since it can be significantly offset when the browser is under high stress; we opt for choppiness over allowing the browser to drop huge chunks of frames. */
+            /* We ignore RAF's high resolution timestamp since it can be significantly offset when the browser is
+               under high stress; we opt for choppiness over allowing the browser to drop huge chunks of frames. */
             var timeCurrent = (new Date).getTime();
 
             /********************
@@ -14635,7 +19347,7 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
 
             /* Iterate through each active call. */
             for (var i = 0, callsLength = Velocity.State.calls.length; i < callsLength; i++) {
-                /* When a velocity call is completed, its Velocity.State.calls array entry is set to false. Continue on to the next call. */
+                /* When a Velocity call is completed, its Velocity.State.calls entry is set to false. Continue on to the next call. */
                 if (!Velocity.State.calls[i]) {
                     continue;
                 }
@@ -14649,16 +19361,20 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                     opts = callContainer[2],
                     timeStart = callContainer[3];
 
-                /* If timeStart is undefined, then this is the first time that this call has been processed by tick(). We assign timeStart now so that its value is as close to the real animation start time as possible.
-                   (Conversely, had timeStart been defined when this call was added to Velocity.State.calls, the delay between that time and now would cause the first few frames of the tween to be skipped since percentComplete is
-                   calculated relative to timeStart.) */
-                /* Further, subtract 16ms (the approximate resolution of RAF) from the current time value so that the first tick iteration isn't wasted by animating at 0% tween completion,
-                   which would produce the same style value as the element's current value. */
+                /* If timeStart is undefined, then this is the first time that this call has been processed by tick().
+                   We assign timeStart now so that its value is as close to the real animation start time as possible.
+                   (Conversely, had timeStart been defined when this call was added to Velocity.State.calls, the delay
+                   between that time and now would cause the first few frames of the tween to be skipped since
+                   percentComplete is calculated relative to timeStart.) */
+                /* Further, subtract 16ms (the approximate resolution of RAF) from the current time value so that the
+                   first tick iteration isn't wasted by animating at 0% tween completion, which would produce the
+                   same style value as the element's current value. */
                 if (!timeStart) {
                     timeStart = Velocity.State.calls[i][3] = timeCurrent - 16;
                 }
 
-                /* The tween's completion percentage is relative to the tween's start time, not the tween's start value (which would result in unpredictable tween durations since JavaScript's timers are not particularly accurate).
+                /* The tween's completion percentage is relative to the tween's start time, not the tween's start value
+                   (which would result in unpredictable tween durations since JavaScript's timers are not particularly accurate).
                    Accordingly, we ensure that percentComplete does not exceed 1. */
                 var percentComplete = Math.min((timeCurrent - timeStart) / opts.duration, 1);
 
@@ -14671,20 +19387,35 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                     var tweensContainer = call[j],
                         element = tweensContainer.element;
 
-                    /* Check to see if this element has been deleted midway through the animation by checking for the continued existence of its data cache. If it's gone, skip animating this element. */
+                    /* Check to see if this element has been deleted midway through the animation by checking for the
+                       continued existence of its data cache. If it's gone, skip animating this element. */
                     if (!Data(element)) {
                         continue;
                     }
 
                     var transformPropertyExists = false;
 
-                    /*********************
-                       Display Toggling
-                    *********************/
+                    /**********************************
+                       Display & Visibility Toggling
+                    **********************************/
 
-                    /* If the display option is set to non-"none", set it upfront so that the element has a chance to become visible before tweening begins. (Otherwise, display's "none" value is set in completeCall() once the animation has completed.) */
-                    if (opts.display && opts.display !== "none") {
+                    /* If the display option is set to non-"none", set it upfront so that the element can become visible before tweening begins.
+                       (Otherwise, display's "none" value is set in completeCall() once the animation has completed.) */
+                    if (opts.display !== undefined && opts.display !== null && opts.display !== "none") {
+                        if (opts.display === "flex") {
+                            var flexValues = [ "-webkit-box", "-moz-box", "-ms-flexbox", "-webkit-flex" ];
+
+                            $.each(flexValues, function(i, flexValue) {
+                                CSS.setPropertyValue(element, "display", flexValue);
+                            });
+                        }
+
                         CSS.setPropertyValue(element, "display", opts.display);
+                    }
+
+                    /* Same goes with the visibility option, but its "none" equivalent is "hidden". */
+                    if (opts.visibility && opts.visibility !== "hidden") {
+                        CSS.setPropertyValue(element, "visibility", opts.visibility);
                     }
 
                     /************************
@@ -14697,14 +19428,16 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                         if (property !== "element") {
                             var tween = tweensContainer[property],
                                 currentValue,
-                                /* Easing can either be a bezier function or a string that references a pre-registered easing on the Velocity.Easings object. In either case, return the appropriate easing function. */
+                                /* Easing can either be a pre-genereated function or a string that references a pre-registered easing
+                                   on the Velocity.Easings object. In either case, return the appropriate easing *function*. */
                                 easing = Type.isString(tween.easing) ? Velocity.Easings[tween.easing] : tween.easing;
 
                             /******************************
                                Current Value Calculation
                             ******************************/
 
-                            /* If this is the last tick pass (if we've reached 100% completion for this tween), ensure that currentValue is explicitly set to its target endValue so that it's not subjected to any rounding. */
+                            /* If this is the last tick pass (if we've reached 100% completion for this tween),
+                               ensure that currentValue is explicitly set to its target endValue so that it's not subjected to any rounding. */
                             if (percentComplete === 1) {
                                 currentValue = tween.endValue;
                             /* Otherwise, calculate currentValue based on the current delta from startValue. */
@@ -14718,9 +19451,11 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                                Hooks: Part I
                             ******************/
 
-                            /* For hooked properties, the newly-updated rootPropertyValueCache is cached onto the element so that it can be used for subsequent hooks in this call that are associated with the same root property.
-                               If we didn't cache the updated rootPropertyValue, each subsequent update to the root property in this tick pass would reset the previous hook's updates to rootPropertyValue prior to injection. */
-                            /* A nice performance byproduct of rootPropertyValue caching is that subsequently chained animations using the same hookRoot but a different hook can use this cached rootPropertyValue. */
+                            /* For hooked properties, the newly-updated rootPropertyValueCache is cached onto the element so that it can be used
+                               for subsequent hooks in this call that are associated with the same root property. If we didn't cache the updated
+                               rootPropertyValue, each subsequent update to the root property in this tick pass would reset the previous hook's
+                               updates to rootPropertyValue prior to injection. A nice performance byproduct of rootPropertyValue caching is that
+                               subsequently chained animations using the same hookRoot but a different hook can use this cached rootPropertyValue. */
                             if (CSS.Hooks.registered[property]) {
                                 var hookRoot = CSS.Hooks.getRoot(property),
                                     rootPropertyValueCache = Data(element).rootPropertyValueCache[hookRoot];
@@ -14736,15 +19471,19 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
 
                             /* setPropertyValue() returns an array of the property name and property value post any normalization that may have been performed. */
                             /* Note: To solve an IE<=8 positioning bug, the unit type is dropped when setting a property value of 0. */
-                            var adjustedSetData = CSS.setPropertyValue(element, property, tween.currentValue + (parseFloat(currentValue) === 0 ? "" : tween.unitType), tween.rootPropertyValue, tween.scrollData); /* SET */
+                            var adjustedSetData = CSS.setPropertyValue(element, /* SET */
+                                                                       property,
+                                                                       tween.currentValue + (parseFloat(currentValue) === 0 ? "" : tween.unitType),
+                                                                       tween.rootPropertyValue,
+                                                                       tween.scrollData);
 
                             /*******************
                                Hooks: Part II
                             *******************/
 
-                            /* Now that we have the hook's updated rootPropertyValue (which is the post-processed value provided by the adjustedSetData array), cache it onto the element. */
+                            /* Now that we have the hook's updated rootPropertyValue (the post-processed value provided by adjustedSetData), cache it onto the element. */
                             if (CSS.Hooks.registered[property]) {
-                                /* Since adjustedSetData contains normalized data ready for DOM updating, the rootPropertyValue needs to be re-extracted from its normalized form. */
+                                /* Since adjustedSetData contains normalized data ready for DOM updating, the rootPropertyValue needs to be re-extracted from its normalized form. ?? */
                                 if (CSS.Normalizations.registered[hookRoot]) {
                                     Data(element).rootPropertyValueCache[hookRoot] = CSS.Normalizations.registered[hookRoot]("extract", null, adjustedSetData[1]);
                                 } else {
@@ -14767,11 +19506,12 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                         mobileHA
                     ****************/
 
-                    /* If mobileHA is enabled, set the translate3d transform to null to force hardware acceleration. It's safe to override this property since Velocity doesn't actually support its animation (hooks are used in its place). */
+                    /* If mobileHA is enabled, set the translate3d transform to null to force hardware acceleration.
+                       It's safe to override this property since Velocity doesn't actually support its animation (hooks are used in its place). */
                     if (opts.mobileHA) {
                         /* Don't set the null transform hack if we've already done so. */
                         if (Data(element).transformCache.translate3d === undefined) {
-                            /* All entries on the transformCache object are concatenated into a single transform string via flushTransformCache(). */
+                            /* All entries on the transformCache object are later concatenated into a single transform string via flushTransformCache(). */
                             Data(element).transformCache.translate3d = "(0px, 0px, 0px)";
 
                             transformPropertyExists = true;
@@ -14783,14 +19523,22 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                     }
                 }
 
-                /* The non-"none" display value is only applied to an element once -- when its associated call is first ticked through. Accordingly, it's set to false so that it isn't re-processed by this call in the next tick. */
-                if (opts.display && opts.display !== "none") {
+                /* The non-"none" display value is only applied to an element once -- when its associated call is first ticked through.
+                   Accordingly, it's set to false so that it isn't re-processed by this call in the next tick. */
+                if (opts.display !== undefined && opts.display !== "none") {
                     Velocity.State.calls[i][2].display = false;
+                }
+                if (opts.visibility && opts.visibility !== "hidden") {
+                    Velocity.State.calls[i][2].visibility = false;
                 }
 
                 /* Pass the elements and the timing data (percentComplete, msRemaining, and timeStart) into the progress callback. */
                 if (opts.progress) {
-                    opts.progress.call(callContainer[1], callContainer[1], percentComplete, Math.max(0, (timeStart + opts.duration) - timeCurrent), timeStart);
+                    opts.progress.call(callContainer[1],
+                                       callContainer[1],
+                                       percentComplete,
+                                       Math.max(0, (timeStart + opts.duration) - timeCurrent),
+                                       timeStart);
                 }
 
                 /* If this call has finished tweening, pass its index to completeCall() to handle call cleanup. */
@@ -14800,9 +19548,9 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
             }
         }
 
-        /* Note: completeCall() contains the logic for setting the isTicking flag to false (which occurs when the last active call on Velocity.State.calls has completed). */
+        /* Note: completeCall() sets the isTicking flag to false when the last call on Velocity.State.calls has completed. */
         if (Velocity.State.isTicking) {
-            requestAnimationFrame(tick);
+            ticker(tick);
         }
     }
 
@@ -14820,27 +19568,36 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
         /* Pull the metadata from the call. */
         var call = Velocity.State.calls[callIndex][0],
             elements = Velocity.State.calls[callIndex][1],
-            opts = Velocity.State.calls[callIndex][2];
+            opts = Velocity.State.calls[callIndex][2],
+            resolver = Velocity.State.calls[callIndex][4];
 
         var remainingCallsExist = false;
 
         /*************************
            Element Finalization
         *************************/
-            
+
         for (var i = 0, callLength = call.length; i < callLength; i++) {
             var element = call[i].element;
 
-            /* If the display option is set to "none" (meaning the user intends to hide the element), set this value now that the animation is complete. */
-            /* Note: The display option is ignored with "reverse" calls, which is what loops are composed of. See reverse's logic for further details. */
-            /* Note: display:none isn't set when calls are manually stopped (via Velocity.animate("stop"). */
-            if (!isStopped && opts.display === "none" && !opts.loop) {
-                CSS.setPropertyValue(element, "display", opts.display);
+            /* If the user set display to "none" (intending to hide the element), set it now that the animation has completed. */
+            /* Note: display:none isn't set when calls are manually stopped (via Velocity("stop"). */
+            /* Note: Display gets ignored with "reverse" calls and infinite loops, since this behavior would be undesirable. */
+            if (!isStopped && !opts.loop) {
+                if (opts.display === "none") {
+                    CSS.setPropertyValue(element, "display", opts.display);
+                }
+
+                if (opts.visibility === "hidden") {
+                    CSS.setPropertyValue(element, "visibility", opts.visibility);
+                }
             }
 
-            /* If the element's queue is empty (if only the "inprogress" item is left at position 0) or if its queue is about to run a non-Velocity-initiated entry, turn off the isAnimating flag.
-               A non-Velocity-initiatied queue entry's logic might alter an element's CSS values and thereby cause Velocity's cached value data to go stale. To detect if a queue entry was initiated by Velocity,
-               we check for the existence of our special Velocity.queueEntryFlag declaration, which minifiers won't rename since the flag is assigned to jQuery's global $ object and thus exists out of Velocity's own scope. */
+            /* If the element's queue is empty (if only the "inprogress" item is left at position 0) or if its queue is about to run
+               a non-Velocity-initiated entry, turn off the isAnimating flag. A non-Velocity-initiatied queue entry's logic might alter
+               an element's CSS values and thereby cause Velocity's cached value data to go stale. To detect if a queue entry was initiated by Velocity,
+               we check for the existence of our special Velocity.queueEntryFlag declaration, which minifiers won't rename since the flag
+               is assigned to jQuery's global $ object and thus exists out of Velocity's own scope. */
             if ($.queue(element)[1] === undefined || !/\.velocityQueueEntryFlag/i.test($.queue(element)[1])) {
                 /* The element may have been deleted. Ensure that its data cache still exists before acting on it. */
                 if (Data(element)) {
@@ -14848,22 +19605,20 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                     /* Clear the element's rootPropertyValueCache, which will become stale. */
                     Data(element).rootPropertyValueCache = {};
 
-                    /* Transform subproperties that trigger hardware acceleration are de-applied entirely when they hit their zero values so that HA'd elements don't remain blurry. */
-                    var transformHAProperties = [ "transformPerspective", "translateZ", "rotateX", "rotateY" ],
-                        transformHAProperty,
-                        transformHAPropertyExists = false;
+                    var transformHAPropertyExists = false;
+                    /* If any 3D transform subproperty is at its default value (regardless of unit type), remove it. */
+                    $.each(CSS.Lists.transforms3D, function(i, transformName) {
+                        var defaultValue = /^scale/.test(transformName) ? 1 : 0,
+                            currentValue = Data(element).transformCache[transformName];
 
-                    for (var transformHAPropertyIndex in transformHAProperties) {
-                        transformHAProperty = transformHAProperties[transformHAPropertyIndex];
-
-                        /* If any transform subproperty begins with "(0", remove it. */
-                        if (/^\(0[^.]/.test(Data(element).transformCache[transformHAProperty])) {
+                        if (Data(element).transformCache[transformName] !== undefined && new RegExp("^\\(" + defaultValue + "[^.]").test(currentValue)) {
                             transformHAPropertyExists = true;
-                            delete Data(element).transformCache[transformHAProperty];
-                        }
-                    }
 
-                    /* Mobile devices have hardware acceleration removed at the end of the animation in order to avoid straining the GPU's available memory. */
+                            delete Data(element).transformCache[transformName];
+                        }
+                    });
+
+                    /* Mobile devices have hardware acceleration removed at the end of the animation in order to avoid hogging the GPU's memory. */
                     if (opts.mobileHA) {
                         transformHAPropertyExists = true;
                         delete Data(element).transformCache.translate3d;
@@ -14873,6 +19628,9 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                     if (transformHAPropertyExists) {
                         CSS.flushTransformCache(element);
                     }
+
+                    /* Remove the "velocity-animating" indicator class. */
+                    CSS.Values.removeClass(element, "velocity-animating");
                 }
             }
 
@@ -14880,19 +19638,50 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                Option: Complete
             *********************/
 
-            /* The complete callback is fired once per call -- not once per elemenet -- and is passed the full raw DOM element set as both its context and its first argument. */
-            /* Note: Callbacks aren't fired when calls are manually stopped (via Velocity.animate("stop"). */
-            /* Note: If this is a loop, complete callback firing is handled by the loop's final reverse call -- we skip handling it here. */
+            /* Complete is fired once per call (not once per element) and is passed the full raw DOM element set as both its context and its first argument. */
+            /* Note: Callbacks aren't fired when calls are manually stopped (via Velocity("stop"). */
             if (!isStopped && opts.complete && !opts.loop && (i === callLength - 1)) {
-                opts.complete.call(elements, elements);
+                /* We throw callbacks in a setTimeout so that thrown errors don't halt the execution of Velocity itself. */
+                try {
+                    opts.complete.call(elements, elements);
+                } catch (error) {
+                    setTimeout(function() { throw error; }, 1);
+                }
+            }
+
+            /**********************
+               Promise Resolving
+            **********************/
+
+            /* Note: Infinite loops don't return promises. */
+            if (resolver && opts.loop !== true) {
+                resolver(elements);
+            }
+
+            /****************************
+               Option: Loop (Infinite)
+            ****************************/
+
+            if (opts.loop === true && !isStopped) {
+                /* If a rotateX/Y/Z property is being animated to 360 deg with loop:true, swap tween start/end values to enable
+                   continuous iterative rotation looping. (Otherise, the element would just rotate back and forth.) */
+                $.each(Data(element).tweensContainer, function(propertyName, tweenContainer) {
+                    if (/^rotate/.test(propertyName) && parseFloat(tweenContainer.endValue) === 360) {
+                        tweenContainer.endValue = 0;
+                        tweenContainer.startValue = 360;
+                    }
+                });
+
+                Velocity(element, "reverse", { loop: true, delay: opts.delay });
             }
 
             /***************
                Dequeueing
             ***************/
 
-            /* Fire the next call in the queue so long as this call's queue wasn't set to false (to trigger a parallel animation), which would have already caused the next call to fire. */
-            /* Note: Even if the end of the animation queue has been reached, $.dequeue() must still be called in order to completely clear jQuery's animation queue. */
+            /* Fire the next call in the queue so long as this call's queue wasn't set to false (to trigger a parallel animation),
+               which would have already caused the next call to fire. Note: Even if the end of the animation queue has been reached,
+               $.dequeue() must still be called in order to completely clear jQuery's animation queue. */
             if (opts.queue !== false) {
                 $.dequeue(element, opts.queue);
             }
@@ -14902,16 +19691,18 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
            Calls Array Cleanup
         ************************/
 
-        /* Since this call is complete, remove it from Velocity.State.calls. For performance reasons, the call is set to false instead of being deleted from the array. Learn more here: http://www.html5rocks.com/en/tutorials/speed/v8/ */
+        /* Since this call is complete, set it to false so that the rAF tick skips it. This array is later compacted via compactSparseArray().
+          (For performance reasons, the call is set to false instead of being deleted from the array: http://www.html5rocks.com/en/tutorials/speed/v8/) */
         Velocity.State.calls[callIndex] = false;
 
-        /* Iterate through the calls array to determine if this was the last running animation. If so, set a flag to end ticking and clear the calls array. */
+        /* Iterate through the calls array to determine if this was the final in-progress animation.
+           If so, set a flag to end ticking and clear the calls array. */
         for (var j = 0, callsLength = Velocity.State.calls.length; j < callsLength; j++) {
             if (Velocity.State.calls[j] !== false) {
                 remainingCallsExist = true;
 
                 break;
-            }    
+            }
         }
 
         if (remainingCallsExist === false) {
@@ -14924,26 +19715,22 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
         }
     }
 
-    /*******************
-        Installation
-    *******************/
+    /******************
+        Frameworks
+    ******************/
 
-    /* Both jQuery and Zepto allow their $.fn object to be extended to allow wrapped elements to be subjected to plugin calls. If either framework is loaded, register a "velocity" extension pointing to Velocity's core animate() method. */
-    var framework = window.jQuery || window.Zepto;
+    /* Both jQuery and Zepto allow their $.fn object to be extended to allow wrapped elements to be subjected to plugin calls.
+       If either framework is loaded, register a "velocity" extension pointing to Velocity's core animate() method.  Velocity
+       also registers itself onto a global container (window.jQuery || window.Zepto || window) so that certain features are
+       accessible beyond just a per-element scope. This master object contains an .animate() method, which is later assigned to $.fn
+       (if jQuery or Zepto are present). Accordingly, Velocity can both act on wrapped DOM elements and stand alone for targeting raw DOM elements. */
+    global.Velocity = Velocity;
 
-    if (framework) {
-        /* Assign the object function to Velocity's animate() method. */
-        framework.fn.velocity = Velocity.animate;
-
+    if (global !== window) {
+        /* Assign the element function to Velocity's core animate() method. */
+        global.fn.velocity = animate;
         /* Assign the object function's defaults to Velocity's global defaults object. */
-        framework.fn.velocity.defaults = Velocity.defaults;
-    }
-
-    /* Support for AMD and CommonJS module loaders. */
-    if (typeof define !== "undefined" && define.amd) {
-        define(function() { return Velocity; });
-    } else if (typeof module !== "undefined" && module.exports) {
-        module.exports = Velocity;
+        global.fn.velocity.defaults = Velocity.defaults;
     }
 
     /***********************
@@ -14952,187 +19739,281 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
 
     /* slideUp, slideDown */
     $.each([ "Down", "Up" ], function(i, direction) {
-        Velocity.Sequences["slide" + direction] = function (element, options) {
-            /* Don't re-run a slide sequence if the element is already at its final display value. */
-            //if ((direction === "Up" && Velocity.CSS.getPropertyValue(element, "display") === 0) ||
-            //    (direction === "Down" && Velocity.CSS.getPropertyValue(element, "display") !== 0)) {
-            //    return;
-            //}
-
+        Velocity.Sequences["slide" + direction] = function (element, options, elementsIndex, elementsSize, elements, promiseData) {
             var opts = $.extend({}, options),
-                originalValues = {
-                    height: null,
-                    marginTop: null,
-                    marginBottom: null,
-                    paddingTop: null,
-                    paddingBottom: null,
-                    overflow: null,
-                    overflowX: null,
-                    overflowY: null
-                },
-                /* The slide functions make use of the begin and complete callbacks, so the the user's custom callbacks are stored upfront for triggering once slideDown/Up's own callback logic is complete. */
                 begin = opts.begin,
                 complete = opts.complete,
-                isHeightAuto = false;
+                computedValues = { height: "", marginTop: "", marginBottom: "", paddingTop: "", paddingBottom: "" },
+                inlineValues = {};
 
-            /* Allow the user to set display to null to bypass display toggling. */
-            if (opts.display !== null) {
-                /* Unless the user is trying to override the display option, show the element before slideDown begins and hide the element after slideUp completes. */
-                if (direction === "Down") {
-                    /* All elements subjected to sliding down are set to the "block" display value (-- )as opposed to an element-appropriate block/inline distinction) because inline elements cannot actually have their dimensions modified. */
-                    opts.display = opts.display || Velocity.CSS.Values.getDisplayType(element);
-                } else {
-                    opts.display = opts.display || "none";
-                }
+            if (opts.display === undefined) {
+                /* Show the element before slideDown begins and hide the element after slideUp completes. */
+                /* Note: Inline elements cannot have dimensions animated, so they're reverted to inline-block. */
+                opts.display = (direction === "Down" ? (Velocity.CSS.Values.getDisplayType(element) === "inline" ? "inline-block" : "block") : "none");
             }
 
-            /* Begin callback. */
             opts.begin = function () {
-                /* Check for height: "auto" so we can revert back to it when the sliding animation is complete. */
-                function checkHeightAuto() {
-                    element.style.display = "block";
-                    originalValues.height = Velocity.CSS.getPropertyValue(element, "height");
-
-                    /* We determine if height was originally set to "auto" by checking if the computed "auto" value is identical to the original value. */
-                    element.style.height = "auto";
-                    if (Velocity.CSS.getPropertyValue(element, "height") === originalValues.height) {
-                        isHeightAuto = true;
-                    }
-
-                    /* Revert to the computed value before sliding begins to prevent vertical popping due to scrollbars. */
-                    /* Note: Webkit has a glitch where height must be explicitly assigned the "px" unit to take effect when height is currently set to "auto". */
-                    Velocity.CSS.setPropertyValue(element, "height", originalValues.height + "px");
-                }
-
-                if (direction === "Down") {
-                    originalValues.overflow = [ Velocity.CSS.getPropertyValue(element, "overflow"), 0 ];
-                    originalValues.overflowX = [ Velocity.CSS.getPropertyValue(element, "overflowX"), 0 ];
-                    originalValues.overflowY = [ Velocity.CSS.getPropertyValue(element, "overflowY"), 0 ];
-
-                    /* Ensure the element is visible, and temporarily remove vertical scrollbars since animating them is visually unappealing. */
-                    element.style.overflow = "hidden";
-                    element.style.overflowX = "visible";
-                    element.style.overflowY = "hidden";
-
-                    /* With the scrollars no longer affecting sizing, determine whether the element is currently set to height: "auto". */
-                    checkHeightAuto();
-
-                    /* Cache the elements' original vertical dimensional values so that we can animate back to them from starting values of 0. */
-                    for (var property in originalValues) {
-                        /* Overflow values have already been cached, do not overwrite them with "hidden" (which they were just set to). */
-                        if (/^overflow/.test(property)) {
-                            continue;
-                        }
-
-                        /* Use forcefeeding to animate slideDown properties from 0. */
-                        originalValues[property] = [ Velocity.CSS.getPropertyValue(element, property), 0 ];
-                    }
-
-                    /* Hide the element inside this begin callback, otherwise it'll momentarily flash itself before the actual animation tick begins. */
-                    element.style.display = "none";
-                } else {
-                    checkHeightAuto();
-
-                    for (var property in originalValues) {
-                        /* Use forcefeeding to animate slideUp properties toward 0. */
-                        originalValues[property] = [ 0, Velocity.CSS.getPropertyValue(element, property) ];
-                    }
-
-                    /* As with slideDown, slideUp hides the element's scrollbars while animating since scrollbar height tweening looks unappealing. */
-                    element.style.overflow = "hidden";
-                    element.style.overflowX = "visible";
-                    element.style.overflowY = "hidden";
-                }
-
                 /* If the user passed in a begin callback, fire it now. */
-                if (begin) {
-                    begin.call(element, element);
+                begin && begin.call(elements, elements);
+
+                /* Force vertical overflow content to clip so that sliding works as expected. */
+                inlineValues.overflow = element.style.overflow;
+                element.style.overflow = "hidden";
+
+                /* Cache the elements' original vertical dimensional property values so that we can animate back to them. */
+                for (var property in computedValues) {
+                    /* Cache all inline values, we reset to upon animation completion. */
+                    inlineValues[property] = element.style[property];
+
+                    /* For slideDown, use forcefeeding to animate all vertical properties from 0. For slideUp, 
+                       use forcefeeding to start from computed values and animate down to 0. */
+                    var propertyValue = Velocity.CSS.getPropertyValue(element, property);
+                    computedValues[property] = (direction === "Down") ? [ propertyValue, 0 ] : [ 0, propertyValue ];
                 }
             }
 
-            /* Complete callback. */
-            opts.complete = function (element) {
-                var propertyValuePosition = (direction === "Down") ? 0 : 1;
-
-                if (isHeightAuto === true) {
-                    /* If the element's height was originally set to auto, overwrite the computed value with "auto". */
-                    originalValues.height[propertyValuePosition] = "auto";
-                } else {
-                    /* Note: Webkit has a glitch where height must be explicitly assigned the "px" unit to take effect after an element's height has been set to "auto". */
-                    originalValues.height[propertyValuePosition] += "px";
-                }
-
-                /* Reset the element to its original values once its slide animation is complete. (For slideDown, overflow values are reset. For slideUp, all values are reset (since they were animated to 0).) */
-                for (var property in originalValues) {
-                    element.style[property] = originalValues[property][propertyValuePosition];
+            opts.complete = function () {
+                /* Reset element to its pre-slide inline values once its slide animation is complete. */
+                for (var property in inlineValues) {
+                    element.style[property] = inlineValues[property];
                 }
 
                 /* If the user passed in a complete callback, fire it now. */
-                if (complete) {
-                    complete.call(element, element);
-                }
+                complete && complete.call(elements, elements);
+                promiseData && promiseData.resolver(elements);
             };
 
-            /* Animation triggering. */
-            Velocity.animate(element, originalValues, opts);
+            Velocity(element, computedValues, opts);
         };
     });
 
     /* fadeIn, fadeOut */
     $.each([ "In", "Out" ], function(i, direction) {
-        Velocity.Sequences["fade" + direction] = function (element, options, elementsIndex, elementsSize) {
+        Velocity.Sequences["fade" + direction] = function (element, options, elementsIndex, elementsSize, elements, promiseData) {
             var opts = $.extend({}, options),
-                propertiesMap = {
-                    opacity: (direction === "In") ? 1 : 0
-                };
+                propertiesMap = { opacity: (direction === "In") ? 1 : 0 },
+                originalComplete = opts.complete;
 
-            /* Since sequences are triggered individually for each element in the animated set, we avoid repeatedly triggering callbacks by firing them only when the final element is reached. */
+            /* Since sequences are triggered individually for each element in the animated set, avoid repeatedly triggering
+               callbacks by firing them only when the final element has been reached. */
             if (elementsIndex !== elementsSize - 1) {
                 opts.complete = opts.begin = null;
+            } else {
+                opts.complete = function() {
+                    if (originalComplete) {
+                        originalComplete.call(elements, elements);
+                    }
+
+                    promiseData && promiseData.resolver(elements);
+                }
             }
 
-            /* If a display value was passed into the sequence, use it. Otherwise, default to "none" for fadeOut and default to the element-specific default value for fadeIn. */
+            /* If a display was passed in, use it. Otherwise, default to "none" for fadeOut or the element-specific default for fadeIn. */
             /* Note: We allow users to pass in "null" to skip display setting altogether. */
-            if (opts.display !== null) {
-                opts.display = (direction === "In") ? Velocity.CSS.Values.getDisplayType(element) : "none";
+            if (opts.display === undefined) {
+                opts.display = (direction === "In" ? "auto" : "none");
             }
 
-            Velocity.animate(this, propertiesMap, opts);
+            Velocity(this, propertiesMap, opts);
         };
     });
-})((window.jQuery || window.Zepto || window), window, document);
+
+    return Velocity;
+}((window.jQuery || window.Zepto || window), window, document);
+}));
 
 /******************
    Known Issues
 ******************/
 
-/* When animating height or width to a % value on an element *without* box-sizing:border-box and *with* visible scrollbars on *both* axes, the opposite axis (e.g. height vs width) will be shortened by the height/width of its scrollbar. */
-/* The translateX/Y/Z subproperties of the transform CSS property are %-relative to the element itself -- not its parent.
-   Velocity, however, doesn't make the distinction. Thus, converting to or from the % unit with these subproperties will produce an inaccurate conversion value. The same issue exists with the cx/cy attributes of SVG circles and ellipses. */;/***************
-    Details
-***************/
+/* When animating height/width to a % value on an element *without* box-sizing:border-box and *with* visible scrollbars
+on *both* axes, the opposite axis (e.g. height vs width) will be shortened by the height/width of its scrollbar. */
+/* The CSS spec mandates that the translateX/Y/Z transforms are %-relative to the element itself -- not its parent.
+Velocity, however, doesn't make this distinction. Thus, converting to or from the % unit with these subproperties
+will produce an inaccurate conversion value. The same issue exists with the cx/cy attributes of SVG circles and ellipses. */;/**********************
+   Velocity UI Pack
+**********************/
 
-/*!
-* velocity.ui.js: UI effects pack for Velocity. Load this file after jquery.velocity.js.
-* @version 2.0.0
-* @docs http://velocityjs.org/#uiPack
-* @support <=IE8: Callouts will have no effect, and transitions will simply fade in/out. IE9/Android 2.3: Most effects are fully supported, the rest fade in/out. All other browsers: Full support.
-* @license Copyright Julian Shapiro. MIT License: http://en.wikipedia.org/wiki/MIT_License
-* @license Indicated portions adapted from Animate.css, copyright Daniel Eden. MIT License: http://en.wikipedia.org/wiki/MIT_License
-* @license Indicated portions adapted from Magic.css, copyright Christian Pucci. MIT License: http://en.wikipedia.org/wiki/MIT_License
-*/   
+/* VelocityJS.org UI Pack (4.1.4). (C) 2014 Julian Shapiro. MIT @license: en.wikipedia.org/wiki/MIT_License. Portions copyright Daniel Eden, Christian Pucci. */
 
-(function() {
-    var Container = (window.jQuery || window.Zepto || window);
+;(function (factory) {    
+    /* CommonJS module. */
+    if (typeof module === "object" && typeof module.exports === "object") {
+        module.exports = factory();
+    /* AMD module. */
+    } else if (typeof define === "function" && define.amd) {
+        define([ "velocity" ], factory);
+    /* Browser globals. */
+    } else {        
+        factory();
+    }
+}(function() {
+return function (global, window, document, undefined) {
 
-    if (!Container.Velocity || !Container.Velocity.Utilities) {
-        console.log("Velocity UI Pack: Velocity must first be loaded. Aborting.");
+    /**************
+        Checks
+    **************/
 
+    if (!global.Velocity || !global.Velocity.Utilities) {
+        window.console && console.log("Velocity UI Pack: Velocity must be loaded first. Aborting.");
         return;
+    } else if (!global.Velocity.version || (global.Velocity.version.major <= 0 && global.Velocity.version.minor <= 11 && global.Velocity.version.patch < 8)) {
+        var abortError = "Velocity UI Pack: You need to update Velocity (jquery.velocity.js) to a newer version. Visit http://github.com/julianshapiro/velocity.";
+
+        alert(abortError);
+        throw new Error(abortError);
     }
 
-    /* Effects declarations. */
-    var effects = 
+    /******************
+       Register UI
+    ******************/
+
+    global.Velocity.RegisterUI = function (effectName, properties) {
+        /* Animate the expansion/contraction of the elements' parent's height for In/Out effects. */
+        function animateParentHeight (elements, direction, totalDuration, stagger) {
+            var totalHeightDelta = 0,
+                parentNode;
+
+            /* Sum the total height (including padding and margin) of all targeted elements. */
+            global.Velocity.Utilities.each(elements.nodeType ? [ elements ] : elements, function(i, element) {
+                if (stagger) {
+                    /* Increase the totalDuration by the successive delay amounts produced by the stagger option. */
+                    totalDuration += i * stagger;
+                }
+
+                parentNode = element.parentNode;
+
+                global.Velocity.Utilities.each([ "height", "paddingTop", "paddingBottom", "marginTop", "marginBottom"], function(i, property) {
+                    totalHeightDelta += parseFloat(global.Velocity.CSS.getPropertyValue(element, property));
+                });
+            });
+
+            /* Animate the parent element's height adjustment (with a varying duration multiplier for aesthetic benefits). */
+            global.Velocity.animate(
+                parentNode,
+                { height: (direction === "In" ? "+" : "-") + "=" + totalHeightDelta },
+                { queue: false, easing: "ease-in-out", duration: totalDuration * (direction === "In" ? 0.6 : 1) }
+            );
+        }
+
+        /* Register a custom sequence for each effect. */
+        global.Velocity.Sequences[effectName] = function (element, sequenceOptions, elementsIndex, elementsSize, elements, promiseData) {
+            var finalElement = (elementsIndex === elementsSize - 1);
+
+            /* Iterate through each effect's call array. */
+            for (var callIndex = 0; callIndex < properties.calls.length; callIndex++) {
+                var call = properties.calls[callIndex],
+                    propertyMap = call[0],
+                    sequenceDuration = (sequenceOptions.duration || properties.defaultDuration || 1000),
+                    durationPercentage = call[1],
+                    callOptions = call[2] || {},
+                    opts = {};
+
+                /* Assign the whitelisted per-call options. */
+                opts.duration = sequenceDuration * (durationPercentage || 1);
+                opts.queue = sequenceOptions.queue || "";
+                opts.easing = callOptions.easing || "ease";
+                opts.delay = callOptions.delay || 0;
+                opts._cacheValues = callOptions._cacheValues || true;
+
+                /* Special processing for the first effect call. */
+                if (callIndex === 0) {
+                    /* If a delay was passed into the sequence, combine it with the first call's delay. */
+                    opts.delay += (sequenceOptions.delay || 0);
+
+                    if (elementsIndex === 0) {
+                        opts.begin = function() {
+                            /* Only trigger a begin callback on the first effect call with the first element in the set. */
+                            sequenceOptions.begin && sequenceOptions.begin.call(elements, elements);
+
+                            /* Only trigger animateParentHeight() if we're using an In/Out transition. */
+                            var direction = effectName.match(/(In|Out)$/);
+                            if (sequenceOptions.animateParentHeight && direction) {
+                                animateParentHeight(elements, direction[0], sequenceDuration + opts.delay, sequenceOptions.stagger);
+                            }
+                        }
+                    }
+
+                    /* If the user isn't overriding the display option, default to "auto" for "In"-suffixed transitions. */
+                    if (sequenceOptions.display !== null) {
+                        if (sequenceOptions.display !== undefined && sequenceOptions.display !== "none") {
+                            opts.display = sequenceOptions.display;
+                        } else if (/In$/.test(effectName)) {
+                            /* Inline elements cannot be subjected to transforms, so we switch them to inline-block. */
+                            var defaultDisplay = global.Velocity.CSS.Values.getDisplayType(element);
+                            opts.display = (defaultDisplay === "inline") ? "inline-block" : defaultDisplay;
+                        }
+                    }
+
+                    if (sequenceOptions.visibility && sequenceOptions.visibility !== "hidden") {
+                        opts.visibility = sequenceOptions.visibility;
+                    }
+                }
+
+                /* Special processing for the last effect call. */
+                if (callIndex === properties.calls.length - 1) {
+                    /* Append promise resolving onto the user's sequence callback. */ 
+                    function injectFinalCallbacks () {
+                        if ((sequenceOptions.display === undefined || sequenceOptions.display === "none") && /Out$/.test(effectName)) {
+                            global.Velocity.Utilities.each(elements.nodeType ? [ elements ] : elements, function(i, element) {
+                                global.Velocity.CSS.setPropertyValue(element, "display", "none");
+                            });
+                        }
+
+                        sequenceOptions.complete && sequenceOptions.complete.call(elements, elements);
+
+                        if (promiseData) {
+                            promiseData.resolver(elements || element);
+                        }
+                    }
+
+                    opts.complete = function() {
+                        if (properties.reset) {
+                            for (var resetProperty in properties.reset) {
+                                var resetValue = properties.reset[resetProperty];
+
+                                /* Format each non-array value in the reset property map to [ value, value ] so that changes apply
+                                   immediately and DOM querying is avoided (via forcefeeding). */
+                                if (typeof resetValue === "string" || typeof resetValue === "number") {
+                                    properties.reset[resetProperty] = [ properties.reset[resetProperty], properties.reset[resetProperty] ];
+                                }
+                            }
+
+                            /* So that the reset values are applied instantly upon the next rAF tick, use a zero duration and parallel queueing. */
+                            var resetOptions = { duration: 0, queue: false };
+
+                            /* Since the reset option uses up the complete callback, we trigger the user's complete callback at the end of ours. */
+                            if (finalElement) {
+                                resetOptions.complete = injectFinalCallbacks;
+                            }  
+
+                            global.Velocity.animate(element, properties.reset, resetOptions);
+                        /* Only trigger the user's complete callback on the last effect call with the last element in the set. */
+                        } else if (finalElement) {
+                            injectFinalCallbacks();
+                        }
+                    };
+
+                    if (sequenceOptions.visibility === "hidden") {
+                        opts.visibility = sequenceOptions.visibility;
+                    }
+                }
+
+                global.Velocity.animate(element, propertyMap, opts);
+            }
+        };
+
+        /* Return the Velocity object so that RegisterUI calls can be chained. */
+        return global.Velocity;
+    };
+
+    /*********************
+       Packaged Effects
+    *********************/
+
+    /* Externalize the packagedEffects data so that they can optionally be modified and re-registered. */
+    /* Support: <=IE8: Callouts will have no effect, and transitions will simply fade in/out. IE9/Android 2.3: Most effects are fully supported, the rest fade in/out. All other browsers: full support. */
+    global.Velocity.RegisterUI.packagedEffects = 
         { 
             /* Animate.css */
             "callout.bounce": {
@@ -15148,8 +20029,13 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
             "callout.shake": {
                 defaultDuration: 800,
                 calls: [ 
-                    [ { translateX: -10 }, 0.125 ],
-                    [ { translateX: 10 }, 0.125, 3 ],
+                    [ { translateX: -11 }, 0.125 ],
+                    [ { translateX: 11 }, 0.125 ],
+                    [ { translateX: -11 }, 0.125 ],
+                    [ { translateX: 11 }, 0.125 ],
+                    [ { translateX: -11 }, 0.125 ],
+                    [ { translateX: 11 }, 0.125 ],
+                    [ { translateX: -11 }, 0.125 ],
                     [ { translateX: 0 }, 0.125 ]
                 ]
             },
@@ -15157,15 +20043,15 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
             "callout.flash": {
                 defaultDuration: 1100,
                 calls: [ 
-                    [ { opacity: [ 0, "swing", 1 ] }, 0.25 ],
-                    [ { opacity: [ 1, "swing" ] }, 0.25 ],
-                    [ { opacity: [ 0, "swing" ] }, 0.25 ],
-                    [ { opacity: [ 1, "swing" ] }, 0.25 ]
+                    [ { opacity: [ 0, "easeInOutQuad", 1 ] }, 0.25 ],
+                    [ { opacity: [ 1, "easeInOutQuad" ] }, 0.25 ],
+                    [ { opacity: [ 0, "easeInOutQuad" ] }, 0.25 ],
+                    [ { opacity: [ 1, "easeInOutQuad" ] }, 0.25 ]
                 ]
             },
             /* Animate.css */
             "callout.pulse": {
-                defaultDuration: 900,
+                defaultDuration: 825,
                 calls: [ 
                     [ { scaleX: 1.1, scaleY: 1.1 }, 0.50 ],
                     [ { scaleX: 1, scaleY: 1 }, 0.50 ]
@@ -15188,11 +20074,28 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                 calls: [ 
                     [ { scaleX: 0.9, scaleY: 0.9, rotateZ: -3 }, 0.10 ],
                     [ { scaleX: 1.1, scaleY: 1.1, rotateZ: 3 }, 0.10 ],
-                    [ { scaleX: 1.1, scaleY: 1.1, rotateZ: -3 }, 0.10, 3 ],
+                    [ { scaleX: 1.1, scaleY: 1.1, rotateZ: -3 }, 0.10 ],
+                    [ "reverse", 0.125 ],
+                    [ "reverse", 0.125 ],
+                    [ "reverse", 0.125 ],
+                    [ "reverse", 0.125 ],
+                    [ "reverse", 0.125 ],
                     [ { scaleX: 1, scaleY: 1, rotateZ: 0 }, 0.20 ]
                 ]
             },
-            /* Support: Loses rotation in IE9/Android 2.3. (Fades only.) */
+            "transition.fadeIn": {
+                defaultDuration: 500,
+                calls: [
+                    [ { opacity: [ 1, 0 ] } ]
+                ]
+            },
+            "transition.fadeOut": {
+                defaultDuration: 500,
+                calls: [
+                    [ { opacity: [ 0, 1 ] } ]
+                ]
+            },
+            /* Support: Loses rotation in IE9/Android 2.3 (fades only). */
             "transition.flipXIn": {
                 defaultDuration: 700,
                 calls: [ 
@@ -15200,32 +20103,32 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                 ],
                 reset: { transformPerspective: 0 }
             },
-            /* Support: Loses rotation in IE9/Android 2.3. (Fades only.) */
+            /* Support: Loses rotation in IE9/Android 2.3 (fades only). */
             "transition.flipXOut": {
                 defaultDuration: 700,
                 calls: [ 
                     [ { opacity: [ 0, 1 ], transformPerspective: [ 800, 800 ], rotateY: 55 } ]
                 ],
-                reset: { opacity: [ 1, 1 ], transformPerspective: 0, rotateY: 0 }
+                reset: { transformPerspective: 0, rotateY: 0 }
             },
-            /* Support: Loses rotation in IE9/Android 2.3. (Fades only.) */
+            /* Support: Loses rotation in IE9/Android 2.3 (fades only). */
             "transition.flipYIn": {
-                defaultDuration: 700,
+                defaultDuration: 800,
                 calls: [ 
-                    [ { opacity: [ 1, 0 ], transformPerspective: [ 800, 800 ], rotateX: [ 0, -35 ] } ]
+                    [ { opacity: [ 1, 0 ], transformPerspective: [ 800, 800 ], rotateX: [ 0, -45 ] } ]
                 ],
                 reset: { transformPerspective: 0 }
             },
-            /* Support: Loses rotation in IE9/Android 2.3. (Fades only.) */
+            /* Support: Loses rotation in IE9/Android 2.3 (fades only). */
             "transition.flipYOut": {
-                defaultDuration: 700,
+                defaultDuration: 800,
                 calls: [ 
                     [ { opacity: [ 0, 1 ], transformPerspective: [ 800, 800 ], rotateX: 25 } ]
                 ],
-                reset: { opacity: [ 1, 1 ], transformPerspective: 0, rotateX: 0 }
+                reset: { transformPerspective: 0, rotateX: 0 }
             },
             /* Animate.css */
-            /* Support: Loses rotation in IE9/Android 2.3. (Fades only.) */
+            /* Support: Loses rotation in IE9/Android 2.3 (fades only). */
             "transition.flipBounceXIn": {
                 defaultDuration: 900,
                 calls: [ 
@@ -15236,17 +20139,17 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                 reset: { transformPerspective: 0 }
             },
             /* Animate.css */
-            /* Support: Loses rotation in IE9/Android 2.3. (Fades only.) */
+            /* Support: Loses rotation in IE9/Android 2.3 (fades only). */
             "transition.flipBounceXOut": {
                 defaultDuration: 800,
                 calls: [ 
                     [ { opacity: [ 0.9, 1 ], transformPerspective: [ 400, 400 ], rotateY: -10 }, 0.50 ],
                     [ { opacity: 0, rotateY: 90 }, 0.50 ]
                 ],
-                reset: { opacity: [ 1, 1 ], transformPerspective: 0, rotateY: 0 }
+                reset: { transformPerspective: 0, rotateY: 0 }
             },
             /* Animate.css */
-            /* Support: Loses rotation in IE9/Android 2.3. (Fades only.) */
+            /* Support: Loses rotation in IE9/Android 2.3 (fades only). */
             "transition.flipBounceYIn": {
                 defaultDuration: 850,
                 calls: [ 
@@ -15257,20 +20160,20 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                 reset: { transformPerspective: 0 }
             },
             /* Animate.css */
-            /* Support: Loses rotation in IE9/Android 2.3. (Fades only.) */
+            /* Support: Loses rotation in IE9/Android 2.3 (fades only). */
             "transition.flipBounceYOut": {
                 defaultDuration: 800,
                 calls: [ 
                     [ { opacity: [ 0.9, 1 ], transformPerspective: [ 400, 400 ], rotateX: -15 }, 0.50 ],
                     [ { opacity: 0, rotateX: 90 }, 0.50 ]
                 ],
-                reset: { opacity: [ 1, 1 ], transformPerspective: 0, rotateX: 0 }
+                reset: { transformPerspective: 0, rotateX: 0 }
             },
             /* Magic.css */
             "transition.swoopIn": {
                 defaultDuration: 850,
                 calls: [ 
-                    [ { opacity: [ 1, 0 ], transformOriginX: [ "100%", "25%" ], transformOriginY: [ "100%", "100%" ], transformOriginZ: [ 0, 0 ], scaleX: [ 1, 0 ], scaleY: [ 1, 0 ], translateX: [ 0, -700 ], translateZ: 0 } ]
+                    [ { opacity: [ 1, 0 ], transformOriginX: [ "100%", "50%" ], transformOriginY: [ "100%", "100%" ], scaleX: [ 1, 0 ], scaleY: [ 1, 0 ], translateX: [ 0, -700 ], translateZ: 0 } ]
                 ],
                 reset: { transformOriginX: "50%", transformOriginY: "50%" }
             },
@@ -15278,56 +20181,56 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
             "transition.swoopOut": {
                 defaultDuration: 850,
                 calls: [ 
-                    [ { opacity: [ 0, 1 ], transformOriginX: [ "25%", "100%" ], transformOriginY: [ "100%", "100%" ], transformOriginZ: [ 0, 0 ], scaleX: 0, scaleY: 0, translateX: -700, translateZ: 0 } ]
+                    [ { opacity: [ 0, 1 ], transformOriginX: [ "50%", "100%" ], transformOriginY: [ "100%", "100%" ], scaleX: 0, scaleY: 0, translateX: -700, translateZ: 0 } ]
                 ],
-                reset: { opacity: [ 1, 1 ], transformOriginX: "50%", transformOriginY: "50%", scaleX: 1, scaleY: 1, translateX: 0 }
+                reset: { transformOriginX: "50%", transformOriginY: "50%", scaleX: 1, scaleY: 1, translateX: 0 }
             },
             /* Magic.css */
             /* Support: Loses rotation in IE9/Android 2.3. (Fades and scales only.) */
             "transition.whirlIn": {
-                defaultDuration: 1000,
+                defaultDuration: 900,
                 calls: [ 
-                    [ { opacity: [ 1, 0 ], transformOriginX: [ "50%", "50%" ], transformOriginY: [ "50%", "50%" ], transformOriginZ: [ 0, 0 ], scaleX: [ 1, 0 ], scaleY: [ 1, 0 ], rotateY: [ 0, 180 ] } ]
+                    [ { opacity: [ 1, 0 ], transformOriginX: [ "50%", "50%" ], transformOriginY: [ "50%", "50%" ], scaleX: [ 1, 0 ], scaleY: [ 1, 0 ], rotateY: [ 0, 160 ] } ]
                 ]
             },
             /* Magic.css */
             /* Support: Loses rotation in IE9/Android 2.3. (Fades and scales only.) */
             "transition.whirlOut": {
-                defaultDuration: 1000,
+                defaultDuration: 900,
                 calls: [ 
-                    [ { opacity: [ 0, 1 ], transformOriginX: [ "50%", "50%" ], transformOriginY: [ "50%", "50%" ], transformOriginZ: [ 0, 0 ], scaleX: 0, scaleY: 0, rotateY: 180 } ]
+                    [ { opacity: [ 0, 1 ], transformOriginX: [ "50%", "50%" ], transformOriginY: [ "50%", "50%" ], scaleX: 0, scaleY: 0, rotateY: 160 } ]
                 ],
-                reset: { opacity: [ 1, 1 ], scaleX: 1, scaleY: 1, rotateY: 0 }
+                reset: { scaleX: 1, scaleY: 1, rotateY: 0 }
             },
             "transition.shrinkIn": {
                 defaultDuration: 700,
                 calls: [ 
-                    [ { opacity: [ 1, 0 ], transformOriginX: [ "50%", "50%" ], transformOriginY: [ "50%", "50%" ], transformOriginZ: [ 0, 0 ], scaleX: [ 1, 1.625 ], scaleY: [ 1, 1.625 ], translateZ: 0 } ]
+                    [ { opacity: [ 1, 0 ], transformOriginX: [ "50%", "50%" ], transformOriginY: [ "50%", "50%" ], scaleX: [ 1, 1.5 ], scaleY: [ 1, 1.5 ], translateZ: 0 } ]
                 ]
             },
             "transition.shrinkOut": {
-                defaultDuration: 700,
+                defaultDuration: 650,
                 calls: [ 
-                    [ { opacity: [ 0, 1 ], transformOriginX: [ "50%", "50%" ], transformOriginY: [ "50%", "50%" ], transformOriginZ: [ 0, 0 ], scaleX: 1.35, scaleY: 1.35, translateZ: 0 } ]
+                    [ { opacity: [ 0, 1 ], transformOriginX: [ "50%", "50%" ], transformOriginY: [ "50%", "50%" ], scaleX: 1.3, scaleY: 1.3, translateZ: 0 } ]
                 ],
-                reset: { opacity: [ 1, 1 ], scaleX: 1, scaleY: 1 }
+                reset: { scaleX: 1, scaleY: 1 }
             },
             "transition.expandIn": {
                 defaultDuration: 700,
                 calls: [ 
-                    [ { opacity: [ 1, 0 ], transformOriginX: [ "50%", "50%" ], transformOriginY: [ "50%", "50%" ], transformOriginZ: [ 0, 0 ], scaleX: [ 1, 0.625 ], scaleY: [ 1, 0.625 ], translateZ: 0 } ]
+                    [ { opacity: [ 1, 0 ], transformOriginX: [ "50%", "50%" ], transformOriginY: [ "50%", "50%" ], scaleX: [ 1, 0.625 ], scaleY: [ 1, 0.625 ], translateZ: 0 } ]
                 ]
             },
             "transition.expandOut": {
                 defaultDuration: 700,
                 calls: [ 
-                    [ { opacity: [ 0, 1 ], transformOriginX: [ "50%", "50%" ], transformOriginY: [ "50%", "50%" ], transformOriginZ: [ 0, 0 ], scaleX: 0.5, scaleY: 0.5, translateZ: 0 } ]
+                    [ { opacity: [ 0, 1 ], transformOriginX: [ "50%", "50%" ], transformOriginY: [ "50%", "50%" ], scaleX: 0.5, scaleY: 0.5, translateZ: 0 } ]
                 ],
-                reset: { opacity: [ 1, 1 ], scaleX: 1, scaleY: 1 }
+                reset: { scaleX: 1, scaleY: 1 }
             },
             /* Animate.css */
             "transition.bounceIn": {
-                defaultDuration: 1000,
+                defaultDuration: 800,
                 calls: [ 
                     [ { opacity: [ 1, 0 ], scaleX: [ 1.05, 0.3 ], scaleY: [ 1.05, 0.3 ] }, 0.40 ],
                     [ { scaleX: 0.9, scaleY: 0.9, translateZ: 0 }, 0.20 ],
@@ -15336,19 +20239,19 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
             },
             /* Animate.css */
             "transition.bounceOut": {
-                defaultDuration: 1000,
+                defaultDuration: 800,
                 calls: [ 
-                    [ { opacity: [ 1, 1 ], scaleX: 0.95, scaleY: 0.95 }, 0.35 ],
-                    [ { scaleX: 1.1, scaleY: 1.1, translateZ: 0 }, 0.35 ],
-                    [ { opacity: 0, scaleX: 0.3, scaleY: 0.3 }, 0.30 ]
+                    [ { scaleX: 0.95, scaleY: 0.95 }, 0.40 ],
+                    [ { scaleX: 1.1, scaleY: 1.1, translateZ: 0 }, 0.40 ],
+                    [ { opacity: [ 0, 1 ], scaleX: 0.3, scaleY: 0.3 }, 0.20 ]
                 ],
-                reset: { opacity: [ 1, 1 ], scaleX: 1, scaleY: 1 }
+                reset: { scaleX: 1, scaleY: 1 }
             },
             /* Animate.css */
             "transition.bounceUpIn": {
-                defaultDuration: 1000,
+                defaultDuration: 800,
                 calls: [ 
-                    [ { opacity: [ 1, "easeOutQuad", 0 ], translateY: [ -30, 1000 ] }, 0.60 ],
+                    [ { opacity: [ 1, 0 ], translateY: [ -30, 1000 ] }, 0.60, { easing: "easeOutCirc" } ],
                     [ { translateY: 10 }, 0.20 ],
                     [ { translateY: 0 }, 0.20 ]
                 ]
@@ -15357,16 +20260,16 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
             "transition.bounceUpOut": {
                 defaultDuration: 1000,
                 calls: [ 
-                    [ { opacity: [ 1, "easeInQuad", 1 ], translateY: 20 }, 0.20 ],
-                    [ { opacity: 0, translateY: -1000 }, 0.80 ]
+                    [ { translateY: 20 }, 0.20 ],
+                    [ { opacity: [ 0, "easeInCirc", 1 ], translateY: -1000 }, 0.80 ]
                 ],
-                reset: { opacity: [ 1, 1 ], translateY: 0 }
+                reset: { translateY: 0 }
             },
             /* Animate.css */
             "transition.bounceDownIn": {
-                defaultDuration: 1000,
+                defaultDuration: 800,
                 calls: [ 
-                    [ { opacity: [ 1, "easeOutQuad", 0 ], translateY: [ 30, -1000 ] }, 0.60 ],
+                    [ { opacity: [ 1, 0 ], translateY: [ 30, -1000 ] }, 0.60, { easing: "easeOutCirc" } ],
                     [ { translateY: -10 }, 0.20 ],
                     [ { translateY: 0 }, 0.20 ]
                 ]
@@ -15375,72 +20278,72 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
             "transition.bounceDownOut": {
                 defaultDuration: 1000,
                 calls: [ 
-                    [ { opacity: [ 1, "easeInQuad", 1 ], translateY: -20 }, 0.20 ],
-                    [ { opacity: 0, translateY: 1000 }, 0.80 ]
+                    [ { translateY: -20 }, 0.20 ],
+                    [ { opacity: [ 0, "easeInCirc", 1 ], translateY: 1000 }, 0.80 ]
                 ],
-                reset: { opacity: [ 1, 1 ], translateY: 0 }
+                reset: { translateY: 0 }
             },
             /* Animate.css */
             "transition.bounceLeftIn": {
-                defaultDuration: 900,
+                defaultDuration: 750,
                 calls: [ 
-                    [ { opacity: [ 1, "easeOutQuad", 0 ], translateX: [ 30, -1000 ] }, 0.60 ],
+                    [ { opacity: [ 1, 0 ], translateX: [ 30, -1250 ] }, 0.60, { easing: "easeOutCirc" } ],
                     [ { translateX: -10 }, 0.20 ],
                     [ { translateX: 0 }, 0.20 ]
                 ]
             },
             /* Animate.css */
             "transition.bounceLeftOut": {
-                defaultDuration: 900,
+                defaultDuration: 750,
                 calls: [ 
-                    [ { opacity: [ 1, "easeOutQuad", 1 ], translateX: 20 }, 0.20 ],
-                    [ { opacity: 0, translateX: -1000 }, 0.80 ]
+                    [ { translateX: 30 }, 0.20 ],
+                    [ { opacity: [ 0, "easeInCirc", 1 ], translateX: -1250 }, 0.80 ]
                 ],
-                reset: { opacity: [ 1, 1 ], translateX: 0 }
+                reset: { translateX: 0 }
             },
             /* Animate.css */
             "transition.bounceRightIn": {
-                defaultDuration: 950,
+                defaultDuration: 750,
                 calls: [ 
-                    [ { opacity: [ 1, "easeOutQuad", 0 ], translateX: [ -30, 1000 ] }, 0.60 ],
+                    [ { opacity: [ 1, 0 ], translateX: [ -30, 1250 ] }, 0.60, { easing: "easeOutCirc" } ],
                     [ { translateX: 10 }, 0.20 ],
                     [ { translateX: 0 }, 0.20 ]
                 ]
             },
             /* Animate.css */
             "transition.bounceRightOut": {
-                defaultDuration: 950,
+                defaultDuration: 750,
                 calls: [ 
-                    [ { opacity: [ 1, "easeOutQuad", 1 ], translateX: -20 }, 0.20 ],
-                    [ { opacity: 0, translateX: 1000 }, 0.80 ]
+                    [ { translateX: -30 }, 0.20 ],
+                    [ { opacity: [ 0, "easeInCirc", 1 ], translateX: 1250 }, 0.80 ]
                 ],
-                reset: { opacity: [ 1, 1 ], translateX: 0 }
+                reset: { translateX: 0 }
             },
             "transition.slideUpIn": {
-                defaultDuration: 1000,
+                defaultDuration: 900,
                 calls: [ 
                     [ { opacity: [ 1, 0 ], translateY: [ 0, 20 ], translateZ: 0 } ]
                 ]
             },
             "transition.slideUpOut": {
-                defaultDuration: 1000,
+                defaultDuration: 900,
                 calls: [ 
                     [ { opacity: [ 0, 1 ], translateY: -20, translateZ: 0 } ]
                 ],
-                reset: { opacity: [ 1, 1 ], translateY: 0 }
+                reset: { translateY: 0 }
             },
             "transition.slideDownIn": {
-                defaultDuration: 1000,
+                defaultDuration: 900,
                 calls: [ 
                     [ { opacity: [ 1, 0 ], translateY: [ 0, -20 ], translateZ: 0 } ]
                 ]
             },
             "transition.slideDownOut": {
-                defaultDuration: 1000,
+                defaultDuration: 900,
                 calls: [ 
                     [ { opacity: [ 0, 1 ], translateY: 20, translateZ: 0 } ]
                 ],
-                reset: { opacity: [ 1, 1 ], translateY: 0 }
+                reset: { translateY: 0 }
             },
             "transition.slideLeftIn": {
                 defaultDuration: 1000,
@@ -15453,7 +20356,7 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                 calls: [ 
                     [ { opacity: [ 0, 1 ], translateX: -20, translateZ: 0 } ]
                 ],
-                reset: { opacity: [ 1, 1 ], translateX: 0 }
+                reset: { translateX: 0 }
             },
             "transition.slideRightIn": {
                 defaultDuration: 1000,
@@ -15466,7 +20369,7 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                 calls: [ 
                     [ { opacity: [ 0, 1 ], translateX: 20, translateZ: 0 } ]
                 ],
-                reset: { opacity: [ 1, 1 ], translateX: 0 }
+                reset: { translateX: 0 }
             },
             "transition.slideUpBigIn": {
                 defaultDuration: 850,
@@ -15475,11 +20378,11 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                 ]
             },
             "transition.slideUpBigOut": {
-                defaultDuration: 850,
+                defaultDuration: 800,
                 calls: [ 
                     [ { opacity: [ 0, 1 ], translateY: -75, translateZ: 0 } ]
                 ],
-                reset: { opacity: [ 1, 1 ], translateY: 0 }
+                reset: { translateY: 0 }
             },
             "transition.slideDownBigIn": {
                 defaultDuration: 850,
@@ -15488,167 +20391,114 @@ The biggest cause of both codebase bloat and codepath obfuscation is support for
                 ]
             },
             "transition.slideDownBigOut": {
-                defaultDuration: 850,
+                defaultDuration: 800,
                 calls: [ 
                     [ { opacity: [ 0, 1 ], translateY: 75, translateZ: 0 } ]
                 ],
-                reset: { opacity: [ 1, 1 ], translateY: 0 }
+                reset: { translateY: 0 }
             },
             "transition.slideLeftBigIn": {
-                defaultDuration: 850,
+                defaultDuration: 800,
                 calls: [ 
                     [ { opacity: [ 1, 0 ], translateX: [ 0, -75 ], translateZ: 0 } ]
                 ]
             },
             "transition.slideLeftBigOut": {
-                defaultDuration: 850,
+                defaultDuration: 750,
                 calls: [ 
                     [ { opacity: [ 0, 1 ], translateX: -75, translateZ: 0 } ]
                 ],
-                reset: { opacity: [ 1, 1 ], translateX: 0 }
+                reset: { translateX: 0 }
             },
             "transition.slideRightBigIn": {
-                defaultDuration: 850,
+                defaultDuration: 800,
                 calls: [ 
                     [ { opacity: [ 1, 0 ], translateX: [ 0, 75 ], translateZ: 0 } ]
                 ]
             },
             "transition.slideRightBigOut": {
-                defaultDuration: 850,
+                defaultDuration: 750,
                 calls: [ 
                     [ { opacity: [ 0, 1 ], translateX: 75, translateZ: 0 } ]
                 ],
-                reset: { opacity: [ 1, 1 ], translateX: 0 }
+                reset: { translateX: 0 }
             },
             /* Magic.css */
             "transition.perspectiveUpIn": {
-                defaultDuration: 900,
+                defaultDuration: 800,
                 calls: [ 
-                    [ { opacity: [ 1, 0 ], transformPerspective: [ 800, 800 ], transformOriginX: [ 0, 0 ], transformOriginY: [ "100%", "100%" ], transformOriginZ: [ 0, 0 ], rotateX: [ 0, -180 ] } ]
+                    [ { opacity: [ 1, 0 ], transformPerspective: [ 800, 800 ], transformOriginX: [ 0, 0 ], transformOriginY: [ "100%", "100%" ], rotateX: [ 0, -180 ] } ]
                 ],
                 reset: { transformPerspective: 0, transformOriginX: "50%", transformOriginY: "50%" }
             },
             /* Magic.css */
-            /* Support: Loses rotation in IE9/Android 2.3. (Fades only.) */
+            /* Support: Loses rotation in IE9/Android 2.3 (fades only). */
             "transition.perspectiveUpOut": {
-                defaultDuration: 950,
+                defaultDuration: 850,
                 calls: [ 
-                    [ { opacity: [ 0, 1 ], transformPerspective: [ 800, 800 ], transformOriginX: [ 0, 0 ], transformOriginY: [ "100%", "100%" ], transformOriginZ: [ 0, 0 ], rotateX: -180 } ]
+                    [ { opacity: [ 0, 1 ], transformPerspective: [ 800, 800 ], transformOriginX: [ 0, 0 ], transformOriginY: [ "100%", "100%" ], rotateX: -180 } ]
                 ],
-                reset: { opacity: [ 1, 1 ], transformPerspective: 0, transformOriginX: "50%", transformOriginY: "50%", rotateX: 0 }
+                reset: { transformPerspective: 0, transformOriginX: "50%", transformOriginY: "50%", rotateX: 0 }
             },
             /* Magic.css */
-            /* Support: Loses rotation in IE9/Android 2.3. (Fades only.) */
+            /* Support: Loses rotation in IE9/Android 2.3 (fades only). */
             "transition.perspectiveDownIn": {
-                defaultDuration: 925,
+                defaultDuration: 800,
                 calls: [ 
-                    [ { opacity: [ 1, 0 ], transformPerspective: [ 800, 800 ], transformOriginX: [ 0, 0 ], transformOriginY: [ 0, 0 ], transformOriginZ: [ 0, 0 ], rotateX: [ 0, 180 ] } ]
+                    [ { opacity: [ 1, 0 ], transformPerspective: [ 800, 800 ], transformOriginX: [ 0, 0 ], transformOriginY: [ 0, 0 ], rotateX: [ 0, 180 ] } ]
                 ],
                 reset: { transformPerspective: 0, transformOriginX: "50%", transformOriginY: "50%" }
             },
             /* Magic.css */
-            /* Support: Loses rotation in IE9/Android 2.3. (Fades only.) */
+            /* Support: Loses rotation in IE9/Android 2.3 (fades only). */
             "transition.perspectiveDownOut": {
-                defaultDuration: 950,
+                defaultDuration: 850,
                 calls: [ 
-                    [ { opacity: [ 0, 1 ], transformPerspective: [ 800, 800 ], transformOriginX: [ 0, 0 ], transformOriginY: [ 0, 0 ], transformOriginZ: [ 0, 0 ], rotateX: 180 } ]
+                    [ { opacity: [ 0, 1 ], transformPerspective: [ 800, 800 ], transformOriginX: [ 0, 0 ], transformOriginY: [ 0, 0 ], rotateX: 180 } ]
                 ],
-                reset: { opacity: [ 1, 1 ], transformPerspective: 0, transformOriginX: "50%", transformOriginY: "50%", rotateX: 0 }
+                reset: { transformPerspective: 0, transformOriginX: "50%", transformOriginY: "50%", rotateX: 0 }
             },
             /* Magic.css */
-            /* Support: Loses rotation in IE9/Android 2.3. (Fades only.) */
+            /* Support: Loses rotation in IE9/Android 2.3 (fades only). */
             "transition.perspectiveLeftIn": {
                 defaultDuration: 950,
                 calls: [ 
-                    [ { opacity: [ 1, 0 ], transformPerspective: [ 2000, 2000 ], transformOriginX: [ 0, 0 ], transformOriginY: [ 0, 0 ], transformOriginZ: [ 0, 0 ], rotateY: [ 0, -180 ] } ]
+                    [ { opacity: [ 1, 0 ], transformPerspective: [ 2000, 2000 ], transformOriginX: [ 0, 0 ], transformOriginY: [ 0, 0 ], rotateY: [ 0, -180 ] } ]
                 ],
                 reset: { transformPerspective: 0, transformOriginX: "50%", transformOriginY: "50%" }
             },
             /* Magic.css */
-            /* Support: Loses rotation in IE9/Android 2.3. (Fades only.) */
+            /* Support: Loses rotation in IE9/Android 2.3 (fades only). */
             "transition.perspectiveLeftOut": {
                 defaultDuration: 950,
                 calls: [ 
-                    [ { opacity: [ 0, 1 ], transformPerspective: [ 2000, 2000 ], transformOriginX: [ 0, 0 ], transformOriginY: [ 0, 0 ], transformOriginZ: [ 0, 0 ], rotateY: -180 } ]
+                    [ { opacity: [ 0, 1 ], transformPerspective: [ 2000, 2000 ], transformOriginX: [ 0, 0 ], transformOriginY: [ 0, 0 ], rotateY: -180 } ]
                 ],
-                reset: { opacity: [ 1, 1 ], transformPerspective: 0, transformOriginX: "50%", transformOriginY: "50%", rotateY: 0 }
+                reset: { transformPerspective: 0, transformOriginX: "50%", transformOriginY: "50%", rotateY: 0 }
             },
             /* Magic.css */
-            /* Support: Loses rotation in IE9/Android 2.3. (Fades only.) */
+            /* Support: Loses rotation in IE9/Android 2.3 (fades only). */
             "transition.perspectiveRightIn": {
                 defaultDuration: 950,
                 calls: [ 
-                    [ { opacity: [ 1, 0 ],transformPerspective: [ 2000, 2000 ], transformOriginX: [ "100%", "100%" ], transformOriginY: [ 0, 0 ], transformOriginZ: [ 0, 0 ], rotateY: [ 0, 180 ] } ]
+                    [ { opacity: [ 1, 0 ], transformPerspective: [ 2000, 2000 ], transformOriginX: [ "100%", "100%" ], transformOriginY: [ 0, 0 ], rotateY: [ 0, 180 ] } ]
                 ],
                 reset: { transformPerspective: 0, transformOriginX: "50%", transformOriginY: "50%" }
             },
             /* Magic.css */
-            /* Support: Loses rotation in IE9/Android 2.3. (Fades only.) */
+            /* Support: Loses rotation in IE9/Android 2.3 (fades only). */
             "transition.perspectiveRightOut": {
                 defaultDuration: 950,
                 calls: [ 
-                    [ { opacity: [ 0, 1 ], transformPerspective: [ 2000, 2000 ], transformOriginX: [ "100%", "100%" ], transformOriginY: [ 0, 0 ], transformOriginZ: [ 0, 0 ], rotateY: 180 } ]
+                    [ { opacity: [ 0, 1 ], transformPerspective: [ 2000, 2000 ], transformOriginX: [ "100%", "100%" ], transformOriginY: [ 0, 0 ], rotateY: 180 } ]
                 ],
-                reset: { opacity: [ 1, 1 ], transformPerspective: 0, transformOriginX: "50%", transformOriginY: "50%", rotateY: 0 }
+                reset: { transformPerspective: 0, transformOriginX: "50%", transformOriginY: "50%", rotateY: 0 }
             }
         };
 
-    /* Sequence generator. */
-    for (var effectName in effects) {
-        (function(effectName) {
-            var effect = effects[effectName];
-
-            Container.Velocity.Sequences[effectName] = function (element, options, elementsIndex, elementsSize) {
-                var finalElement = (elementsIndex === elementsSize - 1);
-
-                for (var callIndex = 0; callIndex < effect.calls.length; callIndex++) {
-                    var opts = {};
-
-                    opts.duration = (options.duration || effect.defaultDuration || 1000) * (effect.calls[callIndex][1] || 1);
-                    opts.easing = "ease";
-                    opts.loop = effect.calls[callIndex][2];
-
-                    if (callIndex === 0) {
-                        opts.delay = options.delay;
-
-                        if (elementsIndex === 0) {
-                            opts.begin = options.begin;
-                        }
-
-                        if (options.display !== null) {
-                            if (options.display) {
-                                opts.display = options.display;
-                            } else if (/In$/.test(effectName)) {
-                                opts.display = Container.Velocity.CSS.Values.getDisplayType(element);
-                            }
-                        }
-                    }
-
-                    if (callIndex === effect.calls.length - 1) {
-                        if (effect.reset) {
-                            opts.complete = function() {
-                                if (finalElement) {
-                                    options.complete && options.complete.call();
-                                }
-
-                                Container.Velocity.animate(element, effect.reset, { duration: 0, queue: false });
-                            };
-                        } else if (finalElement) {
-                            opts.complete = options.complete;
-                        }
-
-                        if (options.display !== null) {
-                            if (options.display) {
-                                opts.display = options.display;
-                            } else if (/Out$/.test(effectName)) {
-                                opts.display = "none";                        
-                            }
-                        }
-                    }
-
-                    Container.Velocity.animate(element, effect.calls[callIndex][0], opts);
-                } 
-            };
-        })(effectName);
+    /* Register the packaged effects. */
+    for (var effectName in global.Velocity.RegisterUI.packagedEffects) {
+        global.Velocity.RegisterUI(effectName, global.Velocity.RegisterUI.packagedEffects[effectName]);
     }
-})();
+}((window.jQuery || window.Zepto || window), window, document);
+}));

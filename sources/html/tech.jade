@@ -1,0 +1,129 @@
+include includes/header
+
+<body class="tech">
+.wrap
+	include includes/toolbar
+
+	main.page
+		.container
+			.row
+				.col-xs-3.col-md-4
+					aside.sidebar
+						a(href="/").logo
+							include ../../public_html/layout/images/svg/logo.svg
+						nav.nav-left
+							a(href="about.html").nav-left__item О компании
+							a(href="news.html").nav-left__item Новости
+							a(href="services.html").nav-left__item Услуги
+							a(href="tech.html").nav-left__item.nav-left__item--active Технологии
+							a(href="projects.html").nav-left__item Наши проекты
+							a(href="partners.html").nav-left__item Партнеры
+							a(href="contacts.html").nav-left__item Контакты
+						
+				.col-xs-9.col-md-8
+					article
+						h1.page__title Технологии
+						.page__divider
+						h2 В нашей работы мы используем:
+						.tech
+							.row
+								.col-xs-4
+									.tech__item
+										.tech__image(style="background-image: url(./layout/images/t-1.jpg)")
+										.tech__title Автоматический сварочный аппарат M-400
+										.row
+											.col-xs-5
+												a.tech__link.tech__video(data-toggle="modal", data-target="#techVideo", href="#techVideo")
+													include ../../public_html/layout/images/svg/video.svg
+													| Видео
+											.col-xs-7
+												a.tech__link.tech__photos(data-toggle="modal", data-target="#techPhotos", href="#techPhotos")
+													include ../../public_html/layout/images/svg/photos.svg
+													| Фотогалерея
+								.col-xs-4
+									.tech__item
+										.tech__image(style="background-image: url(./layout/images/t-1.jpg)")
+										.tech__title Автоматический сварочный аппарат M-400
+										.row
+											.col-xs-5
+												a.tech__link.tech__video(data-toggle="modal", data-target="#techVideo", href="#techVideo")
+													include ../../public_html/layout/images/svg/video.svg
+													| Видео
+											.col-xs-7
+												a.tech__link.tech__photos(data-toggle="modal", data-target="#techPhotos", href="#techPhotos")
+													include ../../public_html/layout/images/svg/photos.svg
+													| Фотогалерея
+								.col-xs-4
+									.tech__item
+										.tech__image(style="background-image: url(./layout/images/t-1.jpg)")
+										.tech__title Автоматический сварочный аппарат M-400
+										.row
+											.col-xs-5
+												a.tech__link.tech__video(data-toggle="modal", data-target="#techVideo", href="#techVideo")
+													include ../../public_html/layout/images/svg/video.svg
+													| Видео
+											.col-xs-7
+												a.tech__link.tech__photos(data-toggle="modal", data-target="#techPhotos", href="#techPhotos")
+													include ../../public_html/layout/images/svg/photos.svg
+													| Фотогалерея
+							.row
+								.col-xs-4
+									.tech__item
+										.tech__image(style="background-image: url(./layout/images/t-1.jpg)")
+										.tech__title Автоматический сварочный аппарат M-400
+										.row
+											.col-xs-5
+												a.tech__link.tech__video(data-toggle="modal", data-target="#techVideo", href="#techVideo")
+													include ../../public_html/layout/images/svg/video.svg
+													| Видео
+											.col-xs-7
+												a.tech__link.tech__photos(data-toggle="modal", data-target="#techPhotos", href="#techPhotos")
+													include ../../public_html/layout/images/svg/photos.svg
+													| Фотогалерея
+								.col-xs-4
+									.tech__item
+										.tech__image(style="background-image: url(./layout/images/t-1.jpg)")
+										.tech__title Автоматический сварочный аппарат M-400
+										.row
+											.col-xs-5
+												a.tech__link.tech__video(data-toggle="modal", data-target="#techVideo", href="#techVideo")
+													include ../../public_html/layout/images/svg/video.svg
+													| Видео
+											.col-xs-7
+												a.tech__link.tech__photos(data-toggle="modal", data-target="#techPhotos", href="#techPhotos")
+													include ../../public_html/layout/images/svg/photos.svg
+													| Фотогалерея
+								.col-xs-4
+									.tech__item
+										.tech__image(style="background-image: url(./layout/images/t-1.jpg)")
+										.tech__title Автоматический сварочный аппарат M-400
+										.row
+											.col-xs-5
+												a.tech__link.tech__video(data-toggle="modal", data-target="#techVideo", href="#techVideo")
+													include ../../public_html/layout/images/svg/video.svg
+													| Видео
+											.col-xs-7
+												a.tech__link.tech__photos(data-toggle="modal", data-target="#techPhotos", href="#techPhotos")
+													include ../../public_html/layout/images/svg/photos.svg
+													| Фотогалерея
+						.page__divider
+						big.l-line-height.s-margin-bottom Одновременно с предоставлением персонала мы имеем возможность и осуществляем аудит, имеющейся тех.вооруженности,  разработку технологий сварки с внедрением, сваркой КСС, предоставлением процедур, обучением персонала заказчика на оборудовании заказчика, что предпочтительнее для заказчика, т.к. обучение проходит непосредственно на оборудовании и объекте заказчика перед началом сварки.
+						.center
+							a.button.button--white(href="#") как проходит рабочий процесс
+
+.modal.fade(id="techVideo", tabindex="-1", role="dialog" aria-hidden="true")
+	.modal-dialog.modal-lg
+		.modal-content
+			a.close(data-dismiss="modal", href="#")
+				include ../../public_html/layout/images/svg/close.svg
+			| <iframe src="//player.vimeo.com/video/105264011?title=0&amp;byline=0&amp;badge=0&amp;color=0075cb" width="858" height="483" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+
+.modal.fade(id="techPhotos", tabindex="-1", role="dialog" aria-hidden="true")
+	.modal-dialog.modal-lg
+		.modal-content
+			a.close(data-dismiss="modal", href="#")
+				include ../../public_html/layout/images/svg/close.svg
+			.fotorama(data-width="100%", data-height="438")
+				img(src="./layout/images/bg_about.jpg")
+				img(src="./layout/images/bg_index.jpg")
+include includes/footer

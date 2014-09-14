@@ -1,12 +1,16 @@
 .sidebar
 	full-width()
 	padding-bottom 80px
+	z-index 10
+	position relative
 	.logo
 		full-width()
 		margin-bottom 90px
+		svg
+			max-width 100%
 	.nav-left
 		full-width()
-		margin-bottom 90px
+		margin-bottom 60px
 		&__item
 			float left
 			clear both
@@ -26,8 +30,10 @@
 				border-radius 20px
 			&:hover
 				color blue
+				text-decoration: none
 	.news
 		full-width()
+		max-width 75%
 		&__item
 			full-width()
 		&__date

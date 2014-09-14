@@ -13,7 +13,7 @@ module.exports = (grunt)->
 				js : '/jquery/dist/jquery.js'
 			bootstrap :
 				js  : '/bootstrap/dist/js/bootstrap.js'
-				css : '/bootstrap/dist/css/bootstrap.css'
+				css : '/../sources/css/bootstrap.css'
 			slick :
 				js  : '/slick/slick/slick.js'
 				css : '/slick/slick/slick.css'
@@ -22,6 +22,9 @@ module.exports = (grunt)->
 				css : '/prettyPhoto/css/prettyPhoto.css'
 			parsley :
 				js  : '/parsleyjs/dist/parsley.js'
+			fotorama :
+				js : '/fotorama/fotorama.js'
+				css : '/fotorama/fotorama.css'
 			mask :
 				js  : '/jQuery-Mask-Plugin/jquery.mask.js'
 			hypher:
@@ -33,9 +36,11 @@ module.exports = (grunt)->
 				js  : '/jquery.cookie/jquery.cookie.js'
 			velocity :
 				js  : [
-						'/velocity/jquery.velocity.js'
+						'/velocity/velocity.js'
 						'/velocity/velocity.ui.js'
 					]
+			isotope :
+				js : '/isotope/dist/isotope.pkgd.js' 
 			bem :
 				js : '/jquery.bem/jquery.bem.js'
 			chosen :
@@ -63,7 +68,7 @@ module.exports = (grunt)->
 			sources : 'sources'
 			layout  : 'public_html/layout'
 
-		use : loadPlugins [ 'jquery', 'bootstrap', 'browser', 'bem', 'hoverIntent', 'velocity' ]
+		use : loadPlugins [ 'jquery', 'bootstrap', 'browser', 'isotope', 'fotorama', 'bem', 'hoverIntent', 'velocity' ]
 
 		files:
 			css:
@@ -131,6 +136,7 @@ module.exports = (grunt)->
 				files: [
 					{ expand: true, flatten: true, src: ['./bower_components/bootstrap/dist/css/bootstrap.css.map'], dest: '<%= path.layout %>/css/', filter: 'isFile' }
 					{ expand: true, flatten: true, src: ['./bower_components/prettyPhoto/images/prettyPhoto/default/*.png'], dest: '<%= path.sources %>/images/plugins/', filter: 'isFile' }
+					{ expand: true, flatten: true, src: ['./bower_components/fotorama/*.png'], dest: '<%= path.sources %>/images/plugins/', filter: 'isFile' }
 				]
 
 		# Уменьшение размера изображений
@@ -188,13 +194,17 @@ module.exports = (grunt)->
 				files: 
 					'<%= path.sources %>/js/script.js' : ['<%= files.js.develop %>']
 
-		
+		less:
+		  bootstrap:
+		    options:
+		      paths: ['<%= path.sources %>/css/bootstrap/']
+		    files:
+		      "<%= path.sources %>/css/bootstrap.css": "<%= path.sources %>/css/bootstrap/bootstrap.less"
+		    
 
 		# Причесываем CSS
 		csscomb:
 			css_frontend:
-				options:
-					config: './node_modules/grunt-csscomb/node_modules/csscomb/config/yandex.json'
 				files:
 					'<%= files.css.frontend %>' : [ '<%= files.css.frontend %>' ]
 
@@ -286,6 +296,6 @@ module.exports = (grunt)->
 
 	grunt.registerTask 'svg', ['svgmin', 'jade']
 	
-	grunt.registerTask 'compile', ['copy', 'imagemin', 'svgmin', 'concat:css_stylus', 'stylus', 'coffee', 'concat:js_plugins', 'concat:js_frontend', 'concat:css_frontend', 'csscomb', 'cssmin', 'uglify', 'jade']
+	grunt.registerTask 'compile', ['copy', 'imagemin', 'svgmin', 'less', 'concat:css_stylus', 'stylus', 'coffee', 'concat:js_plugins', 'concat:js_frontend', 'concat:css_frontend', 'csscomb', 'cssmin', 'uglify', 'jade']
 
 	grunt.task.run 'notify_hooks'

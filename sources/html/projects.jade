@@ -1,0 +1,59 @@
+include includes/header
+
+<body class="map">
+.wrap
+	include includes/toolbar
+
+	main.page
+		.container
+			.row
+				.col-xs-3.col-md-4
+					aside.sidebar
+						a(href="/").logo
+							include ../../public_html/layout/images/svg/logo.svg
+						nav.nav-left
+							a(href="about.html").nav-left__item О компании
+							a(href="news.html").nav-left__item Новости
+							a(href="services.html").nav-left__item Услуги
+							a(href="tech.html").nav-left__item Технологии
+							a(href="projects.html").nav-left__item.nav-left__item--active Наши проекты
+							a(href="partners.html").nav-left__item Партнеры
+							a(href="contacts.html").nav-left__item Контакты
+				.col-xs-9.col-md-8
+					article
+						h1.inline-block.page__title(data-more="Для получения подробной информации о проекте нажмите на соответствующий маркер на карте.") наши проекты
+						.filter
+							.row
+								.col-xs-9
+									a.filter__item.filter__item--active(href="#") все проекты
+									a.filter__item.filter__item--yellow(href="#") текущие проекты
+									a.filter__item.filter__item--blue(href="#") ЗАВЕРШЕННЫЕ проекты
+								.col-xs-3.right
+									| Вид: 
+									span.dropdown
+										a.dropdown__trigger(href="#")
+											span.dropdown__text Карта
+											include ../../public_html/layout/images/svg/arrow.svg
+										span.dropdown__frame
+											a.dropdown__item(href="#") Список
+											a.dropdown__item(href="#") Карта
+
+#bg_map
+
+.modal.fade(id="markerDetail", tabindex="-1", role="dialog" aria-hidden="true")
+	.modal-dialog.modal-lg
+		.modal-content.modal-content--white
+			a.close(data-dismiss="modal", href="#")
+				include ../../public_html/layout/images/svg/close.svg
+			h1 Описание проекта. Заголовок.
+			.row
+				.col-xs-7
+					p В настоящее время автоматическая сварка занимает лидирующее положение не только при сооружении сухопутных и морских магистральных трубопроводов большого диаметра, но и при строительстве промысловых трубопроводов различных диаметров.
+					p При строительства трубопроводов малого диаметра основной объем работ по-прежнему выполняется с помощью ручной сварки. Однако тенденции развития трубопроводостроительной отрасли подтверждают, что и здесь в ближайшей перспективе центральное место займёт автоматическая сварка. 
+					p В то же время полуавтоматическая сварка будет играть все большую роль при выполнении ремонтных работ на трассе, вытесняя сварку штучным электродом. 
+					p Комбинация систем автоматической, полуавтоматической и ручной сварки (штучным электродом) позволят формировать единый технологический процесс, обеспечивающий стабильно высокие качество и производительность выполнения сварочных работ в совокупности с экономической рентабельностью, гибкостью и универсальностью.
+				.col-xs-5
+					img(src="./layout/images/img.jpg")
+script(type="text/javascript", src="https://maps.googleapis.com/maps/api/js?key=AIzaSyASm3CwaK9qtcZEWYa-iQwHaGi3gcosAJc&sensor=false")
+		
+include includes/footer

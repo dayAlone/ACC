@@ -1,0 +1,50 @@
+include includes/header
+
+<body class="contacts">
+.wrap
+	include includes/toolbar
+
+	main.page
+		.container
+			.row
+				.col-xs-3.col-md-4
+					aside.sidebar
+						a(href="/").logo
+							include ../../public_html/layout/images/svg/logo.svg
+						nav.nav-left
+							a(href="about.html").nav-left__item О компании
+							a(href="news.html").nav-left__item Новости
+							a(href="services.html").nav-left__item Услуги
+							a(href="tech.html").nav-left__item Технологии
+							a(href="projects.html").nav-left__item Наши проекты
+							a(href="partners.html").nav-left__item Партнеры
+							a(href="contacts.html").nav-left__item.nav-left__item--active Контакты
+				.col-xs-9.col-md-8
+					article
+						h1.page__title Контакты
+						.page__divider
+						.row
+							.col-xs-8
+								big
+									strong Адрес: 
+									| Россия, Москва, ул. Усачева, 35А <br>
+									strong Телефон: 
+									a(href="tel:88002005001") 8 800 200 500 1 <br>
+									strong E-mail: 
+									a(href="mailto:info@argusweld.ru") info@argusweld.ru
+								br
+								a.button.button--big.button--white(data-toggle="modal", data-target="#contactsMap", href="#contactsMap") схема проезда
+							.col-xs-4
+								a.no-margin-top.button.button--big.button--white(data-toggle="modal", data-target="#contactsForm", href="#contactsForm") напишите нам
+
+
+.modal.fade(id="contactsMap", tabindex="-1", role="dialog" aria-hidden="true")
+	.modal-dialog.modal-lg
+		.modal-content
+			a.close(data-dismiss="modal", href="#")
+				include ../../public_html/layout/images/svg/close.svg
+			#map
+
+script(src="http://api-maps.yandex.ru/2.1/?lang=ru-RU&load=package.full", type="text/javascript")
+
+include includes/footer

@@ -5,14 +5,33 @@
 a, input
 	&:focus
 		outline 0
+		text-decoration: none
 
-for x in uppercase lowecase
-	.{x}
-		text-transform x
+.inline-block
+	display inline-block
 
-for x in left center right
-	.{x}
-		text-align x
+for vx in uppercase lowecase
+	.{vx}
+		text-transform vx
+
+for vx in left center right
+	.{vx}
+		text-align vx
+
+value = 5px 10px 15px 20px 25px 30px 35px
+
+for vx in margin padding
+	for vy in top left bottom right
+		.no-{vx}-{vy}
+			{vx}-{vy} 0 !important
+		for vz, key in xxs xs s m l xl xxl
+			/.{vz}-{vx}-{vy}
+				{vx}-{vy}: value[key] !important
+
+for vx in line-height
+	for vz, key in xxs xs s m l xl xxl
+		/.{vz}-{vx}
+			{vx}: value[key] !important
 /*!
  * Примеси
  */
@@ -37,9 +56,13 @@ b(name=null, position=null, color=null, size=null)
 /*
  * Модификаторы плагинов
  */
+ .fotorama__arr,.fotorama__fullscreen-icon,.fotorama__video-close,.fotorama__video-play
+	background-image url(/layout/plugins/fotorama.png)
+	@media (-webkit-min-device-pixel-ratio:1.5),(min-resolution:144dpi)
+		background-image url(/layout/images/plugins/fotorama@2x.png)
 blue  = #0049d3
 blue2 = #00aafa
-white = #f0f4f9
+white = #f4f4f4
 @font-face
 	font-family 'Proxima'
 	src url("../fonts/ProximaNova-Bold.ttf")
@@ -56,15 +79,17 @@ white = #f0f4f9
 	font-family 'Proxima'
 	src url("../fonts/ProximaNova-Light.ttf")
 	src local('☺'), url('../fonts/ProximaNova-Light.ttf') format('truetype')
-	font-weight normal
+	font-weight 300
 .footer
 	full-width()
+	position relative
+	z-index 20
 	color #a3a3a3
 	overflow hidden
 	background black
 	border-top 1px solid #212121
-	height 65px
-	padding 22px 0
+	min-height 65px
+	padding 22px 0 13px
 	font-weight bold
 	text-transform uppercase
 	font-size 10px
@@ -75,8 +100,6 @@ white = #f0f4f9
 			color blue
 	.social
 		full-width()
-		line-height 70px
-		margin-top -22px
 		&__item
 			middle()
 			width 23px
@@ -112,12 +135,12 @@ white = #f0f4f9
 			text-decoration: none
 body
 	font-family 'Proxima', 'Helvetica Neue', 'Arial', sans-serif
+	min-height 100%
 	height 100%
-	background-color black
 	color white
-	for x in index about
-		&.{x}
-			b('bg_'+x+'.jpg', top center no-repeat, black)
+	&.map
+		min-height 850px
+	
 a
 	transition-property color, background-color, border-radius, box-shadow, border-radius
 	transition-duration .3s
@@ -125,7 +148,8 @@ a
 		text-decoration none
 .container
 	max-width 1150px
-
+	@media (max-width : 1024px)
+		max-width 980px
 .wrap 
 	min-height: 100%
 	padding-bottom 65px
@@ -133,10 +157,19 @@ a
 	&:after
 		content ""
 		display block
+	.transparent &
+		background transparent
+	b('bg.jpg', top center no-repeat, black, cover)
+	for x in index about contacts partners tech news
+		.{x} &
+			b('bg_'+x+'.jpg', top center no-repeat, black, cover)
 
 html
 	height 100%
 
+article
+	position relative
+	z-index 10
 .index-page
 	full-width()
 	margin-top 495px
@@ -161,27 +194,386 @@ html
 			font-size 11px
 			text-transform: uppercase
 			font-weight: bold
+
+.modal-lg
+	width 980px
+.modal-content
+	border-radius 0
+	background black
+	border 1px solid blue
+	padding 50px 60px
+	&--white
+		background white
+		border 0
+		padding 30px 40px
+		color black !important
+		p
+			font-size 16px
+			line-height 20px
+			margin-bottom 18px
+		h1
+			margin-top 10px
+			font-weight bold
+			font-size 30px
+			margin-bottom: 25px
+	.close
+		opacity 1
+		position absolute
+		top 0
+		right -100px
+		svg
+			path
+				fill blue
+	img
+		max-width 100%
+.modal-backdrop.in
+	opacity .8
+
+#map
+	width 100%
+	height 438px
+
+#bg_map
+	position absolute
+	background black
+	top 0
+	z-index 1
+	left 0
+	width 100%
+	height 100%
+	min-height 850px
 .page
+	padding-bottom 40px
+	color white
+	.index &
+		padding-bottom 0
 	&__title
-		full-width()
 		font-size 45px
+		line-height 40px
 		color white
 		text-transform: uppercase
 		font-weight: bold
-		padding-bottom 20px
-		border-bottom 1px solid rgba(255,255,255,.25)
-		margin-bottom 30px
+		position relative
+		&:after
+			margin-left 20px
+			content attr(data-more)
+			position absolute
+			left 100%
+			font-weight normal
+			width 100%
+			top -5px
+			font-size 14px
+			line-height 18px
+			color #a3a3a3
+			text-transform none
 	&__blue-title
 		color blue2
+		margin-bottom 15px
+	&__divider
+		width 100%
+		border-bottom 1px solid rgba(255,255,255,.25)
+		margin 30px 0
+	a
+		color white
+		&:hover
+			color blue2
+			text-decoration: underline
+	p
+		font-size 16px
+		font-weight 300
+	h2
+		font-weight 300
+	h4
+		font-size 12px
+		text-transform: uppercase
+		margin-bottom 5px
+		font-weight bold
+	.list
+		padding 0
+		margin 20px 0 0
+		font-size 16px
+		list-style none
+		li
+			margin-bottom 10px
+			max-width 90%
+			font-weight 300
+			position relative
+			&:after
+				content ""
+				width 5px
+				height 5px
+				border-radius 5px
+				background blue2
+				position absolute
+				top 8px
+				left -15px
+	big
+		font-size 20px
+		line-height 35px
+		display inline-block
+	.button
+		display inline-block
+		padding 0 23px
+		cursor pointer
+		font-size 12px
+		line-height 33px
+		margin 20px 0
+		border-radius 30px
+		height 30px
+		border 1px solid blue2
+		color blue2
+		text-transform: uppercase
+		font-weight bold
+		t(opacity)
+		text-align: center
+		&:hover
+			opacity .8
+			color blue2
+			text-decoration: none
+		&--big
+			padding 0 33px
+			min-width 216px 
+		&--white
+			color white
+			border-color white
+			&:hover
+				color white
+	.partners-list
+		line-height 110px
+		text-align center
+	.tech
+		&__item
+			margin-top 30px
+			full-width()
+			background rgba(0,0,0,.45)
+			padding 13px 13px 10px
+			t(background)
+			&:hover
+				background #0082dc
+				.tech__link
+					opacity 1
+		&__image
+			full-width()
+			height 120px
+			background-size cover
+			background-position center center
+			margin-bottom 7px
+		&__title
+			full-width()
+			font-size 14px
+			min-height 55px
+			line-height 17px
+			padding-bottom 8px
+			font-weight 300
+		&__link
+			padding-left 31px
+			position relative
+			full-width()
+			line-height 26px
+			opacity .6
+			font-size 10px
+			font-weight bold
+			text-transform uppercase
+			t(opacity)
+			&:hover
+				text-decoration: none
+				color white
+			svg
+				position absolute
+				left 0
+				top 0
+				max-width 26px
+				max-height 22px
+		&__photos
+			left -5px
+			svg
+				max-height 20px
+				top 0px
+	.services
+		margin-top 30px
+		&__image
+			height 100px
+			full-width()
+		&__title
+			middle()
+			font-size 18px
+			font-weight bold
+			color #a7a8a8
+			line-height 20px
+			t(color)
+		&__item
+			display inline-block
+			width 100%
+			padding 7px 13px
+			margin-left -13px
+			line-height 100px
+			&:hover
+				padding 13px
+				margin-top -6px
+				margin-bottom -6px
+				t(background)
+				background black
+				.services__title
+					color white
+	.years
+		&__item
+			middle()
+			font-size 11px
+			font-weight bold
+			height 20px
+			line-height 22px
+			padding 0 8px
+			margin-left 3px
+			border-radius 20px
+			border 1px solid transparent
+			&:hover
+				text-decoration: none
+				color white
+				border 1px solid blue
+			&--active
+				border 1px solid blue
+	article
+		.news
+			margin-right -7px
+			margin-left -7px
+			&__date
+				line-height 15px
+				height 22px
+				full-width()
+				font-size 10px
+				color blue2
+			&__picture + .news__date
+				line-height 42px
+				height 40px
+			&__title
+				display inline-block
+				font-size 14px
+				line-height 16px
+				font-weight 300
+			&__item
+				width (100/3)%
+				display inline-block
+				padding 0 7px 14px
+			&__picture
+				full-width()
+				background-size cover
+				background-repeat no-repeat
+				height 130px
+			&__frame
+				padding 15px 15px 12px
+				t(background)
+				background rgba(0,0,0,.45)
+				&:hover
+					background #0082dc
+					color white
+					.news__date
+						color white
+	.filter
+		full-width()
+		background #161616
+		height 37px
+		margin-top 10px
+		line-height 42px
+		padding 0 15px
+		font-size 12px
+		text-transform: uppercase
+		font-weight bold
+		&__item
+			margin-right 20px
+			color #9c9c9c
+			position relative
+			&:after
+				border-bottom 1px dotted #595959
+				width 100%
+				content ""
+				bottom 3px
+				left 0
+				position absolute
+				t(border-color)
+			&--yellow, &--blue
+				margin-left 15px
+				&:before
+					position absolute
+					left -14px
+					top 2px
+					width 9px
+					height 9px
+					border-radius 5px
+					content ""
+
+			&--yellow:before
+				background #ffba14
+			&--blue:before
+				background #0089c0
+			&:hover, &--active
+				text-decoration none
+				color white
+				&:after
+					border-bottom-color white
+			&--active
+				&:after
+					opacity 0
+	.dropdown
+		margin-left 5px
+		margin-right -10px
+		position relative
+		&__trigger
+			color #9c9c9c
+			z-index: 2
+			position relative
+			padding-right 10px
+			svg
+				margin-left 5px
+				position relative
+				top -1px
+			&:hover
+				text-decoration none
+				color white
+				.dropdown__text
+					color white
+				&:after
+					border-bottom-color white
+		&__text	
+			position relative
+			border-bottom 1px dotted #595959
+			max-height 26px
+			display inline-block
+		&__frame
+			background blue
+			display none
+			padding 25px 5px 0px
+			border-radius 5px
+			position absolute
+			top -4px
+			left -5px
+			min-width 100%
+		&__item
+			float: left
+			clear: both
+			font-size 11px
+			line-height 19px
+			&:hover
+				color #18a5f7
+				text-decoration none
+		&:hover
+			.dropdown__trigger
+				color white
+				svg
+					path
+						fill white
 .sidebar
 	full-width()
 	padding-bottom 80px
+	z-index 10
+	position relative
 	.logo
 		full-width()
 		margin-bottom 90px
+		svg
+			max-width 100%
 	.nav-left
 		full-width()
-		margin-bottom 90px
+		margin-bottom 60px
 		&__item
 			float left
 			clear both
@@ -201,8 +593,10 @@ html
 				border-radius 20px
 			&:hover
 				color blue
+				text-decoration: none
 	.news
 		full-width()
+		max-width 75%
 		&__item
 			full-width()
 		&__date
@@ -330,7 +724,6 @@ html
 	.search
 		position relative
 		middle()
-		top -3px
 		width 100%
 		&__input
 			width 100%
@@ -346,9 +739,17 @@ html
 			padding-right 22px
 		&__submit
 			position absolute
-			width 13px
+			width 13px !important
 			height 13px
-			b('svg/seach.svg', center center no-repeat, transparent, cover)
+			//b('svg/seach.svg', center center no-repeat, transparent, cover)
+			appearance none
+			background transparent
 			border 0
 			right 6px
-			top 26px
+			top 23px
+			svg
+				position absolute
+				top 0
+				right 0
+				height 13px
+				width 13px

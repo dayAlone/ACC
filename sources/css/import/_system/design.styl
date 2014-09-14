@@ -5,11 +5,30 @@
 a, input
 	&:focus
 		outline 0
+		text-decoration: none
 
-for x in uppercase lowecase
-	.{x}
-		text-transform x
+.inline-block
+	display inline-block
 
-for x in left center right
-	.{x}
-		text-align x
+for vx in uppercase lowecase
+	.{vx}
+		text-transform vx
+
+for vx in left center right
+	.{vx}
+		text-align vx
+
+value = 5px 10px 15px 20px 25px 30px 35px
+
+for vx in margin padding
+	for vy in top left bottom right
+		.no-{vx}-{vy}
+			{vx}-{vy} 0 !important
+		for vz, key in xxs xs s m l xl xxl
+			/.{vz}-{vx}-{vy}
+				{vx}-{vy}: value[key] !important
+
+for vx in line-height
+	for vz, key in xxs xs s m l xl xxl
+		/.{vz}-{vx}
+			{vx}: value[key] !important
