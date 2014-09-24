@@ -1,6 +1,10 @@
 /*
  * Модификаторы оформления
  */
+scr_xs = 480px
+scr_sm = 768px
+scr_md = 992px
+scr_lg = 1200px
 
 a, input
 	&:focus
@@ -16,9 +20,10 @@ for vx in uppercase lowecase
 
 for vx in left center right
 	.{vx}
-		text-align vx
+		text-align vx !important
 
-value = 5px 10px 15px 20px 25px 30px 35px
+value = 0px 5px 10px 15px 20px 25px 30px
+value_sm = 5px 10px 15px 20px 25px 30px 35px
 
 for vx in margin padding
 	for vy in top left bottom right
@@ -27,11 +32,14 @@ for vx in margin padding
 		for vz, key in xxs xs s m l xl xxl
 			/.{vz}-{vx}-{vy}
 				{vx}-{vy}: value[key] !important
+				@media (min-width: scr_sm)
+					{vx}-{vy}: value_sm[key] !important
 
 for vx in line-height
 	for vz, key in xxs xs s m l xl xxl
 		/.{vz}-{vx}
-			{vx}: value[key] !important
+			{vx}: value_sm[key] !important
+
 /*!
  * Примеси
  */
@@ -57,9 +65,9 @@ b(name=null, position=null, color=null, size=null)
  * Модификаторы плагинов
  */
  .fotorama__arr,.fotorama__fullscreen-icon,.fotorama__video-close,.fotorama__video-play
-	background-image url(/layout/plugins/fotorama.png)
+	background-image url(../images/plugins/fotorama.png)
 	@media (-webkit-min-device-pixel-ratio:1.5),(min-resolution:144dpi)
-		background-image url(/layout/images/plugins/fotorama@2x.png)
+		background-image url(../images/plugins/fotorama@2x.png)
 blue  = #0049d3
 blue2 = #00aafa
 white = #f4f4f4
@@ -93,22 +101,44 @@ white = #f4f4f4
 	font-weight bold
 	text-transform uppercase
 	font-size 10px
+	.copyright
+		position relative
+		top 4px
+		@media (min-width: scr_sm)
+			top 0
+	.contacts
+		span
+			white-space no-wrap
 	a
 		color #a3a3a3
 		text-decoration: underline
 		&:hover
 			color blue
-	.social
+	.map
 		full-width()
+		@media (min-width: scr_md)
+			text-align center
+	.social
+		padding-left 0
+		text-align right
+		@media (min-width: scr_sm)
+			padding-left 20px
+			text-align left
 		&__item
 			middle()
-			width 23px
-			height 23px
-			line-height 23px
-			margin 0 5px
 			opacity .5
 			text-align: center
 			t(opacity)
+			width 14px
+			height 14px
+			margin 0 4px
+			position relative
+			@media (min-width: scr_sm)
+				width 23px
+				height 23px
+				top 0
+				margin 0 4px
+				line-height 23px
 			&:hover
 				opacity 1
 			svg
@@ -133,6 +163,10 @@ white = #f4f4f4
 			float left
 			color #fff
 			text-decoration: none
+	.contacts, .radia, .map, .address
+		display none
+		@media (min-width: scr_sm)
+			display block
 body
 	font-family 'Proxima', 'Helvetica Neue', 'Arial', sans-serif
 	min-height 100%
@@ -148,8 +182,6 @@ a
 		text-decoration none
 .container
 	max-width 1150px
-	@media (max-width : 1024px)
-		max-width 980px
 .wrap 
 	min-height: 100%
 	padding-bottom 65px
@@ -163,6 +195,13 @@ a
 	for x in index about contacts partners tech news
 		.{x} &
 			b('bg_'+x+'.jpg', top center no-repeat, black, cover)
+			
+	.index &
+		background-size 350% auto
+		background-position 54% 40px
+		@media (min-width: scr_xs)
+			background-size cover
+			background-position center center
 
 html
 	height 100%
@@ -170,64 +209,138 @@ html
 article
 	position relative
 	z-index 10
+
 .index-page
 	full-width()
-	margin-top 495px
 	float right
-	max-width 700px
+	max-width 715px
+	margin-top 240px
+	@media (min-width: scr_sm)
+		margin-top 495px
 	h1
 		float right
 		padding-bottom 15px
 		margin-bottom 20px
-		font-size 24px
 		text-transform: uppercase
 		border-bottom 1px solid rgba(255,255,255,.5)
+		text-align center
+		font-size 18px
+		@media (min-width: scr_sm)
+			text-align: right
+			font-size 24px
 	.bages
-		line-height: 54px
+		text-align center
+		margin-bottom 30px
+		@media (min-width: scr_sm)
+			margin-bottom 0
+			text-align left
+			line-height: 54px
 		&__image
-			max-width 54px
-			margin-right: 10px
+			max-width 44px
+			margin-bottom 10px
+			@media (min-width: scr_sm)
+				margin-bottom 0
+				margin-right: 10px
+				max-width 54px
 		&__title
 			middle()
-			max-width 60%
-			line-height 16px
-			font-size 11px
 			text-transform: uppercase
 			font-weight: bold
+			max-width 100%
+			font-size 7px
+			@media (min-width: scr_sm)
+				max-width 60%
+				line-height 16px
+				font-size 11px
+.modal
+	padding 0
+.modal-dialog
+	width 100%
+	margin 0
+	min-height 100%
+	@media (min-width: scr_md)
+		min-height none
+		margin: 30px auto;
+		width 770px
+		iframe
+			height (648*.562)px
+	@media (min-width: scr_lg)
+		width 980px
+		iframe
+			height (900*.562)px
 
-.modal-lg
-	width 980px
 .modal-content
+	full-width()
 	border-radius 0
 	background black
-	border 1px solid blue
-	padding 50px 60px
+	.date
+		font-weight bold
+		color blue
+	.divider
+		full-width()
+		border-bottom 1px solid black
+		margin 15px 0 20px
+	.text
+		min-height 200px
+	iframe
+		max-width 90%
+		margin 15px 5%
+		max-height 50%
+		@media (min-width: scr_md)
+			margin 0
+			max-height none
+			max-width 100%
+	min-height 100%
+	@media (min-width: scr_md)
+		min-height none
+		padding 50px 60px
+		border 1px solid blue
 	&--white
 		background white
 		border 0
-		padding 30px 40px
+		padding 30px 20px
+		@media (min-width: scr_md)
+			padding 30px 40px
 		color black !important
 		p
-			font-size 16px
-			line-height 20px
+			font-size 14px
+			line-height 17px
 			margin-bottom 18px
+			@media (min-width: scr_md)
+				font-size 16px
+				line-height 20px
 		h1
 			margin-top 10px
 			font-weight bold
-			font-size 30px
+			font-size 25px
 			margin-bottom: 25px
+			@media (min-width: scr_md)
+				font-size 30px
 	.close
 		opacity 1
 		position absolute
-		top 0
-		right -100px
+		z-index 30000000
+		right 10px
+		top -5px
 		svg
+			max-width 30px
 			path
 				fill blue
+		@media (min-width: scr_sm)
+			right -65px
+			top 0
+			svg
+				max-width 50px
+		@media (min-width: scr_md)
+			right -100px
+			svg
+				max-width none
 	img
 		max-width 100%
 .modal-backdrop.in
-	opacity .8
+	opacity .99
+	@media (min-width: scr_sm)
+		opacity .8
 
 #map
 	width 100%
@@ -242,47 +355,185 @@ article
 	width 100%
 	height 100%
 	min-height 850px
+	display none
+	@media (min-width: scr_sm)
+		display block
+
+.no-mobile
+	display none
+	@media (min-width: scr_sm)
+		display block
+.modal
+	.lang-trigger
+		margin 17px 20px 15px
+	.phone
+		full-width()
+		text-align: center
+		font-size 37px
+		color white
+		padding 20px 0
+		font-weight bold
+	.form-trigger
+		font-size 25px
+		font-weight bold
+		color white
+		height 25px
+		display inline-block
+		border-bottom 1px dotted white
+		text-align center
+		text-transform: uppercase
+	.form
+		full-width()
+		padding-bottom 40px
+		padding 0 20px
+		display none
+		label
+			full-width()
+			margin-top 20px
+			text-align center
+			font-size 10px
+			text-transform: uppercase
+		input[type="text"], input[type="email"], textarea
+			border 0
+			appearance none
+			full-width()
+			border-radius 0
+			color black
+			text-align center
+			padding-top 12px
+			line-height 27px
+			height 30px
+		textarea
+			height 180px
+			text-align left
+		.captcha
+			full-width()
+			background-color #737a82
+			height 30px
+		input[type="submit"]
+			appearance none
+			middle()
+			background transparent
+			margin-top 20px
+			margin-bottom 20px
+			border-radius 30px
+			height 30px
+			border 1px solid blue2
+			padding 5px 25px 0
+			font-weight bold
+			text-transform: uppercase
+	&-title
+		full-width()
+		color white
+		padding 0 20px
+		line-height 55px
+		height 55px
+		font-size 11px
+		text-transform uppercase		
+		font-weight bold
+	.search
+		padding 20px
+		&__input
+			height 40px
+			font-size 15px
+			padding 0 25px 0 15px
+			border-radius 50px
+			border-weight 2px
+		&__submit
+			right 30px
+			top 30px
+			svg
+				width 20px
+				height 20px
+.nav-popup
+	border-top 1px solid #404040
+	full-width()
+	&__item
+		border-bottom 1px solid #404040
+		full-width()
+		color white
+		padding 0 20px
+		line-height 62px
+		height 55px
+		font-weight: bold
+		text-transform: uppercase
+		font-size: 26px
+		#Sites &
+			font-size 16px
+		&:hover, &--active
+			background blue2
+			color white
 .page
 	padding-bottom 40px
 	color white
+	.xs-center
+		full-width()
+		text-align center
+		@media (min-width: scr_sm)
+			text-align inherit
+	img.map
+		display none
+		@media (min-width: scr_sm)
+			display block
+	img
+		max-width 100%
 	.index &
 		padding-bottom 0
 	&__title
-		font-size 45px
-		line-height 40px
+		font-size 35px
+		line-height 30px
 		color white
 		text-transform: uppercase
 		font-weight: bold
 		position relative
+		margin-top 0
+		@media (min-width: scr_sm)
+			margin-top 20px
+			font-size 45px
+			line-height 40px
 		&:after
 			margin-left 20px
 			content attr(data-more)
 			position absolute
 			left 100%
 			font-weight normal
-			width 100%
 			top -5px
-			font-size 14px
-			line-height 18px
 			color #a3a3a3
 			text-transform none
+			display none
+			@media (min-width: scr_md)
+				display block
+				width 55%
+				font-size 12px
+				line-height 14px
+			@media (min-width: scr_lg)
+				width 100%
+				font-size 14px
+				line-height 18px
 	&__blue-title
 		color blue2
 		margin-bottom 15px
 	&__divider
 		width 100%
 		border-bottom 1px solid rgba(255,255,255,.25)
-		margin 30px 0
+		margin 20px 0
+		@media (min-width: scr_sm)
+			margin 30px 0
 	a
 		color white
 		&:hover
 			color blue2
 			text-decoration: underline
 	p
-		font-size 16px
+		font-size 15px	
+		@media (min-width: scr_sm)
+			font-size 16px
 		font-weight 300
 	h2
 		font-weight 300
+		font-size 22px
+		@media (min-width: scr_sm)
+			font-size 30px
 	h4
 		font-size 12px
 		text-transform: uppercase
@@ -293,11 +544,19 @@ article
 		margin 20px 0 0
 		font-size 16px
 		list-style none
+		margin-left 20px
+		@media (min-width: scr_sm)
+			margin-left 0
 		li
 			margin-bottom 10px
 			max-width 90%
 			font-weight 300
 			position relative
+			font-size 15px
+			line-height 16px
+			@media (min-width: scr_sm)
+				font-size 16px
+				line-height inherit
 			&:after
 				content ""
 				width 5px
@@ -305,12 +564,16 @@ article
 				border-radius 5px
 				background blue2
 				position absolute
-				top 8px
+				top 6px
 				left -15px
+				@media (min-width: scr_sm)
+					top 8px
 	big
-		font-size 20px
-		line-height 35px
+		font-size 16px
 		display inline-block
+		@media (min-width: scr_sm)
+			font-size 20px
+			line-height 35px
 	.button
 		display inline-block
 		padding 0 23px
@@ -333,6 +596,10 @@ article
 		&--big
 			padding 0 33px
 			min-width 216px 
+			max-width 100%
+			@media (min-width: scr_sm)
+				min-width 100px
+				padding 0 15px
 		&--white
 			color white
 			border-color white
@@ -343,21 +610,32 @@ article
 		text-align center
 	.tech
 		&__item
-			margin-top 30px
+			.row
+				> div:last-of-type
+					padding-left 0
+					@media (min-width: scr_xs)
+						padding-left 15px
+			margin-top 20px
+
 			full-width()
 			background rgba(0,0,0,.45)
-			padding 13px 13px 10px
+			padding 13px 13px 7px
 			t(background)
 			&:hover
 				background #0082dc
 				.tech__link
 					opacity 1
+			@media (min-width: scr_sm)
+				margin-top 30px
+				padding 13px 13px 10px
 		&__image
 			full-width()
-			height 120px
+			height 80px
 			background-size cover
 			background-position center center
 			margin-bottom 7px
+			@media (min-width: scr_sm)
+				height 120px
 		&__title
 			full-width()
 			font-size 14px
@@ -365,8 +643,11 @@ article
 			line-height 17px
 			padding-bottom 8px
 			font-weight 300
+			&:hover
+				text-decoration none
+				color white
 		&__link
-			padding-left 31px
+			padding-left 23px
 			position relative
 			full-width()
 			line-height 26px
@@ -378,44 +659,78 @@ article
 			&:hover
 				text-decoration: none
 				color white
+			font-size 8px
+			@media (min-width: scr_xs)
+				padding-left 31px
+				font-size 10px
 			svg
 				position absolute
 				left 0
 				top 0
-				max-width 26px
+				max-width 17px
 				max-height 22px
+				@media (min-width: scr_xs)
+					max-width 26px
+					max-height 22px
 		&__photos
 			left -5px
 			svg
 				max-height 20px
 				top 0px
+	.filter + .services
+		margin-top 20px
+		@media (min-width: scr_sm)
+			display none
+		full-width()
 	.services
 		margin-top 30px
+		width 100%
 		&__image
-			height 100px
+			height 80px
 			full-width()
+			background-repeat no-repeat
+			background-position center center
+			background-size cover
+			@media (min-width: scr_sm)
+				height 100px
 		&__title
 			middle()
-			font-size 18px
+			font-size 12px
 			font-weight bold
 			color #a7a8a8
-			line-height 20px
+			line-height 14px
 			t(color)
+			@media (min-width: scr_sm)
+				font-size 18px
+				line-height 20px
+
 		&__item
+			.row
+				> div:last-of-type
+					padding-left 0
+					padding-right 5px
+					@media (min-width: scr_sm)
+						padding-left 15px
+						padding-right 15px
 			display inline-block
 			width 100%
-			padding 7px 13px
+			padding 7px 13px 0px
 			margin-left -13px
-			line-height 100px
+			line-height 85px
+			@media (min-width: scr_sm)
+				line-height 105px
 			&:hover
-				padding 13px
+				padding 13px 13px 8px
 				margin-top -6px
-				margin-bottom -6px
+				margin-bottom -8px
 				t(background)
 				background black
 				.services__title
 					color white
-	.years
+	.years, .pages
+		display none
+		@media (min-width: scr_sm)
+			display inline-block
 		&__item
 			middle()
 			font-size 11px
@@ -432,6 +747,12 @@ article
 				border 1px solid blue
 			&--active
 				border 1px solid blue
+	.pages
+		margin-top: 20px
+		&__item
+			font-size 12px
+			line-height 26px
+			height 24px
 	article
 		.news
 			margin-right -7px
@@ -443,22 +764,34 @@ article
 				font-size 10px
 				color blue2
 			&__picture + .news__date
-				line-height 42px
-				height 40px
+				@media (min-width: scr_sm)
+					line-height 42px
+					height 40px
 			&__title
 				display inline-block
 				font-size 14px
 				line-height 16px
 				font-weight 300
+				&:hover
+					color white
 			&__item
-				width (100/3)%
+				width 100%
+				vertical-align top
 				display inline-block
 				padding 0 7px 14px
+				@media (min-width: scr_sm)
+					width (100/2)%
+				@media (min-width: scr_md)
+					width (100/3)%
 			&__picture
 				full-width()
-				background-size cover
 				background-repeat no-repeat
+				background-position center center
+				background-size cover
 				height 130px
+				display none
+				@media (min-width: scr_sm)
+					display block
 			&__frame
 				padding 15px 15px 12px
 				t(background)
@@ -470,6 +803,8 @@ article
 						color white
 	.filter
 		full-width()
+		position relative
+		z-index 20
 		background #161616
 		height 37px
 		margin-top 10px
@@ -482,6 +817,10 @@ article
 			margin-right 20px
 			color #9c9c9c
 			position relative
+			span
+				display none
+				@media (min-width: scr_lg)
+					display inline
 			&:after
 				border-bottom 1px dotted #595959
 				width 100%
@@ -517,11 +856,21 @@ article
 		margin-left 5px
 		margin-right -10px
 		position relative
+		font-size 12px
+		font-weight bold
+		text-transform: uppercase
+		.news &
+			display inline-block
+			margin-top 10px
+			@media (min-width: scr_sm)
+				display none
 		&__trigger
+			
 			color #9c9c9c
 			z-index: 2
 			position relative
 			padding-right 10px
+			line-height 8px
 			svg
 				margin-left 5px
 				position relative
@@ -538,6 +887,8 @@ article
 			border-bottom 1px dotted #595959
 			max-height 26px
 			display inline-block
+			&--white
+				color white
 		&__frame
 			background blue
 			display none
@@ -563,14 +914,19 @@ article
 						fill white
 .sidebar
 	full-width()
-	padding-bottom 80px
 	z-index 10
 	position relative
+	padding-bottom 30px
+	@media (min-width: scr_sm)
+		padding-bottom 80px
 	.logo
 		full-width()
-		margin-bottom 90px
+		@media (min-width: scr_sm)
+			margin-bottom 90px
 		svg
-			max-width 100%
+			max-width 70%
+			@media (min-width: scr_sm)
+				max-width 100%
 	.nav-left
 		full-width()
 		margin-bottom 60px
@@ -594,11 +950,25 @@ article
 			&:hover
 				color blue
 				text-decoration: none
+.sidebar, article.index-page	
 	.news
 		full-width()
-		max-width 75%
+		text-align: center
+		background #1b1b1b
+		width 110%
+		padding 12px 0 5px
+		margin-left -5%
+		@media (min-width: scr_sm)
+			padding 0
+			width 100%
+			margin-left 0
+			background transparent
+			max-width 75%
+			text-align: left
 		&__item
 			full-width()
+			position relative !important
+
 		&__date
 			color blue2
 			font-size 10px
@@ -610,7 +980,9 @@ article
 			font-size 13px
 			line-height 16px
 			float left
-			margin-bottom 25px
+			margin-bottom 0
+			@media (min-width: scr_sm)
+				margin-bottom 25px
 			&:hover
 				color blue2
 		&__more
@@ -620,15 +992,105 @@ article
 			font-weight bold
 			&:hover
 				text-decoration underline
+article.index-page
+	.news
+		height auto !important
+		
+		&__more
+			full-width()
+			margin 10px 0
+.search
+	position relative
+	middle()
+	width 100%
+	&__input
+		width 100%
+		border 1px solid blue
+		border-radius 20px
+		height 20px
+		background transparent
+		color white
+		line-height normal
+		padding-left 5px
+		font-size 11px
+		middle()
+		padding-right 22px
+	&__submit
+		position absolute
+		width 13px !important
+		height 13px
+		//b('svg/seach.svg', center center no-repeat, transparent, cover)
+		appearance none
+		background transparent
+		border 0
+		right 6px
+		top 23px
+		svg
+			position absolute
+			top 0
+			right 0
+			height 13px
+			width 13px
+.lang-trigger
+	font-size 11px
+	font-weight bold
+	user-select none
+	color #a4a4a4
+	middle()
+	&__label
+		t(color)
+	&--lang
+		&_russian
+			.lang-trigger__label:first-of-type
+				color white
+			.lang-trigger__carriage:after
+				left 4px
+		&_english
+			.lang-trigger__label:last-of-type
+				color white
+			.lang-trigger__carriage:after
+				left 25px
+	&__carriage
+		middle()
+		background blue
+		width 41px
+		height 20px
+		border-radius 10px
+		cursor pointer
+		margin 0 3px
+		position: relative
+		top -1px
+		&:after
+			t(left)
+			content ""
+			width 12px
+			border-radius 12px
+			left 4px
+			top 4px
+			height 12px
+			box-shadow 0 1px 3px rgba(0,0,0,.3)
+			background white
+			position absolute
+.wrap
+	padding-top 82px
+	@media (min-width: scr_sm)
+		padding-top 0
 .toolbar
 	full-width()
 	position relative
 	height 62px
-	margin-bottom 35px
 	line-height 63px
 	z-index 20
 	white-space nowrap
-	background rgba(0,0,0,.5)
+	background rgba(0,0,0,.8)
+	margin-bottom 20px
+	top 0
+	left 0
+	position fixed
+	@media (min-width: scr_sm)
+		position relative
+		background rgba(0,0,0,.5)
+		margin-bottom 35px
 	.site-select
 		middle()
 		width 200px
@@ -646,7 +1108,7 @@ article
 			position relative
 			z-index 3
 			svg
-				margin-left 10px
+				margin-left 5px
 		&__dropdown
 			display none
 			position absolute
@@ -665,47 +1127,33 @@ article
 			&:hover
 				color blue2
 				text-decoration none
-
-	.lang-trigger
-		font-size 11px
-		font-weight bold
-		user-select none
-		color #a4a4a4
-		middle()
-		&__label
-			t(color)
-		&--lang
-			&_russian
-				.lang-trigger__label:first-of-type
-					color white
-				.lang-trigger__carriage:after
-					left 4px
-			&_english
-				.lang-trigger__label:last-of-type
-					color white
-				.lang-trigger__carriage:after
-					left 25px
-		&__carriage
+	.nav-trigger
+		float right
+		position relative
+		z-index 22
+		@media (min-width: scr_sm)
+			display none
+		span
+			color white
+			font-size 8px
+			text-transform: uppercase
+			font-weight bold
+		svg
 			middle()
-			background blue
-			width 41px
-			height 20px
-			border-radius 10px
-			cursor pointer
-			margin 0 3px
-			position: relative
-			top -1px
-			&:after
-				t(left)
-				content ""
-				width 12px
-				border-radius 12px
-				left 4px
-				top 4px
-				height 12px
-				box-shadow 0 1px 3px rgba(0,0,0,.3)
-				background white
-				position absolute
+			max-width 23px
+			margin-left 7px
+	.popup-trigger
+		middle()
+		display inline
+		margin 0 7px
+		&:first-of-type
+			margin-left 20px
+		svg
+			middle()
+			position relative
+			top -2px
+		@media (min-width: scr_sm)
+			display none
 	.phone
 		color white
 		font-size 15px
@@ -721,35 +1169,11 @@ article
 		font-size 10px
 		color white
 		font-weight bold
-	.search
-		position relative
-		middle()
-		width 100%
-		&__input
-			width 100%
-			border 1px solid blue
-			border-radius 20px
-			height 20px
-			background transparent
-			color white
-			line-height normal
-			padding-left 5px
-			font-size 11px
-			middle()
-			padding-right 22px
-		&__submit
-			position absolute
-			width 13px !important
-			height 13px
-			//b('svg/seach.svg', center center no-repeat, transparent, cover)
-			appearance none
-			background transparent
-			border 0
-			right 6px
-			top 23px
-			svg
-				position absolute
-				top 0
-				right 0
-				height 13px
-				width 13px
+	.site-select span
+		display none
+		@media (min-width: scr_sm)
+			display inline
+	.search, .phone, .lang-trigger, .feedback
+		display none
+		@media (min-width: scr_sm)
+			display block

@@ -7,11 +7,11 @@ include includes/header
 	main.page
 		.container
 			.row
-				.col-xs-3.col-md-4
+				.col-sm-3.col-md-4
 					aside.sidebar
 						a(href="/").logo
 							include ../../public_html/layout/images/svg/logo.svg
-						nav.nav-left
+						nav.nav-left.no-mobile
 							a(href="about.html").nav-left__item О компании
 							a(href="news.html").nav-left__item.nav-left__item--active Новости
 							a(href="services.html").nav-left__item Услуги
@@ -19,13 +19,20 @@ include includes/header
 							a(href="projects.html").nav-left__item Наши проекты
 							a(href="partners.html").nav-left__item Партнеры
 							a(href="contacts.html").nav-left__item Контакты
-						
-				.col-xs-9.col-md-8
+				.col-sm-9.col-md-8
 					article
 						.row
 							.col-xs-7
 								h1.page__title Новости
 							.col-xs-5.right
+								span.dropdown
+									a.dropdown__trigger(href="#")
+										span.dropdown__text.dropdown__text--white 2014
+										include ../../public_html/layout/images/svg/arrow.svg
+									span.dropdown__frame
+										a.dropdown__item(href="#", style="display:none") 2014
+										a.dropdown__item(href="#") 2013
+										a.dropdown__item(href="#") 2012
 								.years.xl-margin-top
 									a(href="#").years__item.years__item--active 2014
 									a(href="#").years__item 2013
@@ -91,11 +98,11 @@ include includes/header
 				include ../../public_html/layout/images/svg/close.svg
 			h1 Описание проекта. Заголовок.
 			.row
-				.col-xs-7
+				.col-md-7
 					p В настоящее время автоматическая сварка занимает лидирующее положение не только при сооружении сухопутных и морских магистральных трубопроводов большого диаметра, но и при строительстве промысловых трубопроводов различных диаметров.
 					p При строительства трубопроводов малого диаметра основной объем работ по-прежнему выполняется с помощью ручной сварки. Однако тенденции развития трубопроводостроительной отрасли подтверждают, что и здесь в ближайшей перспективе центральное место займёт автоматическая сварка. 
 					p В то же время полуавтоматическая сварка будет играть все большую роль при выполнении ремонтных работ на трассе, вытесняя сварку штучным электродом. 
 					p Комбинация систем автоматической, полуавтоматической и ручной сварки (штучным электродом) позволят формировать единый технологический процесс, обеспечивающий стабильно высокие качество и производительность выполнения сварочных работ в совокупности с экономической рентабельностью, гибкостью и универсальностью.
-				.col-xs-5
+				.col-md-5
 					img(src="./layout/images/img.jpg")
 include includes/footer

@@ -25,7 +25,9 @@
     "prettyPhoto": "git@github.com:scaron/prettyphoto.git",
     "nested": "git@github.com:suprb/Nested.git",
     "jquery.bem": "*",
-    "isotope": "~2.0.1"
+    "isotope": "~2.0.1",
+    "spin.js": "~2.0.1",
+    "history.js": "~1.8.0"
   },
   "moduleType": [
     "amd",

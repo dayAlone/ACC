@@ -7,11 +7,11 @@ include includes/header
 	main.page
 		.container
 			.row
-				.col-xs-3.col-md-4
+				.col-sm-3.col-md-4
 					aside.sidebar
 						a(href="/").logo
 							include ../../public_html/layout/images/svg/logo.svg
-						nav.nav-left
+						nav.nav-left.no-mobile
 							a(href="about.html").nav-left__item.nav-left__item--active О компании
 							a(href="news.html").nav-left__item Новости
 							a(href="services.html").nav-left__item Услуги
@@ -19,21 +19,20 @@ include includes/header
 							a(href="projects.html").nav-left__item Наши проекты
 							a(href="partners.html").nav-left__item Партнеры
 							a(href="contacts.html").nav-left__item Контакты
-						
-				.col-xs-9.col-md-8
+				.col-sm-9.col-md-8
 					article
 						h1.page__title О компании
 						.page__divider
 						h2.page__blue-title Аргус СварСервис – компания экспертов  в области сварочно-монтажных работы при строительстве и ремонте трубопроводов мирового уровня.
 						.row
-							.col-xs-6
+							.col-sm-6
 								ul.list
 									li Организация работы колонн автоматической сварки
 									li Организация мероприятий для вывода сварочных потоков на требуемую производительность и качество;
 									li Производство анализ причин возникновения дефектов и разработка мероприятий по их устранению;
 									li Обеспечение технической исправность оборудования и его бесперебойной работы; 
 									li Осуществление технологической поддержки автоматической сварки на этапе аттестации и на протяжении всего проекта;
-							.col-xs-6
+							.col-sm-6
 								ul.list
 									li Разработка технологических карт и сварочных процедур;
 									li Разработка и внедрение новых сварочных технологий к существующим условиям и задачам на объектах строительства;
@@ -41,12 +40,13 @@ include includes/header
 									li Осуществляем сварочно-монтажные работы на участках строительств магистральных трубопроводов различных диаметров и протяженностей, различных категорий.
 						.page__divider
 						.row
-							.col-xs-6
+							.col-sm-6
 								h4 Опыт работы в различных регионах и странах мира:
 								p Россия, Казахстан, Узбекистан, Азербайджан, Туркменистан, Белоруссия, Украина, Алжир, Ирак, ОАЭ, Китай, Индия
-								a.button(data-toggle="modal", data-target="#aboutVideo", href="#aboutVideo") смотрите видео о компании
-							.col-xs-6
-								img(src="./layout/images/map.png")
+								.xs-center
+									a.button(data-toggle="modal", data-target="#aboutVideo", href="#aboutVideo") смотрите видео о компании
+							.col-sm-6
+								img(src="./layout/images/map.png").map
 
 
 .modal.fade(id="aboutVideo", tabindex="-1", role="dialog" aria-hidden="true")

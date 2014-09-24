@@ -17,6 +17,8 @@ module.exports = (grunt)->
 			slick :
 				js  : '/slick/slick/slick.js'
 				css : '/slick/slick/slick.css'
+			spin :
+				js : ['/spin.js/spin.js', '/spin.js/jquery.spin.js']
 			prettyPhoto :
 				js  : '/prettyPhoto/js/jquery.prettyPhoto.js'
 				css : '/prettyPhoto/css/prettyPhoto.css'
@@ -27,6 +29,8 @@ module.exports = (grunt)->
 				css : '/fotorama/fotorama.css'
 			mask :
 				js  : '/jQuery-Mask-Plugin/jquery.mask.js'
+			history :
+				js  : '/history.js/scripts/bundled/html4+html5/jquery.history.js'
 			hypher:
 				js  : [
 					  '/hypher/dist/jquery.hypher.js'
@@ -68,7 +72,7 @@ module.exports = (grunt)->
 			sources : 'sources'
 			layout  : 'public_html/layout'
 
-		use : loadPlugins [ 'jquery', 'bootstrap', 'browser', 'isotope', 'fotorama', 'bem', 'hoverIntent', 'velocity' ]
+		use : loadPlugins [ 'jquery', 'bootstrap', 'browser', 'isotope', 'fotorama', 'bem', 'hoverIntent', 'history', 'spin', 'velocity' ]
 
 		files:
 			css:
@@ -190,6 +194,8 @@ module.exports = (grunt)->
 
 		# Конвертируем CoffeeScript -> JavaScript
 		coffee:
+			options:
+				bare: false
 			compile:
 				files: 
 					'<%= path.sources %>/js/script.js' : ['<%= files.js.develop %>']
@@ -296,6 +302,6 @@ module.exports = (grunt)->
 
 	grunt.registerTask 'svg', ['svgmin', 'jade']
 	
-	grunt.registerTask 'compile', ['copy', 'imagemin', 'svgmin', 'less', 'concat:css_stylus', 'stylus', 'coffee', 'concat:js_plugins', 'concat:js_frontend', 'concat:css_frontend', 'csscomb', 'cssmin', 'uglify', 'jade']
+	grunt.registerTask 'compile', ['copy', 'imagemin', 'svgmin', 'less', 'concat:css_stylus', 'stylus', 'coffee', 'concat:js_plugins', 'concat:js_frontend', 'concat:css_frontend', 'csscomb', 'cssmin', 'uglify']#, 'jade']
 
 	grunt.task.run 'notify_hooks'

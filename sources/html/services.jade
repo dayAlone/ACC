@@ -7,11 +7,11 @@ include includes/header
 	main.page
 		.container
 			.row
-				.col-xs-3.col-md-4
+				.col-sm-3.col-md-4
 					aside.sidebar
 						a(href="/").logo
 							include ../../public_html/layout/images/svg/logo.svg
-						nav.nav-left
+						nav.nav-left.no-mobile
 							a(href="about.html").nav-left__item О компании
 							a(href="news.html").nav-left__item Новости
 							a(href="services.html").nav-left__item.nav-left__item--active Услуги
@@ -19,66 +19,65 @@ include includes/header
 							a(href="projects.html").nav-left__item Наши проекты
 							a(href="partners.html").nav-left__item Партнеры
 							a(href="contacts.html").nav-left__item Контакты
-						
-				.col-xs-9.col-md-8
+				.col-sm-9.col-md-8
 					article
-						h1.page__title Технологии
+						h1.page__title Наши услуги
 						.page__divider
 						h2 Аргус СварСервис выполняет широкий спектр работ, связанных с обслуживанием трубопроводов:
 						.services
 							a.services__item(data-toggle="modal", data-target="#servicesDetail", href="#servicesDetail")
 								.row
-									.col-xs-3
+									.col-xs-5.col-sm-4.col-md-3
 										.services__image(style="background-image: url(./layout/images/s-1.jpg)")
-									.col-xs-9
+									.col-xs-7.col-sm-8.col-md-9
 										.services__title Организация работы колонн автоматической сварки
 							a.services__item(data-toggle="modal", data-target="#servicesDetail", href="#servicesDetail")
 								.row
-									.col-xs-3
+									.col-xs-5.col-sm-4.col-md-3
 										.services__image(style="background-image: url(./layout/images/s-2.jpg)")
-									.col-xs-9
+									.col-xs-7.col-sm-8.col-md-9
 										.services__title Организация мероприятий для вывода сварочных потоков на требуемую роизводительность и качество
 							a.services__item(data-toggle="modal", data-target="#servicesDetail", href="#servicesDetail")
 								.row
-									.col-xs-3
+									.col-xs-5.col-sm-4.col-md-3
 										.services__image(style="background-image: url(./layout/images/s-3.jpg)")
-									.col-xs-9
+									.col-xs-7.col-sm-8.col-md-9
 										.services__title Производство и анализ причин возникновения дефектов и разработка мероприятий по их устранению
 							a.services__item(data-toggle="modal", data-target="#servicesDetail", href="#servicesDetail")
 								.row
-									.col-xs-3
+									.col-xs-5.col-sm-4.col-md-3
 										.services__image(style="background-image: url(./layout/images/s-4.jpg)")
-									.col-xs-9
+									.col-xs-7.col-sm-8.col-md-9
 										.services__title Обеспечение технической исправность оборудования и его бесперебойной работы
 							a.services__item(data-toggle="modal", data-target="#servicesDetail", href="#servicesDetail")
 								.row
-									.col-xs-3
+									.col-xs-5.col-sm-4.col-md-3
 										.services__image(style="background-image: url(./layout/images/s-6.jpg)")
-									.col-xs-9
+									.col-xs-7.col-sm-8.col-md-9
 										.services__title Осуществление технологической поддержки автоматической сварки на этапе аттестации и на протяжении всего проекта
 							a.services__item(data-toggle="modal", data-target="#servicesDetail", href="#servicesDetail")
 								.row
-									.col-xs-3
+									.col-xs-5.col-sm-4.col-md-3
 										.services__image(style="background-image: url(./layout/images/s-7.jpg)")
-									.col-xs-9
+									.col-xs-7.col-sm-8.col-md-9
 										.services__title Разработка технологических карт и сварочных процедур
 							a.services__item(data-toggle="modal", data-target="#servicesDetail", href="#servicesDetail")
 								.row
-									.col-xs-3
+									.col-xs-5.col-sm-4.col-md-3
 										.services__image(style="background-image: url(./layout/images/s-8.jpg)")
-									.col-xs-9
+									.col-xs-7.col-sm-8.col-md-9
 										.services__title Разработка и внедрение новых сварочных технологий к существующим условиям и задачам на объектах строительства
 							a.services__item(data-toggle="modal", data-target="#servicesDetail", href="#servicesDetail")
 								.row
-									.col-xs-3
+									.col-xs-5.col-sm-4.col-md-3
 										.services__image(style="background-image: url(./layout/images/s-9.jpg)")
-									.col-xs-9
+									.col-xs-7.col-sm-8.col-md-9
 										.services__title Предоставляем комплексы автоматической сварки в аренду с техническим персоналом и сварщиками
 							a.services__item(data-toggle="modal", data-target="#servicesDetail", href="#servicesDetail")
 								.row
-									.col-xs-3
+									.col-xs-5.col-sm-4.col-md-3
 										.services__image(style="background-image: url(./layout/images/s-10.jpg)")
-									.col-xs-9
+									.col-xs-7.col-sm-8.col-md-9
 										.services__title Осуществляем сварочно-монтажные работы на участках строительства магистральных трубопроводов различных диаметров и протяженностей, различных категорий
 
 						.page__divider
@@ -95,11 +94,11 @@ include includes/header
 				include ../../public_html/layout/images/svg/close.svg
 			h1 Описание проекта. Заголовок.
 			.row
-				.col-xs-7
+				.col-md-7
 					p В настоящее время автоматическая сварка занимает лидирующее положение не только при сооружении сухопутных и морских магистральных трубопроводов большого диаметра, но и при строительстве промысловых трубопроводов различных диаметров.
 					p При строительства трубопроводов малого диаметра основной объем работ по-прежнему выполняется с помощью ручной сварки. Однако тенденции развития трубопроводостроительной отрасли подтверждают, что и здесь в ближайшей перспективе центральное место займёт автоматическая сварка. 
 					p В то же время полуавтоматическая сварка будет играть все большую роль при выполнении ремонтных работ на трассе, вытесняя сварку штучным электродом. 
 					p Комбинация систем автоматической, полуавтоматической и ручной сварки (штучным электродом) позволят формировать единый технологический процесс, обеспечивающий стабильно высокие качество и производительность выполнения сварочных работ в совокупности с экономической рентабельностью, гибкостью и универсальностью.
-				.col-xs-5
+				.col-md-5
 					img(src="./layout/images/img.jpg")
 include includes/footer

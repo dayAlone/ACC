@@ -7,11 +7,11 @@ include includes/header
 	main.page
 		.container
 			.row
-				.col-xs-3.col-md-4
+				.col-sm-3.col-md-4
 					aside.sidebar
 						a(href="/").logo
 							include ../../public_html/layout/images/svg/logo.svg
-						nav.nav-left
+						nav.nav-left.no-mobile
 							a(href="about.html").nav-left__item О компании
 							a(href="news.html").nav-left__item Новости
 							a(href="services.html").nav-left__item Услуги
@@ -19,14 +19,14 @@ include includes/header
 							a(href="projects.html").nav-left__item Наши проекты
 							a(href="partners.html").nav-left__item Партнеры
 							a(href="contacts.html").nav-left__item Контакты
-						.news
+						.news.no-mobile
 							.news__item
 								.news__date 12.07.2014
 								a(href="#").news__title Представляем новые высокопроизводительные системы автоматической сварки трубопроводов Р-700 и М-400
 							a(href="#").news__more еще новости
-				.col-xs-9.col-md-8
+				.col-sm-9.col-md-8
 					article.index-page
-						h1.right Международная команда экспертов автоматической сварки трубопроводов мирового уровня
+						h1 Международная команда экспертов автоматической сварки трубопроводов мирового уровня
 						.bages
 							.row
 								.col-xs-4
@@ -41,5 +41,9 @@ include includes/header
 									.bages__item
 										img(src='./layout/images/icon-3.png').bages__image
 										.bages__title Сертификация по стандарту ISO
-
+						.news.visible-xs
+							.news__item
+								.news__date 12.07.2014
+								a(href="#").news__title Представляем новые высокопроизводительные системы автоматической сварки трубопроводов Р-700 и М-400
+							a(href="#").news__more еще новости
 include includes/footer

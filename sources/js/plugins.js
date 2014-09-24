@@ -16049,13 +16049,442 @@ qe[Xc]=d(N(yb)),qe[Zc]=d(N(Mb+" "+Ob+rc,N(ic))),qe[Yc]=d(N(Mb+" "+Nb+rc,N(hc))),
         return this.on({'mouseenter.hoverIntent':handleHover,'mouseleave.hoverIntent':handleHover}, cfg.selector);
     };
 })(jQuery);
+;typeof JSON!="object"&&(JSON={}),function(){"use strict";function f(e){return e<10?"0"+e:e}function quote(e){return escapable.lastIndex=0,escapable.test(e)?'"'+e.replace(escapable,function(e){var t=meta[e];return typeof t=="string"?t:"\\u"+("0000"+e.charCodeAt(0).toString(16)).slice(-4)})+'"':'"'+e+'"'}function str(e,t){var n,r,i,s,o=gap,u,a=t[e];a&&typeof a=="object"&&typeof a.toJSON=="function"&&(a=a.toJSON(e)),typeof rep=="function"&&(a=rep.call(t,e,a));switch(typeof a){case"string":return quote(a);case"number":return isFinite(a)?String(a):"null";case"boolean":case"null":return String(a);case"object":if(!a)return"null";gap+=indent,u=[];if(Object.prototype.toString.apply(a)==="[object Array]"){s=a.length;for(n=0;n<s;n+=1)u[n]=str(n,a)||"null";return i=u.length===0?"[]":gap?"[\n"+gap+u.join(",\n"+gap)+"\n"+o+"]":"["+u.join(",")+"]",gap=o,i}if(rep&&typeof rep=="object"){s=rep.length;for(n=0;n<s;n+=1)typeof rep[n]=="string"&&(r=rep[n],i=str(r,a),i&&u.push(quote(r)+(gap?": ":":")+i))}else for(r in a)Object.prototype.hasOwnProperty.call(a,r)&&(i=str(r,a),i&&u.push(quote(r)+(gap?": ":":")+i));return i=u.length===0?"{}":gap?"{\n"+gap+u.join(",\n"+gap)+"\n"+o+"}":"{"+u.join(",")+"}",gap=o,i}}typeof Date.prototype.toJSON!="function"&&(Date.prototype.toJSON=function(e){return isFinite(this.valueOf())?this.getUTCFullYear()+"-"+f(this.getUTCMonth()+1)+"-"+f(this.getUTCDate())+"T"+f(this.getUTCHours())+":"+f(this.getUTCMinutes())+":"+f(this.getUTCSeconds())+"Z":null},String.prototype.toJSON=Number.prototype.toJSON=Boolean.prototype.toJSON=function(e){return this.valueOf()});var cx=/[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,escapable=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,gap,indent,meta={"\b":"\\b","	":"\\t","\n":"\\n","\f":"\\f","\r":"\\r",'"':'\\"',"\\":"\\\\"},rep;typeof JSON.stringify!="function"&&(JSON.stringify=function(e,t,n){var r;gap="",indent="";if(typeof n=="number")for(r=0;r<n;r+=1)indent+=" ";else typeof n=="string"&&(indent=n);rep=t;if(!t||typeof t=="function"||typeof t=="object"&&typeof t.length=="number")return str("",{"":e});throw new Error("JSON.stringify")}),typeof JSON.parse!="function"&&(JSON.parse=function(text,reviver){function walk(e,t){var n,r,i=e[t];if(i&&typeof i=="object")for(n in i)Object.prototype.hasOwnProperty.call(i,n)&&(r=walk(i,n),r!==undefined?i[n]=r:delete i[n]);return reviver.call(e,t,i)}var j;text=String(text),cx.lastIndex=0,cx.test(text)&&(text=text.replace(cx,function(e){return"\\u"+("0000"+e.charCodeAt(0).toString(16)).slice(-4)}));if(/^[\],:{}\s]*$/.test(text.replace(/\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g,"@").replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g,"]").replace(/(?:^|:|,)(?:\s*\[)+/g,"")))return j=eval("("+text+")"),typeof reviver=="function"?walk({"":j},""):j;throw new SyntaxError("JSON.parse")})}(),function(e,t){"use strict";var n=e.History=e.History||{},r=e.jQuery;if(typeof n.Adapter!="undefined")throw new Error("History.js Adapter has already been loaded...");n.Adapter={bind:function(e,t,n){r(e).bind(t,n)},trigger:function(e,t,n){r(e).trigger(t,n)},extractEventData:function(e,n,r){var i=n&&n.originalEvent&&n.originalEvent[e]||r&&r[e]||t;return i},onDomLoad:function(e){r(e)}},typeof n.init!="undefined"&&n.init()}(window),function(e,t){"use strict";var n=e.document,r=e.setTimeout||r,i=e.clearTimeout||i,s=e.setInterval||s,o=e.History=e.History||{};if(typeof o.initHtml4!="undefined")throw new Error("History.js HTML4 Support has already been loaded...");o.initHtml4=function(){if(typeof o.initHtml4.initialized!="undefined")return!1;o.initHtml4.initialized=!0,o.enabled=!0,o.savedHashes=[],o.isLastHash=function(e){var t=o.getHashByIndex(),n;return n=e===t,n},o.isHashEqual=function(e,t){return e=encodeURIComponent(e).replace(/%25/g,"%"),t=encodeURIComponent(t).replace(/%25/g,"%"),e===t},o.saveHash=function(e){return o.isLastHash(e)?!1:(o.savedHashes.push(e),!0)},o.getHashByIndex=function(e){var t=null;return typeof e=="undefined"?t=o.savedHashes[o.savedHashes.length-1]:e<0?t=o.savedHashes[o.savedHashes.length+e]:t=o.savedHashes[e],t},o.discardedHashes={},o.discardedStates={},o.discardState=function(e,t,n){var r=o.getHashByState(e),i;return i={discardedState:e,backState:n,forwardState:t},o.discardedStates[r]=i,!0},o.discardHash=function(e,t,n){var r={discardedHash:e,backState:n,forwardState:t};return o.discardedHashes[e]=r,!0},o.discardedState=function(e){var t=o.getHashByState(e),n;return n=o.discardedStates[t]||!1,n},o.discardedHash=function(e){var t=o.discardedHashes[e]||!1;return t},o.recycleState=function(e){var t=o.getHashByState(e);return o.discardedState(e)&&delete o.discardedStates[t],!0},o.emulated.hashChange&&(o.hashChangeInit=function(){o.checkerFunction=null;var t="",r,i,u,a,f=Boolean(o.getHash());return o.isInternetExplorer()?(r="historyjs-iframe",i=n.createElement("iframe"),i.setAttribute("id",r),i.setAttribute("src","#"),i.style.display="none",n.body.appendChild(i),i.contentWindow.document.open(),i.contentWindow.document.close(),u="",a=!1,o.checkerFunction=function(){if(a)return!1;a=!0;var n=o.getHash(),r=o.getHash(i.contentWindow.document);return n!==t?(t=n,r!==n&&(u=r=n,i.contentWindow.document.open(),i.contentWindow.document.close(),i.contentWindow.document.location.hash=o.escapeHash(n)),o.Adapter.trigger(e,"hashchange")):r!==u&&(u=r,f&&r===""?o.back():o.setHash(r,!1)),a=!1,!0}):o.checkerFunction=function(){var n=o.getHash()||"";return n!==t&&(t=n,o.Adapter.trigger(e,"hashchange")),!0},o.intervalList.push(s(o.checkerFunction,o.options.hashChangeInterval)),!0},o.Adapter.onDomLoad(o.hashChangeInit)),o.emulated.pushState&&(o.onHashChange=function(t){var n=t&&t.newURL||o.getLocationHref(),r=o.getHashByUrl(n),i=null,s=null,u=null,a;return o.isLastHash(r)?(o.busy(!1),!1):(o.doubleCheckComplete(),o.saveHash(r),r&&o.isTraditionalAnchor(r)?(o.Adapter.trigger(e,"anchorchange"),o.busy(!1),!1):(i=o.extractState(o.getFullUrl(r||o.getLocationHref()),!0),o.isLastSavedState(i)?(o.busy(!1),!1):(s=o.getHashByState(i),a=o.discardedState(i),a?(o.getHashByIndex(-2)===o.getHashByState(a.forwardState)?o.back(!1):o.forward(!1),!1):(o.pushState(i.data,i.title,encodeURI(i.url),!1),!0))))},o.Adapter.bind(e,"hashchange",o.onHashChange),o.pushState=function(t,n,r,i){r=encodeURI(r).replace(/%25/g,"%");if(o.getHashByUrl(r))throw new Error("History.js does not support states with fragment-identifiers (hashes/anchors).");if(i!==!1&&o.busy())return o.pushQueue({scope:o,callback:o.pushState,args:arguments,queue:i}),!1;o.busy(!0);var s=o.createStateObject(t,n,r),u=o.getHashByState(s),a=o.getState(!1),f=o.getHashByState(a),l=o.getHash(),c=o.expectedStateId==s.id;return o.storeState(s),o.expectedStateId=s.id,o.recycleState(s),o.setTitle(s),u===f?(o.busy(!1),!1):(o.saveState(s),c||o.Adapter.trigger(e,"statechange"),!o.isHashEqual(u,l)&&!o.isHashEqual(u,o.getShortUrl(o.getLocationHref()))&&o.setHash(u,!1),o.busy(!1),!0)},o.replaceState=function(t,n,r,i){r=encodeURI(r).replace(/%25/g,"%");if(o.getHashByUrl(r))throw new Error("History.js does not support states with fragment-identifiers (hashes/anchors).");if(i!==!1&&o.busy())return o.pushQueue({scope:o,callback:o.replaceState,args:arguments,queue:i}),!1;o.busy(!0);var s=o.createStateObject(t,n,r),u=o.getHashByState(s),a=o.getState(!1),f=o.getHashByState(a),l=o.getStateByIndex(-2);return o.discardState(a,s,l),u===f?(o.storeState(s),o.expectedStateId=s.id,o.recycleState(s),o.setTitle(s),o.saveState(s),o.Adapter.trigger(e,"statechange"),o.busy(!1)):o.pushState(s.data,s.title,s.url,!1),!0}),o.emulated.pushState&&o.getHash()&&!o.emulated.hashChange&&o.Adapter.onDomLoad(function(){o.Adapter.trigger(e,"hashchange")})},typeof o.init!="undefined"&&o.init()}(window),function(e,t){"use strict";var n=e.console||t,r=e.document,i=e.navigator,s=e.sessionStorage||!1,o=e.setTimeout,u=e.clearTimeout,a=e.setInterval,f=e.clearInterval,l=e.JSON,c=e.alert,h=e.History=e.History||{},p=e.history;try{s.setItem("TEST","1"),s.removeItem("TEST")}catch(d){s=!1}l.stringify=l.stringify||l.encode,l.parse=l.parse||l.decode;if(typeof h.init!="undefined")throw new Error("History.js Core has already been loaded...");h.init=function(e){return typeof h.Adapter=="undefined"?!1:(typeof h.initCore!="undefined"&&h.initCore(),typeof h.initHtml4!="undefined"&&h.initHtml4(),!0)},h.initCore=function(d){if(typeof h.initCore.initialized!="undefined")return!1;h.initCore.initialized=!0,h.options=h.options||{},h.options.hashChangeInterval=h.options.hashChangeInterval||100,h.options.safariPollInterval=h.options.safariPollInterval||500,h.options.doubleCheckInterval=h.options.doubleCheckInterval||500,h.options.disableSuid=h.options.disableSuid||!1,h.options.storeInterval=h.options.storeInterval||1e3,h.options.busyDelay=h.options.busyDelay||250,h.options.debug=h.options.debug||!1,h.options.initialTitle=h.options.initialTitle||r.title,h.options.html4Mode=h.options.html4Mode||!1,h.options.delayInit=h.options.delayInit||!1,h.intervalList=[],h.clearAllIntervals=function(){var e,t=h.intervalList;if(typeof t!="undefined"&&t!==null){for(e=0;e<t.length;e++)f(t[e]);h.intervalList=null}},h.debug=function(){(h.options.debug||!1)&&h.log.apply(h,arguments)},h.log=function(){var e=typeof n!="undefined"&&typeof n.log!="undefined"&&typeof n.log.apply!="undefined",t=r.getElementById("log"),i,s,o,u,a;e?(u=Array.prototype.slice.call(arguments),i=u.shift(),typeof n.debug!="undefined"?n.debug.apply(n,[i,u]):n.log.apply(n,[i,u])):i="\n"+arguments[0]+"\n";for(s=1,o=arguments.length;s<o;++s){a=arguments[s];if(typeof a=="object"&&typeof l!="undefined")try{a=l.stringify(a)}catch(f){}i+="\n"+a+"\n"}return t?(t.value+=i+"\n-----\n",t.scrollTop=t.scrollHeight-t.clientHeight):e||c(i),!0},h.getInternetExplorerMajorVersion=function(){var e=h.getInternetExplorerMajorVersion.cached=typeof h.getInternetExplorerMajorVersion.cached!="undefined"?h.getInternetExplorerMajorVersion.cached:function(){var e=3,t=r.createElement("div"),n=t.getElementsByTagName("i");while((t.innerHTML="<!--[if gt IE "+ ++e+"]><i></i><![endif]-->")&&n[0]);return e>4?e:!1}();return e},h.isInternetExplorer=function(){var e=h.isInternetExplorer.cached=typeof h.isInternetExplorer.cached!="undefined"?h.isInternetExplorer.cached:Boolean(h.getInternetExplorerMajorVersion());return e},h.options.html4Mode?h.emulated={pushState:!0,hashChange:!0}:h.emulated={pushState:!Boolean(e.history&&e.history.pushState&&e.history.replaceState&&!/ Mobile\/([1-7][a-z]|(8([abcde]|f(1[0-8]))))/i.test(i.userAgent)&&!/AppleWebKit\/5([0-2]|3[0-2])/i.test(i.userAgent)),hashChange:Boolean(!("onhashchange"in e||"onhashchange"in r)||h.isInternetExplorer()&&h.getInternetExplorerMajorVersion()<8)},h.enabled=!h.emulated.pushState,h.bugs={setHash:Boolean(!h.emulated.pushState&&i.vendor==="Apple Computer, Inc."&&/AppleWebKit\/5([0-2]|3[0-3])/.test(i.userAgent)),safariPoll:Boolean(!h.emulated.pushState&&i.vendor==="Apple Computer, Inc."&&/AppleWebKit\/5([0-2]|3[0-3])/.test(i.userAgent)),ieDoubleCheck:Boolean(h.isInternetExplorer()&&h.getInternetExplorerMajorVersion()<8),hashEscape:Boolean(h.isInternetExplorer()&&h.getInternetExplorerMajorVersion()<7)},h.isEmptyObject=function(e){for(var t in e)if(e.hasOwnProperty(t))return!1;return!0},h.cloneObject=function(e){var t,n;return e?(t=l.stringify(e),n=l.parse(t)):n={},n},h.getRootUrl=function(){var e=r.location.protocol+"//"+(r.location.hostname||r.location.host);if(r.location.port||!1)e+=":"+r.location.port;return e+="/",e},h.getBaseHref=function(){var e=r.getElementsByTagName("base"),t=null,n="";return e.length===1&&(t=e[0],n=t.href.replace(/[^\/]+$/,"")),n=n.replace(/\/+$/,""),n&&(n+="/"),n},h.getBaseUrl=function(){var e=h.getBaseHref()||h.getBasePageUrl()||h.getRootUrl();return e},h.getPageUrl=function(){var e=h.getState(!1,!1),t=(e||{}).url||h.getLocationHref(),n;return n=t.replace(/\/+$/,"").replace(/[^\/]+$/,function(e,t,n){return/\./.test(e)?e:e+"/"}),n},h.getBasePageUrl=function(){var e=h.getLocationHref().replace(/[#\?].*/,"").replace(/[^\/]+$/,function(e,t,n){return/[^\/]$/.test(e)?"":e}).replace(/\/+$/,"")+"/";return e},h.getFullUrl=function(e,t){var n=e,r=e.substring(0,1);return t=typeof t=="undefined"?!0:t,/[a-z]+\:\/\//.test(e)||(r==="/"?n=h.getRootUrl()+e.replace(/^\/+/,""):r==="#"?n=h.getPageUrl().replace(/#.*/,"")+e:r==="?"?n=h.getPageUrl().replace(/[\?#].*/,"")+e:t?n=h.getBaseUrl()+e.replace(/^(\.\/)+/,""):n=h.getBasePageUrl()+e.replace(/^(\.\/)+/,"")),n.replace(/\#$/,"")},h.getShortUrl=function(e){var t=e,n=h.getBaseUrl(),r=h.getRootUrl();return h.emulated.pushState&&(t=t.replace(n,"")),t=t.replace(r,"/"),h.isTraditionalAnchor(t)&&(t="./"+t),t=t.replace(/^(\.\/)+/g,"./").replace(/\#$/,""),t},h.getLocationHref=function(e){return e=e||r,e.URL===e.location.href?e.location.href:e.location.href===decodeURIComponent(e.URL)?e.URL:e.location.hash&&decodeURIComponent(e.location.href.replace(/^[^#]+/,""))===e.location.hash?e.location.href:e.URL.indexOf("#")==-1&&e.location.href.indexOf("#")!=-1?e.location.href:e.URL||e.location.href},h.store={},h.idToState=h.idToState||{},h.stateToId=h.stateToId||{},h.urlToId=h.urlToId||{},h.storedStates=h.storedStates||[],h.savedStates=h.savedStates||[],h.normalizeStore=function(){h.store.idToState=h.store.idToState||{},h.store.urlToId=h.store.urlToId||{},h.store.stateToId=h.store.stateToId||{}},h.getState=function(e,t){typeof e=="undefined"&&(e=!0),typeof t=="undefined"&&(t=!0);var n=h.getLastSavedState();return!n&&t&&(n=h.createStateObject()),e&&(n=h.cloneObject(n),n.url=n.cleanUrl||n.url),n},h.getIdByState=function(e){var t=h.extractId(e.url),n;if(!t){n=h.getStateString(e);if(typeof h.stateToId[n]!="undefined")t=h.stateToId[n];else if(typeof h.store.stateToId[n]!="undefined")t=h.store.stateToId[n];else{for(;;){t=(new Date).getTime()+String(Math.random()).replace(/\D/g,"");if(typeof h.idToState[t]=="undefined"&&typeof h.store.idToState[t]=="undefined")break}h.stateToId[n]=t,h.idToState[t]=e}}return t},h.normalizeState=function(e){var t,n;if(!e||typeof e!="object")e={};if(typeof e.normalized!="undefined")return e;if(!e.data||typeof e.data!="object")e.data={};return t={},t.normalized=!0,t.title=e.title||"",t.url=h.getFullUrl(e.url?e.url:h.getLocationHref()),t.hash=h.getShortUrl(t.url),t.data=h.cloneObject(e.data),t.id=h.getIdByState(t),t.cleanUrl=t.url.replace(/\??\&_suid.*/,""),t.url=t.cleanUrl,n=!h.isEmptyObject(t.data),(t.title||n)&&h.options.disableSuid!==!0&&(t.hash=h.getShortUrl(t.url).replace(/\??\&_suid.*/,""),/\?/.test(t.hash)||(t.hash+="?"),t.hash+="&_suid="+t.id),t.hashedUrl=h.getFullUrl(t.hash),(h.emulated.pushState||h.bugs.safariPoll)&&h.hasUrlDuplicate(t)&&(t.url=t.hashedUrl),t},h.createStateObject=function(e,t,n){var r={data:e,title:t,url:n};return r=h.normalizeState(r),r},h.getStateById=function(e){e=String(e);var n=h.idToState[e]||h.store.idToState[e]||t;return n},h.getStateString=function(e){var t,n,r;return t=h.normalizeState(e),n={data:t.data,title:e.title,url:e.url},r=l.stringify(n),r},h.getStateId=function(e){var t,n;return t=h.normalizeState(e),n=t.id,n},h.getHashByState=function(e){var t,n;return t=h.normalizeState(e),n=t.hash,n},h.extractId=function(e){var t,n,r,i;return e.indexOf("#")!=-1?i=e.split("#")[0]:i=e,n=/(.*)\&_suid=([0-9]+)$/.exec(i),r=n?n[1]||e:e,t=n?String(n[2]||""):"",t||!1},h.isTraditionalAnchor=function(e){var t=!/[\/\?\.]/.test(e);return t},h.extractState=function(e,t){var n=null,r,i;return t=t||!1,r=h.extractId(e),r&&(n=h.getStateById(r)),n||(i=h.getFullUrl(e),r=h.getIdByUrl(i)||!1,r&&(n=h.getStateById(r)),!n&&t&&!h.isTraditionalAnchor(e)&&(n=h.createStateObject(null,null,i))),n},h.getIdByUrl=function(e){var n=h.urlToId[e]||h.store.urlToId[e]||t;return n},h.getLastSavedState=function(){return h.savedStates[h.savedStates.length-1]||t},h.getLastStoredState=function(){return h.storedStates[h.storedStates.length-1]||t},h.hasUrlDuplicate=function(e){var t=!1,n;return n=h.extractState(e.url),t=n&&n.id!==e.id,t},h.storeState=function(e){return h.urlToId[e.url]=e.id,h.storedStates.push(h.cloneObject(e)),e},h.isLastSavedState=function(e){var t=!1,n,r,i;return h.savedStates.length&&(n=e.id,r=h.getLastSavedState(),i=r.id,t=n===i),t},h.saveState=function(e){return h.isLastSavedState(e)?!1:(h.savedStates.push(h.cloneObject(e)),!0)},h.getStateByIndex=function(e){var t=null;return typeof e=="undefined"?t=h.savedStates[h.savedStates.length-1]:e<0?t=h.savedStates[h.savedStates.length+e]:t=h.savedStates[e],t},h.getCurrentIndex=function(){var e=null;return h.savedStates.length<1?e=0:e=h.savedStates.length-1,e},h.getHash=function(e){var t=h.getLocationHref(e),n;return n=h.getHashByUrl(t),n},h.unescapeHash=function(e){var t=h.normalizeHash(e);return t=decodeURIComponent(t),t},h.normalizeHash=function(e){var t=e.replace(/[^#]*#/,"").replace(/#.*/,"");return t},h.setHash=function(e,t){var n,i;return t!==!1&&h.busy()?(h.pushQueue({scope:h,callback:h.setHash,args:arguments,queue:t}),!1):(h.busy(!0),n=h.extractState(e,!0),n&&!h.emulated.pushState?h.pushState(n.data,n.title,n.url,!1):h.getHash()!==e&&(h.bugs.setHash?(i=h.getPageUrl(),h.pushState(null,null,i+"#"+e,!1)):r.location.hash=e),h)},h.escapeHash=function(t){var n=h.normalizeHash(t);return n=e.encodeURIComponent(n),h.bugs.hashEscape||(n=n.replace(/\%21/g,"!").replace(/\%26/g,"&").replace(/\%3D/g,"=").replace(/\%3F/g,"?")),n},h.getHashByUrl=function(e){var t=String(e).replace(/([^#]*)#?([^#]*)#?(.*)/,"$2");return t=h.unescapeHash(t),t},h.setTitle=function(e){var t=e.title,n;t||(n=h.getStateByIndex(0),n&&n.url===e.url&&(t=n.title||h.options.initialTitle));try{r.getElementsByTagName("title")[0].innerHTML=t.replace("<","&lt;").replace(">","&gt;").replace(" & "," &amp; ")}catch(i){}return r.title=t,h},h.queues=[],h.busy=function(e){typeof e!="undefined"?h.busy.flag=e:typeof h.busy.flag=="undefined"&&(h.busy.flag=!1);if(!h.busy.flag){u(h.busy.timeout);var t=function(){var e,n,r;if(h.busy.flag)return;for(e=h.queues.length-1;e>=0;--e){n=h.queues[e];if(n.length===0)continue;r=n.shift(),h.fireQueueItem(r),h.busy.timeout=o(t,h.options.busyDelay)}};h.busy.timeout=o(t,h.options.busyDelay)}return h.busy.flag},h.busy.flag=!1,h.fireQueueItem=function(e){return e.callback.apply(e.scope||h,e.args||[])},h.pushQueue=function(e){return h.queues[e.queue||0]=h.queues[e.queue||0]||[],h.queues[e.queue||0].push(e),h},h.queue=function(e,t){return typeof e=="function"&&(e={callback:e}),typeof t!="undefined"&&(e.queue=t),h.busy()?h.pushQueue(e):h.fireQueueItem(e),h},h.clearQueue=function(){return h.busy.flag=!1,h.queues=[],h},h.stateChanged=!1,h.doubleChecker=!1,h.doubleCheckComplete=function(){return h.stateChanged=!0,h.doubleCheckClear(),h},h.doubleCheckClear=function(){return h.doubleChecker&&(u(h.doubleChecker),h.doubleChecker=!1),h},h.doubleCheck=function(e){return h.stateChanged=!1,h.doubleCheckClear(),h.bugs.ieDoubleCheck&&(h.doubleChecker=o(function(){return h.doubleCheckClear(),h.stateChanged||e(),!0},h.options.doubleCheckInterval)),h},h.safariStatePoll=function(){var t=h.extractState(h.getLocationHref()),n;if(!h.isLastSavedState(t))return n=t,n||(n=h.createStateObject()),h.Adapter.trigger(e,"popstate"),h;return},h.back=function(e){return e!==!1&&h.busy()?(h.pushQueue({scope:h,callback:h.back,args:arguments,queue:e}),!1):(h.busy(!0),h.doubleCheck(function(){h.back(!1)}),p.go(-1),!0)},h.forward=function(e){return e!==!1&&h.busy()?(h.pushQueue({scope:h,callback:h.forward,args:arguments,queue:e}),!1):(h.busy(!0),h.doubleCheck(function(){h.forward(!1)}),p.go(1),!0)},h.go=function(e,t){var n;if(e>0)for(n=1;n<=e;++n)h.forward(t);else{if(!(e<0))throw new Error("History.go: History.go requires a positive or negative integer passed.");for(n=-1;n>=e;--n)h.back(t)}return h};if(h.emulated.pushState){var v=function(){};h.pushState=h.pushState||v,h.replaceState=h.replaceState||v}else h.onPopState=function(t,n){var r=!1,i=!1,s,o;return h.doubleCheckComplete(),s=h.getHash(),s?(o=h.extractState(s||h.getLocationHref(),!0),o?h.replaceState(o.data,o.title,o.url,!1):(h.Adapter.trigger(e,"anchorchange"),h.busy(!1)),h.expectedStateId=!1,!1):(r=h.Adapter.extractEventData("state",t,n)||!1,r?i=h.getStateById(r):h.expectedStateId?i=h.getStateById(h.expectedStateId):i=h.extractState(h.getLocationHref()),i||(i=h.createStateObject(null,null,h.getLocationHref())),h.expectedStateId=!1,h.isLastSavedState(i)?(h.busy(!1),!1):(h.storeState(i),h.saveState(i),h.setTitle(i),h.Adapter.trigger(e,"statechange"),h.busy(!1),!0))},h.Adapter.bind(e,"popstate",h.onPopState),h.pushState=function(t,n,r,i){if(h.getHashByUrl(r)&&h.emulated.pushState)throw new Error("History.js does not support states with fragement-identifiers (hashes/anchors).");if(i!==!1&&h.busy())return h.pushQueue({scope:h,callback:h.pushState,args:arguments,queue:i}),!1;h.busy(!0);var s=h.createStateObject(t,n,r);return h.isLastSavedState(s)?h.busy(!1):(h.storeState(s),h.expectedStateId=s.id,p.pushState(s.id,s.title,s.url),h.Adapter.trigger(e,"popstate")),!0},h.replaceState=function(t,n,r,i){if(h.getHashByUrl(r)&&h.emulated.pushState)throw new Error("History.js does not support states with fragement-identifiers (hashes/anchors).");if(i!==!1&&h.busy())return h.pushQueue({scope:h,callback:h.replaceState,args:arguments,queue:i}),!1;h.busy(!0);var s=h.createStateObject(t,n,r);return h.isLastSavedState(s)?h.busy(!1):(h.storeState(s),h.expectedStateId=s.id,p.replaceState(s.id,s.title,s.url),h.Adapter.trigger(e,"popstate")),!0};if(s){try{h.store=l.parse(s.getItem("History.store"))||{}}catch(m){h.store={}}h.normalizeStore()}else h.store={},h.normalizeStore();h.Adapter.bind(e,"unload",h.clearAllIntervals),h.saveState(h.storeState(h.extractState(h.getLocationHref(),!0))),s&&(h.onUnload=function(){var e,t,n;try{e=l.parse(s.getItem("History.store"))||{}}catch(r){e={}}e.idToState=e.idToState||{},e.urlToId=e.urlToId||{},e.stateToId=e.stateToId||{};for(t in h.idToState){if(!h.idToState.hasOwnProperty(t))continue;e.idToState[t]=h.idToState[t]}for(t in h.urlToId){if(!h.urlToId.hasOwnProperty(t))continue;e.urlToId[t]=h.urlToId[t]}for(t in h.stateToId){if(!h.stateToId.hasOwnProperty(t))continue;e.stateToId[t]=h.stateToId[t]}h.store=e,h.normalizeStore(),n=l.stringify(e);try{s.setItem("History.store",n)}catch(i){if(i.code!==DOMException.QUOTA_EXCEEDED_ERR)throw i;s.length&&(s.removeItem("History.store"),s.setItem("History.store",n))}},h.intervalList.push(a(h.onUnload,h.options.storeInterval)),h.Adapter.bind(e,"beforeunload",h.onUnload),h.Adapter.bind(e,"unload",h.onUnload));if(!h.emulated.pushState){h.bugs.safariPoll&&h.intervalList.push(a(h.safariStatePoll,h.options.safariPollInterval));if(i.vendor==="Apple Computer, Inc."||(i.appCodeName||"")==="Mozilla")h.Adapter.bind(e,"hashchange",function(){h.Adapter.trigger(e,"popstate")}),h.getHash()&&h.Adapter.onDomLoad(function(){h.Adapter.trigger(e,"hashchange")})}},(!h.options||!h.options.delayInit)&&h.init()}(window);/**
+ * Copyright (c) 2011-2014 Felix Gnass
+ * Licensed under the MIT license
+ */
+(function(root, factory) {
+
+  /* CommonJS */
+  if (typeof exports == 'object')  module.exports = factory()
+
+  /* AMD module */
+  else if (typeof define == 'function' && define.amd) define(factory)
+
+  /* Browser global */
+  else root.Spinner = factory()
+}
+(this, function() {
+  "use strict";
+
+  var prefixes = ['webkit', 'Moz', 'ms', 'O'] /* Vendor prefixes */
+    , animations = {} /* Animation rules keyed by their name */
+    , useCssAnimations /* Whether to use CSS animations or setTimeout */
+
+  /**
+   * Utility function to create elements. If no tag name is given,
+   * a DIV is created. Optionally properties can be passed.
+   */
+  function createEl(tag, prop) {
+    var el = document.createElement(tag || 'div')
+      , n
+
+    for(n in prop) el[n] = prop[n]
+    return el
+  }
+
+  /**
+   * Appends children and returns the parent.
+   */
+  function ins(parent /* child1, child2, ...*/) {
+    for (var i=1, n=arguments.length; i<n; i++)
+      parent.appendChild(arguments[i])
+
+    return parent
+  }
+
+  /**
+   * Insert a new stylesheet to hold the @keyframe or VML rules.
+   */
+  var sheet = (function() {
+    var el = createEl('style', {type : 'text/css'})
+    ins(document.getElementsByTagName('head')[0], el)
+    return el.sheet || el.styleSheet
+  }())
+
+  /**
+   * Creates an opacity keyframe animation rule and returns its name.
+   * Since most mobile Webkits have timing issues with animation-delay,
+   * we create separate rules for each line/segment.
+   */
+  function addAnimation(alpha, trail, i, lines) {
+    var name = ['opacity', trail, ~~(alpha*100), i, lines].join('-')
+      , start = 0.01 + i/lines * 100
+      , z = Math.max(1 - (1-alpha) / trail * (100-start), alpha)
+      , prefix = useCssAnimations.substring(0, useCssAnimations.indexOf('Animation')).toLowerCase()
+      , pre = prefix && '-' + prefix + '-' || ''
+
+    if (!animations[name]) {
+      sheet.insertRule(
+        '@' + pre + 'keyframes ' + name + '{' +
+        '0%{opacity:' + z + '}' +
+        start + '%{opacity:' + alpha + '}' +
+        (start+0.01) + '%{opacity:1}' +
+        (start+trail) % 100 + '%{opacity:' + alpha + '}' +
+        '100%{opacity:' + z + '}' +
+        '}', sheet.cssRules.length)
+
+      animations[name] = 1
+    }
+
+    return name
+  }
+
+  /**
+   * Tries various vendor prefixes and returns the first supported property.
+   */
+  function vendor(el, prop) {
+    var s = el.style
+      , pp
+      , i
+
+    prop = prop.charAt(0).toUpperCase() + prop.slice(1)
+    for(i=0; i<prefixes.length; i++) {
+      pp = prefixes[i]+prop
+      if(s[pp] !== undefined) return pp
+    }
+    if(s[prop] !== undefined) return prop
+  }
+
+  /**
+   * Sets multiple style properties at once.
+   */
+  function css(el, prop) {
+    for (var n in prop)
+      el.style[vendor(el, n)||n] = prop[n]
+
+    return el
+  }
+
+  /**
+   * Fills in default values.
+   */
+  function merge(obj) {
+    for (var i=1; i < arguments.length; i++) {
+      var def = arguments[i]
+      for (var n in def)
+        if (obj[n] === undefined) obj[n] = def[n]
+    }
+    return obj
+  }
+
+  /**
+   * Returns the absolute page-offset of the given element.
+   */
+  function pos(el) {
+    var o = { x:el.offsetLeft, y:el.offsetTop }
+    while((el = el.offsetParent))
+      o.x+=el.offsetLeft, o.y+=el.offsetTop
+
+    return o
+  }
+
+  /**
+   * Returns the line color from the given string or array.
+   */
+  function getColor(color, idx) {
+    return typeof color == 'string' ? color : color[idx % color.length]
+  }
+
+  // Built-in defaults
+
+  var defaults = {
+    lines: 12,            // The number of lines to draw
+    length: 7,            // The length of each line
+    width: 5,             // The line thickness
+    radius: 10,           // The radius of the inner circle
+    rotate: 0,            // Rotation offset
+    corners: 1,           // Roundness (0..1)
+    color: '#000',        // #rgb or #rrggbb
+    direction: 1,         // 1: clockwise, -1: counterclockwise
+    speed: 1,             // Rounds per second
+    trail: 100,           // Afterglow percentage
+    opacity: 1/4,         // Opacity of the lines
+    fps: 20,              // Frames per second when using setTimeout()
+    zIndex: 2e9,          // Use a high z-index by default
+    className: 'spinner', // CSS class to assign to the element
+    top: '50%',           // center vertically
+    left: '50%',          // center horizontally
+    position: 'absolute'  // element position
+  }
+
+  /** The constructor */
+  function Spinner(o) {
+    this.opts = merge(o || {}, Spinner.defaults, defaults)
+  }
+
+  // Global defaults that override the built-ins:
+  Spinner.defaults = {}
+
+  merge(Spinner.prototype, {
+
+    /**
+     * Adds the spinner to the given target element. If this instance is already
+     * spinning, it is automatically removed from its previous target b calling
+     * stop() internally.
+     */
+    spin: function(target) {
+      this.stop()
+
+      var self = this
+        , o = self.opts
+        , el = self.el = css(createEl(0, {className: o.className}), {position: o.position, width: 0, zIndex: o.zIndex})
+        , mid = o.radius+o.length+o.width
+
+      css(el, {
+        left: o.left,
+        top: o.top
+      })
+        
+      if (target) {
+        target.insertBefore(el, target.firstChild||null)
+      }
+
+      el.setAttribute('role', 'progressbar')
+      self.lines(el, self.opts)
+
+      if (!useCssAnimations) {
+        // No CSS animation support, use setTimeout() instead
+        var i = 0
+          , start = (o.lines - 1) * (1 - o.direction) / 2
+          , alpha
+          , fps = o.fps
+          , f = fps/o.speed
+          , ostep = (1-o.opacity) / (f*o.trail / 100)
+          , astep = f/o.lines
+
+        ;(function anim() {
+          i++;
+          for (var j = 0; j < o.lines; j++) {
+            alpha = Math.max(1 - (i + (o.lines - j) * astep) % f * ostep, o.opacity)
+
+            self.opacity(el, j * o.direction + start, alpha, o)
+          }
+          self.timeout = self.el && setTimeout(anim, ~~(1000/fps))
+        })()
+      }
+      return self
+    },
+
+    /**
+     * Stops and removes the Spinner.
+     */
+    stop: function() {
+      var el = this.el
+      if (el) {
+        clearTimeout(this.timeout)
+        if (el.parentNode) el.parentNode.removeChild(el)
+        this.el = undefined
+      }
+      return this
+    },
+
+    /**
+     * Internal method that draws the individual lines. Will be overwritten
+     * in VML fallback mode below.
+     */
+    lines: function(el, o) {
+      var i = 0
+        , start = (o.lines - 1) * (1 - o.direction) / 2
+        , seg
+
+      function fill(color, shadow) {
+        return css(createEl(), {
+          position: 'absolute',
+          width: (o.length+o.width) + 'px',
+          height: o.width + 'px',
+          background: color,
+          boxShadow: shadow,
+          transformOrigin: 'left',
+          transform: 'rotate(' + ~~(360/o.lines*i+o.rotate) + 'deg) translate(' + o.radius+'px' +',0)',
+          borderRadius: (o.corners * o.width>>1) + 'px'
+        })
+      }
+
+      for (; i < o.lines; i++) {
+        seg = css(createEl(), {
+          position: 'absolute',
+          top: 1+~(o.width/2) + 'px',
+          transform: o.hwaccel ? 'translate3d(0,0,0)' : '',
+          opacity: o.opacity,
+          animation: useCssAnimations && addAnimation(o.opacity, o.trail, start + i * o.direction, o.lines) + ' ' + 1/o.speed + 's linear infinite'
+        })
+
+        if (o.shadow) ins(seg, css(fill('#000', '0 0 4px ' + '#000'), {top: 2+'px'}))
+        ins(el, ins(seg, fill(getColor(o.color, i), '0 0 1px rgba(0,0,0,.1)')))
+      }
+      return el
+    },
+
+    /**
+     * Internal method that adjusts the opacity of a single line.
+     * Will be overwritten in VML fallback mode below.
+     */
+    opacity: function(el, i, val) {
+      if (i < el.childNodes.length) el.childNodes[i].style.opacity = val
+    }
+
+  })
+
+
+  function initVML() {
+
+    /* Utility function to create a VML tag */
+    function vml(tag, attr) {
+      return createEl('<' + tag + ' xmlns="urn:schemas-microsoft.com:vml" class="spin-vml">', attr)
+    }
+
+    // No CSS transforms but VML support, add a CSS rule for VML elements:
+    sheet.addRule('.spin-vml', 'behavior:url(#default#VML)')
+
+    Spinner.prototype.lines = function(el, o) {
+      var r = o.length+o.width
+        , s = 2*r
+
+      function grp() {
+        return css(
+          vml('group', {
+            coordsize: s + ' ' + s,
+            coordorigin: -r + ' ' + -r
+          }),
+          { width: s, height: s }
+        )
+      }
+
+      var margin = -(o.width+o.length)*2 + 'px'
+        , g = css(grp(), {position: 'absolute', top: margin, left: margin})
+        , i
+
+      function seg(i, dx, filter) {
+        ins(g,
+          ins(css(grp(), {rotation: 360 / o.lines * i + 'deg', left: ~~dx}),
+            ins(css(vml('roundrect', {arcsize: o.corners}), {
+                width: r,
+                height: o.width,
+                left: o.radius,
+                top: -o.width>>1,
+                filter: filter
+              }),
+              vml('fill', {color: getColor(o.color, i), opacity: o.opacity}),
+              vml('stroke', {opacity: 0}) // transparent stroke to fix color bleeding upon opacity change
+            )
+          )
+        )
+      }
+
+      if (o.shadow)
+        for (i = 1; i <= o.lines; i++)
+          seg(i, -2, 'progid:DXImageTransform.Microsoft.Blur(pixelradius=2,makeshadow=1,shadowopacity=.3)')
+
+      for (i = 1; i <= o.lines; i++) seg(i)
+      return ins(el, g)
+    }
+
+    Spinner.prototype.opacity = function(el, i, val, o) {
+      var c = el.firstChild
+      o = o.shadow && o.lines || 0
+      if (c && i+o < c.childNodes.length) {
+        c = c.childNodes[i+o]; c = c && c.firstChild; c = c && c.firstChild
+        if (c) c.opacity = val
+      }
+    }
+  }
+
+  var probe = css(createEl('group'), {behavior: 'url(#default#VML)'})
+
+  if (!vendor(probe, 'transform') && probe.adj) initVML()
+  else useCssAnimations = vendor(probe, 'animation')
+
+  return Spinner
+
+}));
+;/**
+ * Copyright (c) 2011-2014 Felix Gnass
+ * Licensed under the MIT license
+ */
+
+/*
+
+Basic Usage:
+============
+
+$('#el').spin(); // Creates a default Spinner using the text color of #el.
+$('#el').spin({ ... }); // Creates a Spinner using the provided options.
+
+$('#el').spin(false); // Stops and removes the spinner.
+
+Using Presets:
+==============
+
+$('#el').spin('small'); // Creates a 'small' Spinner using the text color of #el.
+$('#el').spin('large', '#fff'); // Creates a 'large' white Spinner.
+
+Adding a custom preset:
+=======================
+
+$.fn.spin.presets.flower = {
+  lines: 9
+  length: 10
+  width: 20
+  radius: 0
+}
+
+$('#el').spin('flower', 'red');
+
+*/
+
+(function(factory) {
+
+  if (typeof exports == 'object') {
+    // CommonJS
+    factory(require('jquery'), require('spin'))
+  }
+  else if (typeof define == 'function' && define.amd) {
+    // AMD, register as anonymous module
+    define(['jquery', 'spin'], factory)
+  }
+  else {
+    // Browser globals
+    if (!window.Spinner) throw new Error('Spin.js not present')
+    factory(window.jQuery, window.Spinner)
+  }
+
+}(function($, Spinner) {
+
+  $.fn.spin = function(opts, color) {
+
+    return this.each(function() {
+      var $this = $(this),
+        data = $this.data();
+
+      if (data.spinner) {
+        data.spinner.stop();
+        delete data.spinner;
+      }
+      if (opts !== false) {
+        opts = $.extend(
+          { color: color || $this.css('color') },
+          $.fn.spin.presets[opts] || opts
+        )
+        data.spinner = new Spinner(opts).spin(this)
+      }
+    })
+  }
+
+  $.fn.spin.presets = {
+    tiny: { lines: 8, length: 2, width: 2, radius: 3 },
+    small: { lines: 8, length: 4, width: 3, radius: 5 },
+    large: { lines: 10, length: 8, width: 4, radius: 8 }
+  }
+
+}));
 ;/*! VelocityJS.org (1.0.0). (C) 2014 Julian Shapiro. MIT @license: en.wikipedia.org/wiki/MIT_License */
 
 /*************************
    Velocity jQuery Shim
 *************************/
 
-/*! VelocityJS.org jQuery Shim (1.0.0-rc1). (C) 2014 The jQuery Foundation. MIT @license: en.wikipedia.org/wiki/MIT_License. */
+/*! VelocityJS.org jQuery Shim (1.0.1). (C) 2014 The jQuery Foundation. MIT @license: en.wikipedia.org/wiki/MIT_License. */
 
 /* This file contains the jQuery functions that Velocity relies on, thereby removing Velocity's dependency on a full copy of jQuery, and allowing it to work in any environment. */
 /* These shimmed functions are only used if jQuery isn't present. If both this shim and jQuery are loaded, Velocity defaults to jQuery proper. */
@@ -16373,7 +16802,7 @@ qe[Xc]=d(N(yb)),qe[Zc]=d(N(Mb+" "+Ob+rc,N(ic))),qe[Yc]=d(N(Mb+" "+Nb+rc,N(hc))),
 
     /* jQuery */
     $.fn = $.prototype = {
-        init: function(selector) {
+        init: function (selector) {
             /* Just return the element wrapped inside an array; don't proceed with the actual jQuery node wrapping process. */
             if (selector.nodeType) {
                 this[0] = selector;
@@ -16385,11 +16814,11 @@ qe[Xc]=d(N(yb)),qe[Zc]=d(N(Mb+" "+Ob+rc,N(ic))),qe[Yc]=d(N(Mb+" "+Nb+rc,N(hc))),
         },
 
         offset: function () {
-            /* jQuery altered code: Dropped disconnected DOM node checking and iOS3+BlackBerry support. */
-            var box = this[0].getBoundingClientRect();
+            /* jQuery altered code: Dropped disconnected DOM node checking. */
+            var box = this[0].getBoundingClientRect ? this[0].getBoundingClientRect() : { top: 0, left: 0 };
 
             return {
-                top: box.top  + (window.pageYOffset || document.scrollTop  || 0)  - (document.clientTop  || 0),
+                top: box.top + (window.pageYOffset || document.scrollTop  || 0)  - (document.clientTop  || 0),
                 left: box.left + (window.pageXOffset || document.scrollLeft  || 0) - (document.clientLeft || 0)
             };
         },
@@ -16457,7 +16886,7 @@ qe[Xc]=d(N(yb)),qe[Zc]=d(N(Mb+" "+Ob+rc,N(ic))),qe[Yc]=d(N(Mb+" "+Nb+rc,N(hc))),
     Velocity.js
 ******************/
 
-;(function (factory) {    
+;(function (factory) {
     /* CommonJS module. */
     if (typeof module === "object" && typeof module.exports === "object") {
         module.exports = factory();
@@ -16465,7 +16894,7 @@ qe[Xc]=d(N(yb)),qe[Zc]=d(N(Mb+" "+Ob+rc,N(ic))),qe[Yc]=d(N(Mb+" "+Nb+rc,N(hc))),
     } else if (typeof define === "function" && define.amd) {
         define(factory);
     /* Browser globals. */
-    } else {        
+    } else {
         factory();
     }
 }(function() {
@@ -16561,19 +16990,15 @@ return function (global, window, document, undefined) {
         isString: function (variable) {
             return (typeof variable === "string");
         },
-
         isArray: Array.isArray || function (variable) {
             return Object.prototype.toString.call(variable) === "[object Array]";
         },
-
         isFunction: function (variable) {
             return Object.prototype.toString.call(variable) === "[object Function]";
         },
-
         isNode: function (variable) {
             return variable && variable.nodeType;
         },
-
         /* Copyright Martin Bohm. MIT License: https://gist.github.com/Tomalak/818a78a226a0738eaade */
         isNodeList: function (variable) {
             return typeof variable === "object" &&
@@ -16581,20 +17006,15 @@ return function (global, window, document, undefined) {
                 variable.length !== undefined &&
                 (variable.length === 0 || (typeof variable[0] === "object" && variable[0].nodeType > 0));
         },
-
         /* Determine if variable is a wrapped jQuery or Zepto element. */
         isWrapped: function (variable) {
             return variable && (variable.jquery || (window.Zepto && window.Zepto.zepto.isZ(variable)));
         },
-
         isSVG: function (variable) {
-            return window.SVGElement && (variable instanceof SVGElement);
+            return window.SVGElement && (variable instanceof window.SVGElement);
         },
-
         isEmptyObject: function (variable) {
-            var name;
-
-            for (name in variable) {
+            for (var name in variable) {
                 return false;
             }
 
@@ -16625,15 +17045,6 @@ return function (global, window, document, undefined) {
         /* Now that $.fn.velocity is aliased, abort this Velocity declaration. */
         return;
     }
-
-    /* Shorthand alias for jQuery's $.data() utility. */
-    function Data (element) {
-        /* Hardcode a reference to the plugin name. */
-        var response = $.data(element, "velocity");
-
-        /* jQuery <=1.4.2 returns null instead of undefined when no match is found. We normalize this behavior. */
-        return response === null ? undefined : response;
-    };
 
     /*****************
         Constants
@@ -16676,13 +17087,9 @@ return function (global, window, document, undefined) {
         CSS: { /* Defined below. */ },
         /* Defined by Velocity's optional jQuery shim. */
         Utilities: $,
-        /* Container for the user's custom animation sequences that are referenced by name in place of a properties map object. */
-        Sequences: {
-            /* Manually registered by the user. Learn more: VelocityJS.org/#sequences */
-        },
-        Easings: {
-            /* Defined below. */
-        },
+        /* Container for the user's custom animation redirects that are referenced by name in place of a properties map object. */
+        Redirects: { /* Manually registered by the user. */ },
+        Easings: { /* Defined below. */ },
         /* Attempt to use ES6 Promises by default. Users can override this with a third-party promises library. */
         Promise: window.Promise,
         /* Page-wide option defaults, which can be overriden by the user. */
@@ -16690,10 +17097,11 @@ return function (global, window, document, undefined) {
             queue: "",
             duration: DURATION_DEFAULT,
             easing: EASING_DEFAULT,
-            begin: null,
-            complete: null,
-            progress: null,
+            begin: undefined,
+            complete: undefined,
+            progress: undefined,
             display: undefined,
+            visibility: undefined,
             loop: false,
             delay: false,
             mobileHA: true,
@@ -16722,13 +17130,11 @@ return function (global, window, document, undefined) {
                 transformCache: {}
             });
         },
-        /* Velocity's core animation method, later aliased to $.fn if a framework (jQuery or Zepto) is detected. */
-        animate: null, /* Defined below. */
-        /* A reimplementation of jQuery's $.css(), used for getting/setting Velocity's hooked CSS properties. */
+        /* A parallel to jQuery's $.css(), used for getting/setting Velocity's hooked CSS properties. */
         hook: null, /* Defined below. */
-        /* Set to true to force a duration of 1ms for all animations so that UI testing can be performed without waiting on animations to complete. */
+        /* Velocity-wide animation time remapping for testing purposes. */
         mock: false,
-        version: { major: 1, minor: 0, patch: 0 },
+        version: { major: 1, minor: 1, patch: 0 },
         /* Set to 1 or 2 (most verbose) to output debug info to console. */
         debug: false
     };
@@ -16743,6 +17149,15 @@ return function (global, window, document, undefined) {
         Velocity.State.scrollPropertyLeft = "scrollLeft";
         Velocity.State.scrollPropertyTop = "scrollTop";
     }
+
+    /* Shorthand alias for jQuery's $.data() utility. */
+    function Data (element) {
+        /* Hardcode a reference to the plugin name. */
+        var response = $.data(element, "velocity");
+
+        /* jQuery <=1.4.2 returns null instead of undefined when no match is found. We normalize this behavior. */
+        return response === null ? undefined : response;
+    };
 
     /**************
         Easing
@@ -16967,23 +17382,21 @@ return function (global, window, document, undefined) {
         };
     }());
 
-    /* Easings from jQuery, jQuery UI, and CSS3. */
+    /* jQuery easings. */
     Velocity.Easings = {
-        /* jQuery's default named easing types. */
         linear: function(p) { return p; },
         swing: function(p) { return 0.5 - Math.cos( p * Math.PI ) / 2 },
         /* Bonus "spring" easing, which is a less exaggerated version of easeInOutElastic. */
         spring: function(p) { return 1 - (Math.cos(p * 4.5 * Math.PI) * Math.exp(-p * 6)); }
     };
 
+    /* CSS3 and Robert Penner easings. */
     $.each(
         [
-            /* CSS3's named easing types. */
             [ "ease", [ 0.25, 0.1, 0.25, 1.0 ] ],
             [ "ease-in", [ 0.42, 0.0, 1.00, 1.0 ] ],
             [ "ease-out", [ 0.00, 0.0, 0.58, 1.0 ] ],
             [ "ease-in-out", [ 0.42, 0.0, 0.58, 1.0 ] ],
-            /* Robert Penner easing equations. */
             [ "easeInSine", [ 0.47, 0, 0.745, 0.715 ] ],
             [ "easeOutSine", [ 0.39, 0.575, 0.565, 1 ] ],
             [ "easeInOutSine", [ 0.445, 0.05, 0.55, 0.95 ] ],
@@ -17113,12 +17526,13 @@ return function (global, window, document, undefined) {
             },
             /* Convert the templates into individual hooks then append them to the registered object above. */
             register: function () {
-                /* Color hooks registration. */
-                /* Note: Colors are defaulted to white -- as opposed to black -- since colors that are
+                /* Color hooks registration: Colors are defaulted to white -- as opposed to black -- since colors that are
                    currently set to "transparent" default to their respective template below when color-animated,
-                   and white is typically a closer match to transparent than black is. */
+                   and white is typically a closer match to transparent than black is. An exception is made for text ("color"),
+                   which is almost always set closer to black than white. */
                 for (var i = 0; i < CSS.Lists.colors.length; i++) {
-                    CSS.Hooks.templates[CSS.Lists.colors[i]] = [ "Red Green Blue Alpha", "255 255 255 1" ];
+                    var rgbComponents = (CSS.Lists.colors[i] === "color") ? "0 0 0 1" : "255 255 255 1";
+                    CSS.Hooks.templates[CSS.Lists.colors[i]] = [ "Red Green Blue Alpha", rgbComponents ];
                 }
 
                 var rootProperty,
@@ -17182,7 +17596,7 @@ return function (global, window, document, undefined) {
             cleanRootPropertyValue: function(rootProperty, rootPropertyValue) {
                 /* If the rootPropertyValue is wrapped with "rgb()", "clip()", etc., remove the wrapping to normalize the value before manipulation. */
                 if (CSS.RegEx.valueUnwrap.test(rootPropertyValue)) {
-                    rootPropertyValue = rootPropertyValue.match(CSS.Hooks.RegEx.valueUnwrap)[1];
+                    rootPropertyValue = rootPropertyValue.match(CSS.RegEx.valueUnwrap)[1];
                 }
 
                 /* If rootPropertyValue is a CSS null-value (from which there's inherently no hook value to extract),
@@ -17249,7 +17663,7 @@ return function (global, window, document, undefined) {
             /* Normalizations are passed a normalization target (either the property's name, its extracted value, or its injected value),
                the targeted element (which may need to be queried), and the targeted property value. */
             registered: {
-                clip: function(type, element, propertyValue) {
+                clip: function (type, element, propertyValue) {
                     switch (type) {
                         case "name":
                             return "clip";
@@ -17272,6 +17686,38 @@ return function (global, window, document, undefined) {
                         /* Clip needs to be re-wrapped during injection. */
                         case "inject":
                             return "rect(" + propertyValue + ")";
+                    }
+                },
+
+                blur: function(type, element, propertyValue) {
+                    switch (type) {
+                        case "name":
+                            return "-webkit-filter";
+                        case "extract":
+                            var extracted = parseFloat(propertyValue);
+
+                            /* If extracted is NaN, meaning the value isn't already extracted. */
+                            if (!(extracted || extracted === 0)) {
+                                var blurComponent = propertyValue.toString().match(/blur\(([0-9]+[A-z]+)\)/i);
+
+                                /* If the filter string had a blur component, return just the blur value and unit type. */
+                                if (blurComponent) {
+                                    extracted = blurComponent[1];
+                                /* If the component doesn't exist, default blur to 0. */
+                                } else {
+                                    extracted = 0;
+                                }
+                            }
+
+                            return extracted;
+                        /* Blur needs to be re-wrapped during injection. */
+                        case "inject":
+                            /* For the blur effect to be fully de-applied, it needs to be set to "none" instead of 0. */
+                            if (!parseFloat(propertyValue)) {
+                                return "none";
+                            } else {
+                                return "blur(" + propertyValue + ")";
+                            }
                     }
                 },
 
@@ -17577,6 +18023,7 @@ return function (global, window, document, undefined) {
 
                 return rgbParts ? [ parseInt(rgbParts[1], 16), parseInt(rgbParts[2], 16), parseInt(rgbParts[3], 16) ] : [ 0, 0, 0 ];
             },
+
             isCSSNullValue: function (value) {
                 /* The browser defaults CSS values that have not been set to either 0 or one of several possible null-value strings.
                    Thus, we check for both falsiness and these special strings. */
@@ -17585,6 +18032,7 @@ return function (global, window, document, undefined) {
                 /* Note: Chrome returns "rgba(0, 0, 0, 0)" for an undefined color whereas IE returns "transparent". */
                 return (value == 0 || /^(none|auto|transparent|(rgba\(0, ?0, ?0, ?0\)))$/i.test(value));
             },
+
             /* Retrieve a property's default unit type. Used for assigning a unit type when one is not supplied by the user. */
             getUnitType: function (property) {
                 if (/^(rotate|skew)/i.test(property)) {
@@ -17597,10 +18045,11 @@ return function (global, window, document, undefined) {
                     return "px";
                 }
             },
+
             /* HTML elements default to an associated display type when they're not set to display:none. */
-            /* Note: This function is used for correctly setting the non-"none" display value in certain Velocity sequences, such as fadeIn/Out. */
+            /* Note: This function is used for correctly setting the non-"none" display value in certain Velocity redirects, such as fadeIn/Out. */
             getDisplayType: function (element) {
-                var tagName = element.tagName.toString().toLowerCase();
+                var tagName = element && element.tagName.toString().toLowerCase();
 
                 if (/^(b|big|i|small|tt|abbr|acronym|cite|code|dfn|em|kbd|strong|samp|var|a|bdo|br|img|map|object|q|script|span|sub|sup|button|input|label|select|textarea)$/i.test(tagName)) {
                     return "inline";
@@ -17613,6 +18062,7 @@ return function (global, window, document, undefined) {
                     return "block";
                 }
             },
+
             /* The class add/remove functions are used to temporarily apply a "velocity-animating" class to elements while they're animating. */
             addClass: function (element, className) {
                 if (element.classList) {
@@ -17621,6 +18071,7 @@ return function (global, window, document, undefined) {
                     element.className += (element.className.length ? " " : "") + className;
                 }
             },
+
             removeClass: function (element, className) {
                 if (element.classList) {
                     element.classList.remove(className);
@@ -18108,7 +18559,7 @@ return function (global, window, document, undefined) {
                 /* Treat a number as a duration. Parse it out. */
                 /* Note: The following RegEx will return true if passed an array with a number as its first item.
                    Thus, arrays are skipped from this check. */
-                if (!Type.isArray(arguments[i]) && (/fast|normal|slow/i.test(arguments[i].toString()) || /^\d/.test(arguments[i]))) {
+                if (!Type.isArray(arguments[i]) && (/^(fast|normal|slow)$/i.test(arguments[i]) || /^\d/.test(arguments[i]))) {
                     options.duration = arguments[i];
                 /* Treat strings and arrays as easings. */
                 } else if (Type.isString(arguments[i]) || Type.isArray(arguments[i])) {
@@ -18202,10 +18653,10 @@ return function (global, window, document, undefined) {
 
                             if (options !== undefined && activeCall[2].queue !== queueName) {
                                 return true;
-                            }  
+                            }
 
                             /* Iterate through the calls targeted by the stop command. */
-                            $.each(elements, function(l, element) {                                
+                            $.each(elements, function(l, element) {
                                 /* Check that this call was applied to the target element. */
                                 if (element === activeElement) {
                                     /* Optionally clear the remaining queued calls. */
@@ -18259,21 +18710,21 @@ return function (global, window, document, undefined) {
                     action = "start";
 
                 /****************
-                    Sequences
+                    Redirects
                 ****************/
 
-                /* Check if a string matches a registered sequence (see Sequences above). */
-                } else if (Type.isString(propertiesMap) && Velocity.Sequences[propertiesMap]) {
+                /* Check if a string matches a registered redirect (see Redirects above). */
+                } else if (Type.isString(propertiesMap) && Velocity.Redirects[propertiesMap]) {
                     var opts = $.extend({}, options),
                         durationOriginal = opts.duration,
                         delayOriginal = opts.delay || 0;
 
                     /* If the backwards option was passed in, reverse the element set so that elements animate from the last to the first. */
                     if (opts.backwards === true) {
-                        elements = elements.reverse();
+                        elements = $.extend(true, [], elements).reverse();
                     }
 
-                    /* Individually trigger the sequence for each element in the set to prevent users from having to handle iteration logic in their sequence. */
+                    /* Individually trigger the redirect for each element in the set to prevent users from having to handle iteration logic in their redirect. */
                     $.each(elements, function(elementIndex, element) {
                         /* If the stagger option was passed in, successively delay each element by the stagger value (in ms). Retain the original delay value. */
                         if (parseFloat(opts.stagger)) {
@@ -18290,21 +18741,21 @@ return function (global, window, document, undefined) {
 
                             /* For each element, take the greater duration of: A) animation completion percentage relative to the original duration,
                                B) 75% of the original duration, or C) a 200ms fallback (in case duration is already set to a low value).
-                               The end result is a baseline of 75% of the sequence's duration that increases/decreases as the end of the element set is approached. */
+                               The end result is a baseline of 75% of the redirect's duration that increases/decreases as the end of the element set is approached. */
                             opts.duration = Math.max(opts.duration * (opts.backwards ? 1 - elementIndex/elementsLength : (elementIndex + 1) / elementsLength), opts.duration * 0.75, 200);
                         }
 
-                        /* Pass in the call's opts object so that the sequence can optionally extend it. It defaults to an empty object instead of null to
-                           reduce the opts checking logic required inside the sequence. */
-                        Velocity.Sequences[propertiesMap].call(element, element, opts || {}, elementIndex, elementsLength, elements, promiseData.promise ? promiseData : undefined);
+                        /* Pass in the call's opts object so that the redirect can optionally extend it. It defaults to an empty object instead of null to
+                           reduce the opts checking logic required inside the redirect. */
+                        Velocity.Redirects[propertiesMap].call(element, element, opts || {}, elementIndex, elementsLength, elements, promiseData.promise ? promiseData : undefined);
                     });
 
-                    /* Since the animation logic resides within the sequence's own code, abort the remainder of this call.
+                    /* Since the animation logic resides within the redirect's own code, abort the remainder of this call.
                        (The performance overhead up to this point is virtually non-existant.) */
                     /* Note: The jQuery call chain is kept intact by returning the complete element set. */
                     return getChain();
                 } else {
-                    var abortError = "Velocity: First argument (" + propertiesMap + ") was not a property map, a known action, or a registered sequence. Aborting.";
+                    var abortError = "Velocity: First argument (" + propertiesMap + ") was not a property map, a known action, or a registered redirect. Aborting.";
 
                     if (promiseData.promise) {
                         promiseData.rejecter(new Error(abortError));
@@ -18371,7 +18822,7 @@ return function (global, window, document, undefined) {
             /******************
                Element Init
             ******************/
-            
+
             if (Data(element) === undefined) {
                 Velocity.init(element);
             }
@@ -18401,27 +18852,37 @@ return function (global, window, document, undefined) {
                Option: Duration
             *********************/
 
-            /* In mock mode, all animations are forced to 1ms so that they occur immediately upon the next rAF tick. */
-            if (Velocity.mock === true) {
-                opts.duration = 1;
-            } else {
-                /* Support for jQuery's named durations. */
-                switch (opts.duration.toString().toLowerCase()) {
-                    case "fast":
-                        opts.duration = 200;
-                        break;
+            /* Support for jQuery's named durations. */
+            switch (opts.duration.toString().toLowerCase()) {
+                case "fast":
+                    opts.duration = 200;
+                    break;
 
-                    case "normal":
-                        opts.duration = DURATION_DEFAULT;
-                        break;
+                case "normal":
+                    opts.duration = DURATION_DEFAULT;
+                    break;
 
-                    case "slow":
-                        opts.duration = 600;
-                        break;
+                case "slow":
+                    opts.duration = 600;
+                    break;
 
-                    default:
-                        /* Remove the potential "ms" suffix and default to 1 if the user is attempting to set a duration of 0 (in order to produce an immediate style change). */
-                        opts.duration = parseFloat(opts.duration) || 1;
+                default:
+                    /* Remove the potential "ms" suffix and default to 1 if the user is attempting to set a duration of 0 (in order to produce an immediate style change). */
+                    opts.duration = parseFloat(opts.duration) || 1;
+            }
+
+            /************************
+               Global Option: Mock
+            ************************/
+
+            if (Velocity.mock !== false) {
+                /* In mock mode, all animations are forced to 1ms so that they occur immediately upon the next rAF tick.
+                   Alternatively, a multiplier can be passed in to time remap all delays and durations. */
+                if (Velocity.mock === true) {
+                    opts.duration = opts.delay = 1;
+                } else {
+                    opts.duration *= parseFloat(Velocity.mock) || 1;
+                    opts.delay *= parseFloat(Velocity.mock) || 1;
                 }
             }
 
@@ -18463,7 +18924,7 @@ return function (global, window, document, undefined) {
                 }
             }
 
-            if (opts.visibility) {
+            if (opts.visibility !== undefined && opts.visibility !== null) {
                 opts.visibility = opts.visibility.toString().toLowerCase();
             }
 
@@ -18753,7 +19214,17 @@ return function (global, window, document, undefined) {
 
                                 /* Inject the RGB component tweens into propertiesMap. */
                                 for (var i = 0; i < colorComponents.length; i++) {
-                                    propertiesMap[property + colorComponents[i]] = [ endValueRGB[i], easing, startValueRGB ? startValueRGB[i] : startValueRGB ];
+                                    var dataArray = [ endValueRGB[i] ];
+
+                                    if (easing) {
+                                        dataArray.push(easing);
+                                    }
+
+                                    if (startValueRGB !== undefined) {
+                                        dataArray.push(startValueRGB[i]);
+                                    }
+
+                                    propertiesMap[property + colorComponents[i]] = dataArray;
                                 }
 
                                 /* Remove the intermediary shorthand property entry now that we've processed it. */
@@ -18797,7 +19268,7 @@ return function (global, window, document, undefined) {
                         /* If the display option is being set to a non-"none" (e.g. "block") and opacity (filter on IE<=8) is being
                            animated to an endValue of non-zero, the user's intention is to fade in from invisible, thus we forcefeed opacity
                            a startValue of 0 if its startValue hasn't already been sourced by value transferring or prior forcefeeding. */
-                        if (((opts.display !== undefined && opts.display !== null && opts.display !== "none") || (opts.visibility && opts.visibility !== "hidden")) && /opacity|filter/.test(property) && !startValue && endValue !== 0) {
+                        if (((opts.display !== undefined && opts.display !== null && opts.display !== "none") || (opts.visibility !== undefined && opts.visibility !== "hidden")) && /opacity|filter/.test(property) && !startValue && endValue !== 0) {
                             startValue = 0;
                         }
 
@@ -18850,7 +19321,7 @@ return function (global, window, document, undefined) {
                             var unitType,
                                 numericValue;
 
-                            numericValue = (value || 0)
+                            numericValue = (value || "0")
                                 .toString()
                                 .toLowerCase()
                                 /* Match the unit type at the end of the value. */
@@ -18956,7 +19427,7 @@ return function (global, window, document, undefined) {
                             /***************************
                                Element-Specific Units
                             ***************************/
-                             
+
                             /* Note: IE8 rounds to the nearest pixel when returning CSS values, thus we perform conversions using a measurement
                                of 100 (instead of 1) to give our ratios a precision of at least 2 decimal values. */
                             var measurement = 100,
@@ -18964,7 +19435,7 @@ return function (global, window, document, undefined) {
 
                             if (!sameEmRatio || !samePercentRatio) {
                                 var dummy = Data(element).isSVG ? document.createElementNS("http://www.w3.org/2000/svg", "rect") : document.createElement("div");
-                                
+
                                 Velocity.init(dummy);
                                 sameRatioIndicators.myParent.appendChild(dummy);
 
@@ -18977,7 +19448,7 @@ return function (global, window, document, undefined) {
                                 Velocity.CSS.setPropertyValue(dummy, "position", sameRatioIndicators.position);
                                 Velocity.CSS.setPropertyValue(dummy, "fontSize", sameRatioIndicators.fontSize);
                                 Velocity.CSS.setPropertyValue(dummy, "boxSizing", "content-box");
-                                
+
                                 /* width and height act as our proxy properties for measuring the horizontal and vertical % ratios. */
                                 $.each([ "minWidth", "maxWidth", "width", "minHeight", "maxHeight", "height" ], function(i, property) {
                                     Velocity.CSS.setPropertyValue(dummy, property, measurement + "%");
@@ -18989,7 +19460,7 @@ return function (global, window, document, undefined) {
                                 unitRatios.percentToPxWidth = callUnitConversionData.lastPercentToPxWidth = (parseFloat(CSS.getPropertyValue(dummy, "width", null, true)) || 1) / measurement; /* GET */
                                 unitRatios.percentToPxHeight = callUnitConversionData.lastPercentToPxHeight = (parseFloat(CSS.getPropertyValue(dummy, "height", null, true)) || 1) / measurement; /* GET */
                                 unitRatios.emToPx = callUnitConversionData.lastEmToPx = (parseFloat(CSS.getPropertyValue(dummy, "paddingLeft")) || 1) / measurement; /* GET */
-                                
+
                                 sameRatioIndicators.myParent.removeChild(dummy);
                             } else {
                                 unitRatios.emToPx = callUnitConversionData.lastEmToPx;
@@ -19048,7 +19519,7 @@ return function (global, window, document, undefined) {
                                 /* By this point, we cannot avoid unit conversion (it's undesirable since it causes layout thrashing).
                                    If we haven't already, we trigger calculateUnitRatios(), which runs once per element per call. */
                                 elementUnitConversionData = elementUnitConversionData || calculateUnitRatios();
-                                
+
                                 /* The following RegEx matches CSS properties that have their % values measured relative to the x-axis. */
                                 /* Note: W3C spec mandates that all of margin and padding's properties (even top and bottom) are %-relative to the *width* of the parent element. */
                                 var axis = (/margin|padding|left|right|width|text|word|letter/i.test(property) || /X$/.test(property) || property === "x") ? "x" : "y";
@@ -19269,11 +19740,12 @@ return function (global, window, document, undefined) {
                    isn't parsed until then as well, the current call's delay option must be explicitly passed into the reverse
                    call so that the delay logic that occurs inside *Pre-Queueing* can process it. */
                 var reverseOptions = {
-                    delay: opts.delay
+                    delay: opts.delay,
+                    progress: opts.progress
                 };
 
-                /* If a complete callback was passed into this call, transfer it to the loop sequence's final "reverse" call
-                   so that it's triggered when the entire sequence is complete (and not when the very first animation is complete). */
+                /* If a complete callback was passed into this call, transfer it to the loop redirect's final "reverse" call
+                   so that it's triggered when the entire redirect is complete (and not when the very first animation is complete). */
                 if (x === reverseCallsCount - 1) {
                     reverseOptions.display = opts.display;
                     reverseOptions.visibility = opts.visibility;
@@ -19301,6 +19773,7 @@ return function (global, window, document, undefined) {
         Timing
     **************/
 
+    /* Ticker function. */
     var ticker = window.requestAnimationFrame || rAFShim;
 
     /* Inactive browser tabs pause rAF, which results in all active animations immediately sprinting to their completion states when the tab refocuses.
@@ -19359,7 +19832,8 @@ return function (global, window, document, undefined) {
                 var callContainer = Velocity.State.calls[i],
                     call = callContainer[0],
                     opts = callContainer[2],
-                    timeStart = callContainer[3];
+                    timeStart = callContainer[3],
+                    firstTick = !!timeStart;
 
                 /* If timeStart is undefined, then this is the first time that this call has been processed by tick().
                    We assign timeStart now so that its value is as close to the real animation start time as possible.
@@ -19414,7 +19888,7 @@ return function (global, window, document, undefined) {
                     }
 
                     /* Same goes with the visibility option, but its "none" equivalent is "hidden". */
-                    if (opts.visibility && opts.visibility !== "hidden") {
+                    if (opts.visibility !== undefined && opts.visibility !== "hidden") {
                         CSS.setPropertyValue(element, "visibility", opts.visibility);
                     }
 
@@ -19443,6 +19917,11 @@ return function (global, window, document, undefined) {
                             /* Otherwise, calculate currentValue based on the current delta from startValue. */
                             } else {
                                 currentValue = tween.startValue + ((tween.endValue - tween.startValue) * easing(percentComplete));
+
+                                /* If no value change is occurring, don't proceed with DOM updating. */
+                                if (!firstTick && (currentValue === tween.currentValue)) {
+                                    continue;
+                                }
                             }
 
                             tween.currentValue = currentValue;
@@ -19528,9 +20007,10 @@ return function (global, window, document, undefined) {
                 if (opts.display !== undefined && opts.display !== "none") {
                     Velocity.State.calls[i][2].display = false;
                 }
-                if (opts.visibility && opts.visibility !== "hidden") {
+                if (opts.visibility !== undefined && opts.visibility !== "hidden") {
                     Velocity.State.calls[i][2].visibility = false;
                 }
+
 
                 /* Pass the elements and the timing data (percentComplete, msRemaining, and timeStart) into the progress callback. */
                 if (opts.progress) {
@@ -19598,7 +20078,7 @@ return function (global, window, document, undefined) {
                an element's CSS values and thereby cause Velocity's cached value data to go stale. To detect if a queue entry was initiated by Velocity,
                we check for the existence of our special Velocity.queueEntryFlag declaration, which minifiers won't rename since the flag
                is assigned to jQuery's global $ object and thus exists out of Velocity's own scope. */
-            if ($.queue(element)[1] === undefined || !/\.velocityQueueEntryFlag/i.test($.queue(element)[1])) {
+            if (opts.loop !== true && ($.queue(element)[1] === undefined || !/\.velocityQueueEntryFlag/i.test($.queue(element)[1]))) {
                 /* The element may have been deleted. Ensure that its data cache still exists before acting on it. */
                 if (Data(element)) {
                     Data(element).isAnimating = false;
@@ -19734,12 +20214,12 @@ return function (global, window, document, undefined) {
     }
 
     /***********************
-       Packaged Sequences
+       Packaged Redirects
     ***********************/
 
     /* slideUp, slideDown */
     $.each([ "Down", "Up" ], function(i, direction) {
-        Velocity.Sequences["slide" + direction] = function (element, options, elementsIndex, elementsSize, elements, promiseData) {
+        Velocity.Redirects["slide" + direction] = function (element, options, elementsIndex, elementsSize, elements, promiseData) {
             var opts = $.extend({}, options),
                 begin = opts.begin,
                 complete = opts.complete,
@@ -19752,27 +20232,27 @@ return function (global, window, document, undefined) {
                 opts.display = (direction === "Down" ? (Velocity.CSS.Values.getDisplayType(element) === "inline" ? "inline-block" : "block") : "none");
             }
 
-            opts.begin = function () {
+            opts.begin = function() {
                 /* If the user passed in a begin callback, fire it now. */
                 begin && begin.call(elements, elements);
-
-                /* Force vertical overflow content to clip so that sliding works as expected. */
-                inlineValues.overflow = element.style.overflow;
-                element.style.overflow = "hidden";
 
                 /* Cache the elements' original vertical dimensional property values so that we can animate back to them. */
                 for (var property in computedValues) {
                     /* Cache all inline values, we reset to upon animation completion. */
                     inlineValues[property] = element.style[property];
 
-                    /* For slideDown, use forcefeeding to animate all vertical properties from 0. For slideUp, 
+                    /* For slideDown, use forcefeeding to animate all vertical properties from 0. For slideUp,
                        use forcefeeding to start from computed values and animate down to 0. */
                     var propertyValue = Velocity.CSS.getPropertyValue(element, property);
                     computedValues[property] = (direction === "Down") ? [ propertyValue, 0 ] : [ 0, propertyValue ];
                 }
+
+                /* Force vertical overflow content to clip so that sliding works as expected. */
+                inlineValues.overflow = element.style.overflow;
+                element.style.overflow = "hidden";
             }
 
-            opts.complete = function () {
+            opts.complete = function() {
                 /* Reset element to its pre-slide inline values once its slide animation is complete. */
                 for (var property in inlineValues) {
                     element.style[property] = inlineValues[property];
@@ -19789,12 +20269,12 @@ return function (global, window, document, undefined) {
 
     /* fadeIn, fadeOut */
     $.each([ "In", "Out" ], function(i, direction) {
-        Velocity.Sequences["fade" + direction] = function (element, options, elementsIndex, elementsSize, elements, promiseData) {
+        Velocity.Redirects["fade" + direction] = function (element, options, elementsIndex, elementsSize, elements, promiseData) {
             var opts = $.extend({}, options),
                 propertiesMap = { opacity: (direction === "In") ? 1 : 0 },
                 originalComplete = opts.complete;
 
-            /* Since sequences are triggered individually for each element in the animated set, avoid repeatedly triggering
+            /* Since redirects are triggered individually for each element in the animated set, avoid repeatedly triggering
                callbacks by firing them only when the final element has been reached. */
             if (elementsIndex !== elementsSize - 1) {
                 opts.complete = opts.begin = null;
@@ -19826,56 +20306,83 @@ return function (global, window, document, undefined) {
    Known Issues
 ******************/
 
-/* When animating height/width to a % value on an element *without* box-sizing:border-box and *with* visible scrollbars
-on *both* axes, the opposite axis (e.g. height vs width) will be shortened by the height/width of its scrollbar. */
 /* The CSS spec mandates that the translateX/Y/Z transforms are %-relative to the element itself -- not its parent.
 Velocity, however, doesn't make this distinction. Thus, converting to or from the % unit with these subproperties
 will produce an inaccurate conversion value. The same issue exists with the cx/cy attributes of SVG circles and ellipses. */;/**********************
    Velocity UI Pack
 **********************/
 
-/* VelocityJS.org UI Pack (4.1.4). (C) 2014 Julian Shapiro. MIT @license: en.wikipedia.org/wiki/MIT_License. Portions copyright Daniel Eden, Christian Pucci. */
+/* VelocityJS.org UI Pack (5.0.0). (C) 2014 Julian Shapiro. MIT @license: en.wikipedia.org/wiki/MIT_License. Portions copyright Daniel Eden, Christian Pucci. */
 
-;(function (factory) {    
+;(function (factory) {
     /* CommonJS module. */
-    if (typeof module === "object" && typeof module.exports === "object") {
+    if (typeof require === "function" && typeof exports === "object" ) {
         module.exports = factory();
     /* AMD module. */
     } else if (typeof define === "function" && define.amd) {
         define([ "velocity" ], factory);
     /* Browser globals. */
-    } else {        
+    } else {
         factory();
     }
 }(function() {
 return function (global, window, document, undefined) {
 
-    /**************
+    /*************
         Checks
-    **************/
+    *************/
 
     if (!global.Velocity || !global.Velocity.Utilities) {
         window.console && console.log("Velocity UI Pack: Velocity must be loaded first. Aborting.");
         return;
-    } else if (!global.Velocity.version || (global.Velocity.version.major <= 0 && global.Velocity.version.minor <= 11 && global.Velocity.version.patch < 8)) {
-        var abortError = "Velocity UI Pack: You need to update Velocity (jquery.velocity.js) to a newer version. Visit http://github.com/julianshapiro/velocity.";
+    } else {
+        var Velocity = global.Velocity,
+            $ = Velocity.Utilities;
+    }
 
+    var velocityVersion = Velocity.version,
+        requiredVersion = { major: 1, minor: 1, patch: 0 };
+
+    function greaterSemver (primary, secondary) {
+        var versionInts = [];
+
+        if (!primary || !secondary) { return false; }
+
+        $.each([ primary, secondary ], function(i, versionObject) {
+            var versionIntsComponents = [];
+
+            $.each(versionObject, function(component, value) {
+                while (value.toString().length < 5) {
+                    value = "0" + value;
+                }
+                versionIntsComponents.push(value);
+            });
+
+            versionInts.push(versionIntsComponents.join(""))
+        });
+
+        return (parseFloat(versionInts[0]) > parseFloat(versionInts[1]));
+    }
+
+    if (greaterSemver(requiredVersion, velocityVersion)){
+        var abortError = "Velocity UI Pack: You need to update Velocity (jquery.velocity.js) to a newer version. Visit http://github.com/julianshapiro/velocity.";
         alert(abortError);
         throw new Error(abortError);
     }
 
-    /******************
-       Register UI
-    ******************/
+    /************************
+       Effect Registration
+    ************************/
 
-    global.Velocity.RegisterUI = function (effectName, properties) {
+    /* Note: RegisterUI is a legacy name. */
+    Velocity.RegisterEffect = Velocity.RegisterUI = function (effectName, properties) {
         /* Animate the expansion/contraction of the elements' parent's height for In/Out effects. */
         function animateParentHeight (elements, direction, totalDuration, stagger) {
             var totalHeightDelta = 0,
                 parentNode;
 
             /* Sum the total height (including padding and margin) of all targeted elements. */
-            global.Velocity.Utilities.each(elements.nodeType ? [ elements ] : elements, function(i, element) {
+            $.each(elements.nodeType ? [ elements ] : elements, function(i, element) {
                 if (stagger) {
                     /* Increase the totalDuration by the successive delay amounts produced by the stagger option. */
                     totalDuration += i * stagger;
@@ -19883,84 +20390,99 @@ return function (global, window, document, undefined) {
 
                 parentNode = element.parentNode;
 
-                global.Velocity.Utilities.each([ "height", "paddingTop", "paddingBottom", "marginTop", "marginBottom"], function(i, property) {
-                    totalHeightDelta += parseFloat(global.Velocity.CSS.getPropertyValue(element, property));
+                $.each([ "height", "paddingTop", "paddingBottom", "marginTop", "marginBottom"], function(i, property) {
+                    totalHeightDelta += parseFloat(Velocity.CSS.getPropertyValue(element, property));
                 });
             });
 
             /* Animate the parent element's height adjustment (with a varying duration multiplier for aesthetic benefits). */
-            global.Velocity.animate(
+            Velocity.animate(
                 parentNode,
                 { height: (direction === "In" ? "+" : "-") + "=" + totalHeightDelta },
                 { queue: false, easing: "ease-in-out", duration: totalDuration * (direction === "In" ? 0.6 : 1) }
             );
         }
 
-        /* Register a custom sequence for each effect. */
-        global.Velocity.Sequences[effectName] = function (element, sequenceOptions, elementsIndex, elementsSize, elements, promiseData) {
+        /* Register a custom redirect for each effect. */
+        Velocity.Redirects[effectName] = function (element, redirectOptions, elementsIndex, elementsSize, elements, promiseData) {
             var finalElement = (elementsIndex === elementsSize - 1);
+
+            if (typeof properties.defaultDuration === "function") {
+                properties.defaultDuration = properties.defaultDuration.call(elements, elements);
+            } else {
+                properties.defaultDuration = parseFloat(properties.defaultDuration);
+            }
 
             /* Iterate through each effect's call array. */
             for (var callIndex = 0; callIndex < properties.calls.length; callIndex++) {
                 var call = properties.calls[callIndex],
                     propertyMap = call[0],
-                    sequenceDuration = (sequenceOptions.duration || properties.defaultDuration || 1000),
+                    redirectDuration = (redirectOptions.duration || properties.defaultDuration || 1000),
                     durationPercentage = call[1],
                     callOptions = call[2] || {},
                     opts = {};
 
                 /* Assign the whitelisted per-call options. */
-                opts.duration = sequenceDuration * (durationPercentage || 1);
-                opts.queue = sequenceOptions.queue || "";
+                opts.duration = redirectDuration * (durationPercentage || 1);
+                opts.queue = redirectOptions.queue || "";
                 opts.easing = callOptions.easing || "ease";
-                opts.delay = callOptions.delay || 0;
+                opts.delay = parseFloat(callOptions.delay) || 0;
                 opts._cacheValues = callOptions._cacheValues || true;
 
                 /* Special processing for the first effect call. */
                 if (callIndex === 0) {
-                    /* If a delay was passed into the sequence, combine it with the first call's delay. */
-                    opts.delay += (sequenceOptions.delay || 0);
+                    /* If a delay was passed into the redirect, combine it with the first call's delay. */
+                    opts.delay += (parseFloat(redirectOptions.delay) || 0);
 
                     if (elementsIndex === 0) {
                         opts.begin = function() {
                             /* Only trigger a begin callback on the first effect call with the first element in the set. */
-                            sequenceOptions.begin && sequenceOptions.begin.call(elements, elements);
+                            redirectOptions.begin && redirectOptions.begin.call(elements, elements);
+
+                            var direction = effectName.match(/(In|Out)$/);
+
+                            /* Make "in" transitioning elements invisible immediately so that there's no FOUC between now
+                               and the first RAF tick. */
+                            if ((direction && direction[0] === "In") && propertyMap.opacity !== undefined) {
+                                $.each(elements.nodeType ? [ elements ] : elements, function(i, element) {
+                                    Velocity.CSS.setPropertyValue(element, "opacity", 0);
+                                });
+                            }
 
                             /* Only trigger animateParentHeight() if we're using an In/Out transition. */
-                            var direction = effectName.match(/(In|Out)$/);
-                            if (sequenceOptions.animateParentHeight && direction) {
-                                animateParentHeight(elements, direction[0], sequenceDuration + opts.delay, sequenceOptions.stagger);
+                            if (redirectOptions.animateParentHeight && direction) {
+                                animateParentHeight(elements, direction[0], redirectDuration + opts.delay, redirectOptions.stagger);
                             }
                         }
                     }
 
                     /* If the user isn't overriding the display option, default to "auto" for "In"-suffixed transitions. */
-                    if (sequenceOptions.display !== null) {
-                        if (sequenceOptions.display !== undefined && sequenceOptions.display !== "none") {
-                            opts.display = sequenceOptions.display;
+                    if (redirectOptions.display !== null) {
+                        if (redirectOptions.display !== undefined && redirectOptions.display !== "none") {
+                            opts.display = redirectOptions.display;
                         } else if (/In$/.test(effectName)) {
                             /* Inline elements cannot be subjected to transforms, so we switch them to inline-block. */
-                            var defaultDisplay = global.Velocity.CSS.Values.getDisplayType(element);
+                            var defaultDisplay = Velocity.CSS.Values.getDisplayType(element);
                             opts.display = (defaultDisplay === "inline") ? "inline-block" : defaultDisplay;
                         }
                     }
 
-                    if (sequenceOptions.visibility && sequenceOptions.visibility !== "hidden") {
-                        opts.visibility = sequenceOptions.visibility;
+                    if (redirectOptions.visibility && redirectOptions.visibility !== "hidden") {
+                        opts.visibility = redirectOptions.visibility;
                     }
                 }
 
                 /* Special processing for the last effect call. */
                 if (callIndex === properties.calls.length - 1) {
-                    /* Append promise resolving onto the user's sequence callback. */ 
+                    /* Append promise resolving onto the user's redirect callback. */
                     function injectFinalCallbacks () {
-                        if ((sequenceOptions.display === undefined || sequenceOptions.display === "none") && /Out$/.test(effectName)) {
-                            global.Velocity.Utilities.each(elements.nodeType ? [ elements ] : elements, function(i, element) {
-                                global.Velocity.CSS.setPropertyValue(element, "display", "none");
+                        if ((redirectOptions.display === undefined || redirectOptions.display === "none") && /Out$/.test(effectName)) {
+                            $.each(elements.nodeType ? [ elements ] : elements, function(i, element) {
+                                Velocity.CSS.setPropertyValue(element, "display", "none");
                             });
                         }
 
-                        sequenceOptions.complete && sequenceOptions.complete.call(elements, elements);
+                        redirectOptions.complete && redirectOptions.complete.call(elements, elements);
 
                         if (promiseData) {
                             promiseData.resolver(elements || element);
@@ -19974,7 +20496,8 @@ return function (global, window, document, undefined) {
 
                                 /* Format each non-array value in the reset property map to [ value, value ] so that changes apply
                                    immediately and DOM querying is avoided (via forcefeeding). */
-                                if (typeof resetValue === "string" || typeof resetValue === "number") {
+                                /* Note: Don't forcefeed hooks, otherwise their hook roots will be defaulted to their null values. */
+                                if (Velocity.CSS.Hooks.registered[resetProperty] === undefined && (typeof resetValue === "string" || typeof resetValue === "number")) {
                                     properties.reset[resetProperty] = [ properties.reset[resetProperty], properties.reset[resetProperty] ];
                                 }
                             }
@@ -19985,26 +20508,26 @@ return function (global, window, document, undefined) {
                             /* Since the reset option uses up the complete callback, we trigger the user's complete callback at the end of ours. */
                             if (finalElement) {
                                 resetOptions.complete = injectFinalCallbacks;
-                            }  
+                            }
 
-                            global.Velocity.animate(element, properties.reset, resetOptions);
+                            Velocity.animate(element, properties.reset, resetOptions);
                         /* Only trigger the user's complete callback on the last effect call with the last element in the set. */
                         } else if (finalElement) {
                             injectFinalCallbacks();
                         }
                     };
 
-                    if (sequenceOptions.visibility === "hidden") {
-                        opts.visibility = sequenceOptions.visibility;
+                    if (redirectOptions.visibility === "hidden") {
+                        opts.visibility = redirectOptions.visibility;
                     }
                 }
 
-                global.Velocity.animate(element, propertyMap, opts);
+                Velocity.animate(element, propertyMap, opts);
             }
         };
 
         /* Return the Velocity object so that RegisterUI calls can be chained. */
-        return global.Velocity;
+        return Velocity;
     };
 
     /*********************
@@ -20013,8 +20536,8 @@ return function (global, window, document, undefined) {
 
     /* Externalize the packagedEffects data so that they can optionally be modified and re-registered. */
     /* Support: <=IE8: Callouts will have no effect, and transitions will simply fade in/out. IE9/Android 2.3: Most effects are fully supported, the rest fade in/out. All other browsers: full support. */
-    global.Velocity.RegisterUI.packagedEffects = 
-        { 
+    Velocity.RegisterEffect.packagedEffects =
+        {
             /* Animate.css */
             "callout.bounce": {
                 defaultDuration: 550,
@@ -20028,7 +20551,7 @@ return function (global, window, document, undefined) {
             /* Animate.css */
             "callout.shake": {
                 defaultDuration: 800,
-                calls: [ 
+                calls: [
                     [ { translateX: -11 }, 0.125 ],
                     [ { translateX: 11 }, 0.125 ],
                     [ { translateX: -11 }, 0.125 ],
@@ -20042,7 +20565,7 @@ return function (global, window, document, undefined) {
             /* Animate.css */
             "callout.flash": {
                 defaultDuration: 1100,
-                calls: [ 
+                calls: [
                     [ { opacity: [ 0, "easeInOutQuad", 1 ] }, 0.25 ],
                     [ { opacity: [ 1, "easeInOutQuad" ] }, 0.25 ],
                     [ { opacity: [ 0, "easeInOutQuad" ] }, 0.25 ],
@@ -20052,7 +20575,7 @@ return function (global, window, document, undefined) {
             /* Animate.css */
             "callout.pulse": {
                 defaultDuration: 825,
-                calls: [ 
+                calls: [
                     [ { scaleX: 1.1, scaleY: 1.1 }, 0.50 ],
                     [ { scaleX: 1, scaleY: 1 }, 0.50 ]
                 ]
@@ -20060,7 +20583,7 @@ return function (global, window, document, undefined) {
             /* Animate.css */
             "callout.swing": {
                 defaultDuration: 950,
-                calls: [ 
+                calls: [
                     [ { rotateZ: 15 }, 0.20 ],
                     [ { rotateZ: -10 }, 0.20 ],
                     [ { rotateZ: 5 }, 0.20 ],
@@ -20071,7 +20594,7 @@ return function (global, window, document, undefined) {
             /* Animate.css */
             "callout.tada": {
                 defaultDuration: 1000,
-                calls: [ 
+                calls: [
                     [ { scaleX: 0.9, scaleY: 0.9, rotateZ: -3 }, 0.10 ],
                     [ { scaleX: 1.1, scaleY: 1.1, rotateZ: 3 }, 0.10 ],
                     [ { scaleX: 1.1, scaleY: 1.1, rotateZ: -3 }, 0.10 ],
@@ -20098,7 +20621,7 @@ return function (global, window, document, undefined) {
             /* Support: Loses rotation in IE9/Android 2.3 (fades only). */
             "transition.flipXIn": {
                 defaultDuration: 700,
-                calls: [ 
+                calls: [
                     [ { opacity: [ 1, 0 ], transformPerspective: [ 800, 800 ], rotateY: [ 0, -55 ] } ]
                 ],
                 reset: { transformPerspective: 0 }
@@ -20106,7 +20629,7 @@ return function (global, window, document, undefined) {
             /* Support: Loses rotation in IE9/Android 2.3 (fades only). */
             "transition.flipXOut": {
                 defaultDuration: 700,
-                calls: [ 
+                calls: [
                     [ { opacity: [ 0, 1 ], transformPerspective: [ 800, 800 ], rotateY: 55 } ]
                 ],
                 reset: { transformPerspective: 0, rotateY: 0 }
@@ -20114,7 +20637,7 @@ return function (global, window, document, undefined) {
             /* Support: Loses rotation in IE9/Android 2.3 (fades only). */
             "transition.flipYIn": {
                 defaultDuration: 800,
-                calls: [ 
+                calls: [
                     [ { opacity: [ 1, 0 ], transformPerspective: [ 800, 800 ], rotateX: [ 0, -45 ] } ]
                 ],
                 reset: { transformPerspective: 0 }
@@ -20122,7 +20645,7 @@ return function (global, window, document, undefined) {
             /* Support: Loses rotation in IE9/Android 2.3 (fades only). */
             "transition.flipYOut": {
                 defaultDuration: 800,
-                calls: [ 
+                calls: [
                     [ { opacity: [ 0, 1 ], transformPerspective: [ 800, 800 ], rotateX: 25 } ]
                 ],
                 reset: { transformPerspective: 0, rotateX: 0 }
@@ -20131,7 +20654,7 @@ return function (global, window, document, undefined) {
             /* Support: Loses rotation in IE9/Android 2.3 (fades only). */
             "transition.flipBounceXIn": {
                 defaultDuration: 900,
-                calls: [ 
+                calls: [
                     [ { opacity: [ 0.725, 0 ], transformPerspective: [ 400, 400 ], rotateY: [ -10, 90 ] }, 0.50 ],
                     [ { opacity: 0.80, rotateY: 10 }, 0.25 ],
                     [ { opacity: 1, rotateY: 0 }, 0.25 ]
@@ -20142,7 +20665,7 @@ return function (global, window, document, undefined) {
             /* Support: Loses rotation in IE9/Android 2.3 (fades only). */
             "transition.flipBounceXOut": {
                 defaultDuration: 800,
-                calls: [ 
+                calls: [
                     [ { opacity: [ 0.9, 1 ], transformPerspective: [ 400, 400 ], rotateY: -10 }, 0.50 ],
                     [ { opacity: 0, rotateY: 90 }, 0.50 ]
                 ],
@@ -20152,7 +20675,7 @@ return function (global, window, document, undefined) {
             /* Support: Loses rotation in IE9/Android 2.3 (fades only). */
             "transition.flipBounceYIn": {
                 defaultDuration: 850,
-                calls: [ 
+                calls: [
                     [ { opacity: [ 0.725, 0 ], transformPerspective: [ 400, 400 ], rotateX: [ -10, 90 ] }, 0.50 ],
                     [ { opacity: 0.80, rotateX: 10 }, 0.25 ],
                     [ { opacity: 1, rotateX: 0 }, 0.25 ]
@@ -20163,7 +20686,7 @@ return function (global, window, document, undefined) {
             /* Support: Loses rotation in IE9/Android 2.3 (fades only). */
             "transition.flipBounceYOut": {
                 defaultDuration: 800,
-                calls: [ 
+                calls: [
                     [ { opacity: [ 0.9, 1 ], transformPerspective: [ 400, 400 ], rotateX: -15 }, 0.50 ],
                     [ { opacity: 0, rotateX: 90 }, 0.50 ]
                 ],
@@ -20172,7 +20695,7 @@ return function (global, window, document, undefined) {
             /* Magic.css */
             "transition.swoopIn": {
                 defaultDuration: 850,
-                calls: [ 
+                calls: [
                     [ { opacity: [ 1, 0 ], transformOriginX: [ "100%", "50%" ], transformOriginY: [ "100%", "100%" ], scaleX: [ 1, 0 ], scaleY: [ 1, 0 ], translateX: [ 0, -700 ], translateZ: 0 } ]
                 ],
                 reset: { transformOriginX: "50%", transformOriginY: "50%" }
@@ -20180,7 +20703,7 @@ return function (global, window, document, undefined) {
             /* Magic.css */
             "transition.swoopOut": {
                 defaultDuration: 850,
-                calls: [ 
+                calls: [
                     [ { opacity: [ 0, 1 ], transformOriginX: [ "50%", "100%" ], transformOriginY: [ "100%", "100%" ], scaleX: 0, scaleY: 0, translateX: -700, translateZ: 0 } ]
                 ],
                 reset: { transformOriginX: "50%", transformOriginY: "50%", scaleX: 1, scaleY: 1, translateX: 0 }
@@ -20188,42 +20711,42 @@ return function (global, window, document, undefined) {
             /* Magic.css */
             /* Support: Loses rotation in IE9/Android 2.3. (Fades and scales only.) */
             "transition.whirlIn": {
-                defaultDuration: 900,
-                calls: [ 
-                    [ { opacity: [ 1, 0 ], transformOriginX: [ "50%", "50%" ], transformOriginY: [ "50%", "50%" ], scaleX: [ 1, 0 ], scaleY: [ 1, 0 ], rotateY: [ 0, 160 ] } ]
+                defaultDuration: 850,
+                calls: [
+                    [ { opacity: [ 1, 0 ], transformOriginX: [ "50%", "50%" ], transformOriginY: [ "50%", "50%" ], scaleX: [ 1, 0 ], scaleY: [ 1, 0 ], rotateY: [ 0, 160 ] }, 1, { easing: "easeInOutSine" } ]
                 ]
             },
             /* Magic.css */
             /* Support: Loses rotation in IE9/Android 2.3. (Fades and scales only.) */
             "transition.whirlOut": {
-                defaultDuration: 900,
-                calls: [ 
-                    [ { opacity: [ 0, 1 ], transformOriginX: [ "50%", "50%" ], transformOriginY: [ "50%", "50%" ], scaleX: 0, scaleY: 0, rotateY: 160 } ]
+                defaultDuration: 750,
+                calls: [
+                    [ { opacity: [ 0, "easeInOutQuint", 1 ], transformOriginX: [ "50%", "50%" ], transformOriginY: [ "50%", "50%" ], scaleX: 0, scaleY: 0, rotateY: 160 }, 1, { easing: "swing" } ]
                 ],
                 reset: { scaleX: 1, scaleY: 1, rotateY: 0 }
             },
             "transition.shrinkIn": {
-                defaultDuration: 700,
-                calls: [ 
+                defaultDuration: 750,
+                calls: [
                     [ { opacity: [ 1, 0 ], transformOriginX: [ "50%", "50%" ], transformOriginY: [ "50%", "50%" ], scaleX: [ 1, 1.5 ], scaleY: [ 1, 1.5 ], translateZ: 0 } ]
                 ]
             },
             "transition.shrinkOut": {
-                defaultDuration: 650,
-                calls: [ 
+                defaultDuration: 600,
+                calls: [
                     [ { opacity: [ 0, 1 ], transformOriginX: [ "50%", "50%" ], transformOriginY: [ "50%", "50%" ], scaleX: 1.3, scaleY: 1.3, translateZ: 0 } ]
                 ],
                 reset: { scaleX: 1, scaleY: 1 }
             },
             "transition.expandIn": {
                 defaultDuration: 700,
-                calls: [ 
+                calls: [
                     [ { opacity: [ 1, 0 ], transformOriginX: [ "50%", "50%" ], transformOriginY: [ "50%", "50%" ], scaleX: [ 1, 0.625 ], scaleY: [ 1, 0.625 ], translateZ: 0 } ]
                 ]
             },
             "transition.expandOut": {
                 defaultDuration: 700,
-                calls: [ 
+                calls: [
                     [ { opacity: [ 0, 1 ], transformOriginX: [ "50%", "50%" ], transformOriginY: [ "50%", "50%" ], scaleX: 0.5, scaleY: 0.5, translateZ: 0 } ]
                 ],
                 reset: { scaleX: 1, scaleY: 1 }
@@ -20231,7 +20754,7 @@ return function (global, window, document, undefined) {
             /* Animate.css */
             "transition.bounceIn": {
                 defaultDuration: 800,
-                calls: [ 
+                calls: [
                     [ { opacity: [ 1, 0 ], scaleX: [ 1.05, 0.3 ], scaleY: [ 1.05, 0.3 ] }, 0.40 ],
                     [ { scaleX: 0.9, scaleY: 0.9, translateZ: 0 }, 0.20 ],
                     [ { scaleX: 1, scaleY: 1 }, 0.50 ]
@@ -20240,17 +20763,17 @@ return function (global, window, document, undefined) {
             /* Animate.css */
             "transition.bounceOut": {
                 defaultDuration: 800,
-                calls: [ 
-                    [ { scaleX: 0.95, scaleY: 0.95 }, 0.40 ],
-                    [ { scaleX: 1.1, scaleY: 1.1, translateZ: 0 }, 0.40 ],
-                    [ { opacity: [ 0, 1 ], scaleX: 0.3, scaleY: 0.3 }, 0.20 ]
+                calls: [
+                    [ { scaleX: 0.95, scaleY: 0.95 }, 0.35 ],
+                    [ { scaleX: 1.1, scaleY: 1.1, translateZ: 0 }, 0.35 ],
+                    [ { opacity: [ 0, 1 ], scaleX: 0.3, scaleY: 0.3 }, 0.30 ]
                 ],
                 reset: { scaleX: 1, scaleY: 1 }
             },
             /* Animate.css */
             "transition.bounceUpIn": {
                 defaultDuration: 800,
-                calls: [ 
+                calls: [
                     [ { opacity: [ 1, 0 ], translateY: [ -30, 1000 ] }, 0.60, { easing: "easeOutCirc" } ],
                     [ { translateY: 10 }, 0.20 ],
                     [ { translateY: 0 }, 0.20 ]
@@ -20259,7 +20782,7 @@ return function (global, window, document, undefined) {
             /* Animate.css */
             "transition.bounceUpOut": {
                 defaultDuration: 1000,
-                calls: [ 
+                calls: [
                     [ { translateY: 20 }, 0.20 ],
                     [ { opacity: [ 0, "easeInCirc", 1 ], translateY: -1000 }, 0.80 ]
                 ],
@@ -20268,7 +20791,7 @@ return function (global, window, document, undefined) {
             /* Animate.css */
             "transition.bounceDownIn": {
                 defaultDuration: 800,
-                calls: [ 
+                calls: [
                     [ { opacity: [ 1, 0 ], translateY: [ 30, -1000 ] }, 0.60, { easing: "easeOutCirc" } ],
                     [ { translateY: -10 }, 0.20 ],
                     [ { translateY: 0 }, 0.20 ]
@@ -20277,7 +20800,7 @@ return function (global, window, document, undefined) {
             /* Animate.css */
             "transition.bounceDownOut": {
                 defaultDuration: 1000,
-                calls: [ 
+                calls: [
                     [ { translateY: -20 }, 0.20 ],
                     [ { opacity: [ 0, "easeInCirc", 1 ], translateY: 1000 }, 0.80 ]
                 ],
@@ -20286,7 +20809,7 @@ return function (global, window, document, undefined) {
             /* Animate.css */
             "transition.bounceLeftIn": {
                 defaultDuration: 750,
-                calls: [ 
+                calls: [
                     [ { opacity: [ 1, 0 ], translateX: [ 30, -1250 ] }, 0.60, { easing: "easeOutCirc" } ],
                     [ { translateX: -10 }, 0.20 ],
                     [ { translateX: 0 }, 0.20 ]
@@ -20295,7 +20818,7 @@ return function (global, window, document, undefined) {
             /* Animate.css */
             "transition.bounceLeftOut": {
                 defaultDuration: 750,
-                calls: [ 
+                calls: [
                     [ { translateX: 30 }, 0.20 ],
                     [ { opacity: [ 0, "easeInCirc", 1 ], translateX: -1250 }, 0.80 ]
                 ],
@@ -20304,7 +20827,7 @@ return function (global, window, document, undefined) {
             /* Animate.css */
             "transition.bounceRightIn": {
                 defaultDuration: 750,
-                calls: [ 
+                calls: [
                     [ { opacity: [ 1, 0 ], translateX: [ -30, 1250 ] }, 0.60, { easing: "easeOutCirc" } ],
                     [ { translateX: 10 }, 0.20 ],
                     [ { translateX: 0 }, 0.20 ]
@@ -20313,7 +20836,7 @@ return function (global, window, document, undefined) {
             /* Animate.css */
             "transition.bounceRightOut": {
                 defaultDuration: 750,
-                calls: [ 
+                calls: [
                     [ { translateX: -30 }, 0.20 ],
                     [ { opacity: [ 0, "easeInCirc", 1 ], translateX: 1250 }, 0.80 ]
                 ],
@@ -20321,104 +20844,104 @@ return function (global, window, document, undefined) {
             },
             "transition.slideUpIn": {
                 defaultDuration: 900,
-                calls: [ 
+                calls: [
                     [ { opacity: [ 1, 0 ], translateY: [ 0, 20 ], translateZ: 0 } ]
                 ]
             },
             "transition.slideUpOut": {
                 defaultDuration: 900,
-                calls: [ 
+                calls: [
                     [ { opacity: [ 0, 1 ], translateY: -20, translateZ: 0 } ]
                 ],
                 reset: { translateY: 0 }
             },
             "transition.slideDownIn": {
                 defaultDuration: 900,
-                calls: [ 
+                calls: [
                     [ { opacity: [ 1, 0 ], translateY: [ 0, -20 ], translateZ: 0 } ]
                 ]
             },
             "transition.slideDownOut": {
                 defaultDuration: 900,
-                calls: [ 
+                calls: [
                     [ { opacity: [ 0, 1 ], translateY: 20, translateZ: 0 } ]
                 ],
                 reset: { translateY: 0 }
             },
             "transition.slideLeftIn": {
                 defaultDuration: 1000,
-                calls: [ 
+                calls: [
                     [ { opacity: [ 1, 0 ], translateX: [ 0, -20 ], translateZ: 0 } ]
                 ]
             },
             "transition.slideLeftOut": {
                 defaultDuration: 1050,
-                calls: [ 
+                calls: [
                     [ { opacity: [ 0, 1 ], translateX: -20, translateZ: 0 } ]
                 ],
                 reset: { translateX: 0 }
             },
             "transition.slideRightIn": {
                 defaultDuration: 1000,
-                calls: [ 
+                calls: [
                     [ { opacity: [ 1, 0 ], translateX: [ 0, 20 ], translateZ: 0 } ]
                 ]
             },
             "transition.slideRightOut": {
                 defaultDuration: 1050,
-                calls: [ 
+                calls: [
                     [ { opacity: [ 0, 1 ], translateX: 20, translateZ: 0 } ]
                 ],
                 reset: { translateX: 0 }
             },
             "transition.slideUpBigIn": {
                 defaultDuration: 850,
-                calls: [ 
+                calls: [
                     [ { opacity: [ 1, 0 ], translateY: [ 0, 75 ], translateZ: 0 } ]
                 ]
             },
             "transition.slideUpBigOut": {
                 defaultDuration: 800,
-                calls: [ 
+                calls: [
                     [ { opacity: [ 0, 1 ], translateY: -75, translateZ: 0 } ]
                 ],
                 reset: { translateY: 0 }
             },
             "transition.slideDownBigIn": {
                 defaultDuration: 850,
-                calls: [ 
+                calls: [
                     [ { opacity: [ 1, 0 ], translateY: [ 0, -75 ], translateZ: 0 } ]
                 ]
             },
             "transition.slideDownBigOut": {
                 defaultDuration: 800,
-                calls: [ 
+                calls: [
                     [ { opacity: [ 0, 1 ], translateY: 75, translateZ: 0 } ]
                 ],
                 reset: { translateY: 0 }
             },
             "transition.slideLeftBigIn": {
                 defaultDuration: 800,
-                calls: [ 
+                calls: [
                     [ { opacity: [ 1, 0 ], translateX: [ 0, -75 ], translateZ: 0 } ]
                 ]
             },
             "transition.slideLeftBigOut": {
                 defaultDuration: 750,
-                calls: [ 
+                calls: [
                     [ { opacity: [ 0, 1 ], translateX: -75, translateZ: 0 } ]
                 ],
                 reset: { translateX: 0 }
             },
             "transition.slideRightBigIn": {
                 defaultDuration: 800,
-                calls: [ 
+                calls: [
                     [ { opacity: [ 1, 0 ], translateX: [ 0, 75 ], translateZ: 0 } ]
                 ]
             },
             "transition.slideRightBigOut": {
                 defaultDuration: 750,
-                calls: [ 
+                calls: [
                     [ { opacity: [ 0, 1 ], translateX: 75, translateZ: 0 } ]
                 ],
                 reset: { translateX: 0 }
@@ -20426,16 +20949,15 @@ return function (global, window, document, undefined) {
             /* Magic.css */
             "transition.perspectiveUpIn": {
                 defaultDuration: 800,
-                calls: [ 
+                calls: [
                     [ { opacity: [ 1, 0 ], transformPerspective: [ 800, 800 ], transformOriginX: [ 0, 0 ], transformOriginY: [ "100%", "100%" ], rotateX: [ 0, -180 ] } ]
-                ],
-                reset: { transformPerspective: 0, transformOriginX: "50%", transformOriginY: "50%" }
+                ]
             },
             /* Magic.css */
             /* Support: Loses rotation in IE9/Android 2.3 (fades only). */
             "transition.perspectiveUpOut": {
                 defaultDuration: 850,
-                calls: [ 
+                calls: [
                     [ { opacity: [ 0, 1 ], transformPerspective: [ 800, 800 ], transformOriginX: [ 0, 0 ], transformOriginY: [ "100%", "100%" ], rotateX: -180 } ]
                 ],
                 reset: { transformPerspective: 0, transformOriginX: "50%", transformOriginY: "50%", rotateX: 0 }
@@ -20444,7 +20966,7 @@ return function (global, window, document, undefined) {
             /* Support: Loses rotation in IE9/Android 2.3 (fades only). */
             "transition.perspectiveDownIn": {
                 defaultDuration: 800,
-                calls: [ 
+                calls: [
                     [ { opacity: [ 1, 0 ], transformPerspective: [ 800, 800 ], transformOriginX: [ 0, 0 ], transformOriginY: [ 0, 0 ], rotateX: [ 0, 180 ] } ]
                 ],
                 reset: { transformPerspective: 0, transformOriginX: "50%", transformOriginY: "50%" }
@@ -20453,7 +20975,7 @@ return function (global, window, document, undefined) {
             /* Support: Loses rotation in IE9/Android 2.3 (fades only). */
             "transition.perspectiveDownOut": {
                 defaultDuration: 850,
-                calls: [ 
+                calls: [
                     [ { opacity: [ 0, 1 ], transformPerspective: [ 800, 800 ], transformOriginX: [ 0, 0 ], transformOriginY: [ 0, 0 ], rotateX: 180 } ]
                 ],
                 reset: { transformPerspective: 0, transformOriginX: "50%", transformOriginY: "50%", rotateX: 0 }
@@ -20462,7 +20984,7 @@ return function (global, window, document, undefined) {
             /* Support: Loses rotation in IE9/Android 2.3 (fades only). */
             "transition.perspectiveLeftIn": {
                 defaultDuration: 950,
-                calls: [ 
+                calls: [
                     [ { opacity: [ 1, 0 ], transformPerspective: [ 2000, 2000 ], transformOriginX: [ 0, 0 ], transformOriginY: [ 0, 0 ], rotateY: [ 0, -180 ] } ]
                 ],
                 reset: { transformPerspective: 0, transformOriginX: "50%", transformOriginY: "50%" }
@@ -20471,7 +20993,7 @@ return function (global, window, document, undefined) {
             /* Support: Loses rotation in IE9/Android 2.3 (fades only). */
             "transition.perspectiveLeftOut": {
                 defaultDuration: 950,
-                calls: [ 
+                calls: [
                     [ { opacity: [ 0, 1 ], transformPerspective: [ 2000, 2000 ], transformOriginX: [ 0, 0 ], transformOriginY: [ 0, 0 ], rotateY: -180 } ]
                 ],
                 reset: { transformPerspective: 0, transformOriginX: "50%", transformOriginY: "50%", rotateY: 0 }
@@ -20480,7 +21002,7 @@ return function (global, window, document, undefined) {
             /* Support: Loses rotation in IE9/Android 2.3 (fades only). */
             "transition.perspectiveRightIn": {
                 defaultDuration: 950,
-                calls: [ 
+                calls: [
                     [ { opacity: [ 1, 0 ], transformPerspective: [ 2000, 2000 ], transformOriginX: [ "100%", "100%" ], transformOriginY: [ 0, 0 ], rotateY: [ 0, 180 ] } ]
                 ],
                 reset: { transformPerspective: 0, transformOriginX: "50%", transformOriginY: "50%" }
@@ -20489,7 +21011,7 @@ return function (global, window, document, undefined) {
             /* Support: Loses rotation in IE9/Android 2.3 (fades only). */
             "transition.perspectiveRightOut": {
                 defaultDuration: 950,
-                calls: [ 
+                calls: [
                     [ { opacity: [ 0, 1 ], transformPerspective: [ 2000, 2000 ], transformOriginX: [ "100%", "100%" ], transformOriginY: [ 0, 0 ], rotateY: 180 } ]
                 ],
                 reset: { transformPerspective: 0, transformOriginX: "50%", transformOriginY: "50%", rotateY: 0 }
@@ -20497,8 +21019,45 @@ return function (global, window, document, undefined) {
         };
 
     /* Register the packaged effects. */
-    for (var effectName in global.Velocity.RegisterUI.packagedEffects) {
-        global.Velocity.RegisterUI(effectName, global.Velocity.RegisterUI.packagedEffects[effectName]);
+    for (var effectName in Velocity.RegisterEffect.packagedEffects) {
+        Velocity.RegisterEffect(effectName, Velocity.RegisterEffect.packagedEffects[effectName]);
     }
+
+    /*********************
+       Sequence Running
+    **********************/
+
+    /* Sequence calls must use Velocity's single-object arguments syntax. */
+    Velocity.RunSequence = function (originalSequence) {
+        var sequence = $.extend(true, [], originalSequence);
+
+        if (sequence.length > 1) {
+            $.each(sequence.reverse(), function(i, currentCall) {
+                var nextCall = sequence[i + 1];
+
+                if (nextCall) {
+                    /* Parallel sequence calls (indicated via sequenceQueue:false) are triggered
+                       in the previous call's begin callback. Otherwise, chained calls are normally triggered
+                       in the previous call's complete callback. */
+                    var timing = (currentCall.options && currentCall.options.sequenceQueue === false) ? "begin" : "complete",
+                        callbackOriginal = nextCall.options && nextCall.options[timing],
+                        options = {};
+
+                    options[timing] = function() {
+                        var elements = nextCall.elements.nodeType ? [ nextCall.elements ] : nextCall.elements;
+
+                        callbackOriginal && callbackOriginal.call(elements, elements);
+                        Velocity(currentCall);
+                    }
+
+                    nextCall.options = $.extend({}, nextCall.options, options);
+                }
+            });
+
+            sequence.reverse();
+        }
+
+        Velocity(sequence[0]);
+    };
 }((window.jQuery || window.Zepto || window), window, document);
 }));

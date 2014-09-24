@@ -1,6 +1,10 @@
 /*
  * Модификаторы оформления
  */
+scr_xs = 480px
+scr_sm = 768px
+scr_md = 992px
+scr_lg = 1200px
 
 a, input
 	&:focus
@@ -16,9 +20,10 @@ for vx in uppercase lowecase
 
 for vx in left center right
 	.{vx}
-		text-align vx
+		text-align vx !important
 
-value = 5px 10px 15px 20px 25px 30px 35px
+value = 0px 5px 10px 15px 20px 25px 30px
+value_sm = 5px 10px 15px 20px 25px 30px 35px
 
 for vx in margin padding
 	for vy in top left bottom right
@@ -27,8 +32,10 @@ for vx in margin padding
 		for vz, key in xxs xs s m l xl xxl
 			/.{vz}-{vx}-{vy}
 				{vx}-{vy}: value[key] !important
+				@media (min-width: scr_sm)
+					{vx}-{vy}: value_sm[key] !important
 
 for vx in line-height
 	for vz, key in xxs xs s m l xl xxl
 		/.{vz}-{vx}
-			{vx}: value[key] !important
+			{vx}: value_sm[key] !important

@@ -1,0 +1,113 @@
+        <?if($APPLICATION->GetCurDir()=='/'):
+        $APPLICATION->IncludeComponent("bitrix:news.list", "news_index", 
+        array(
+          "IBLOCK_ID"   => 1,
+          "NEWS_COUNT"  => "1",
+          "SORT_BY1"    => "ACTIVE_FROM",
+          "SORT_ORDER1" => "DESC",
+          "DETAIL_URL"  => "/news/#ELEMENT_CODE#/",
+          "CACHE_TYPE"  => "A",
+          "SET_TITLE"   => "N"
+           ),
+           false
+        );
+        endif;?>
+        </article>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<?$APPLICATION->ShowViewContent('footer');?>
+<div id="Nav" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content"><a data-dismiss="modal" href="#" class="close"><?=svg('close')?></a>
+      <div data-variant="russian,english" class="lang-trigger lang-trigger--lang_russian"><span class="lang-trigger__label">RU</span><span class="lang-trigger__carriage"></span><span class="lang-trigger__label">EN</span></div>
+      <div class="nav-popup"><a href="about.html" class="nav-popup__item">О компании</a><a href="news.html" class="nav-popup__item">Новости</a><a href="services.html" class="nav-popup__item">Услуги</a><a href="tech.html" class="nav-popup__item">Технологии</a><a href="projects.html" class="nav-popup__item">Наши проекты</a><a href="partners.html" class="nav-popup__item">Партнеры</a><a href="contacts.html" class="nav-popup__item">Контакты</a></div>
+    </div>
+  </div>
+</div>
+<div id="Sites" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content"><a data-dismiss="modal" href="#" class="close"><?=svg('close')?></a>
+      <div class="modal-title">Сайты холдинга</div>
+      <div class="nav-popup"><a href="#" class="nav-popup__item">ТКС-холдинг</a><a href="#" class="nav-popup__item">аргус пайплайн сервис</a><a href="#" class="nav-popup__item">трубопровод контроль сервис</a><a href="#" class="nav-popup__item">спецнефтегаз-т</a><a href="#" class="nav-popup__item">уиц ронктд “спектр”</a><a href="#" class="nav-popup__item">интера</a><a href="#" class="nav-popup__item">мнпо “спектр”</a><a href="#" class="nav-popup__item">асц сварка стройтэк</a><a href="#" class="nav-popup__item">зто</a></div>
+    </div>
+  </div>
+</div>
+<div id="Search" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content"><a data-dismiss="modal" href="#" class="close"><?=svg('close')?></a>
+      <div class="modal-title">Поиск</div>
+      <form class="search">
+        <input type="text" name="q" class="search__input">
+        <button type="submit" value="" class="search__submit"><?=svg('seach')?>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+<div id="Contacts" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content"><a data-dismiss="modal" href="#" class="close"><?=svg('close')?></a>
+      <div class="modal-title">связаться с нами</div><a href="tel:+78002005001" class="phone">8 800 200 500 1</a>
+      <div class="full-width center"><a href="#" class="form-trigger">напишите нам</a></div>
+      <form class="form">
+        <label>представьтесь, пожалуйста</label>
+        <input name="name" type="text">
+        <label>какую компанию вы представляете</label>
+        <input name="company" type="text">
+        <label>Ваш e-mail</label>
+        <input name="email" type="email">
+        <label>телефон для связи с вами</label>
+        <input name="phone" type="text">
+        <label>ваше сообщение</label>
+        <textarea></textarea>
+        <div class="row">
+          <div class="col-xs-6">
+            <label class="left">введите данный код</label>
+            <div class="captcha"></div>
+          </div>
+          <div class="col-xs-6">
+            <label class="right">в это поле</label>
+            <input name="captcha_word" type="text">
+          </div>
+        </div>
+        <div class="center">
+          <input type="submit" value="Отправить">
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-8 col-sm-3 col-sm-4 col-md-3">
+        <div class="copyright">© 2014 ООО «аргус свар сервис» </div>
+      </div>
+      <div class="col-sm-2 col-sm-3 col-md-2">
+        <div class="contacts"><span>Москва,  ул. усачева, 35А <br></span><a href="mailto:info@argusweld.ru" class="contacts_link">info@argusweld.ru</a></div>
+      </div>
+      <div class="col-sm-2">
+        <div class="map"><a href="#">карта сайта</a></div>
+      </div>
+      <div class="col-xs-4 col-sm-2 col-sm-3 col-md-2 social">
+        <?php
+            $APPLICATION->IncludeComponent("bitrix:menu", "social", 
+            array(
+                "ALLOW_MULTI_SELECT" => "Y",
+                "MENU_CACHE_TYPE"    => "A",
+                "ROOT_MENU_TYPE"     => "social",
+                "MAX_LEVEL"          => "1",
+                ),
+            false);
+        ?>
+      </div>
+      <div class="col-md-3 col-lg-3 visible-md-block visible-lg-block"><a href="http://radia.ru" target="_blank" class="radia"><?=svg('radia')?>
+          <div class="radia__content">разработка сайта <br>radia interactive</div></a></div>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

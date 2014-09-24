@@ -1,13 +1,18 @@
 .sidebar
 	full-width()
-	padding-bottom 80px
 	z-index 10
 	position relative
+	padding-bottom 30px
+	@media (min-width: scr_sm)
+		padding-bottom 80px
 	.logo
 		full-width()
-		margin-bottom 90px
+		@media (min-width: scr_sm)
+			margin-bottom 90px
 		svg
-			max-width 100%
+			max-width 70%
+			@media (min-width: scr_sm)
+				max-width 100%
 	.nav-left
 		full-width()
 		margin-bottom 60px
@@ -31,11 +36,25 @@
 			&:hover
 				color blue
 				text-decoration: none
+.sidebar, article.index-page	
 	.news
 		full-width()
-		max-width 75%
+		text-align: center
+		background #1b1b1b
+		width 110%
+		padding 12px 0 5px
+		margin-left -5%
+		@media (min-width: scr_sm)
+			padding 0
+			width 100%
+			margin-left 0
+			background transparent
+			max-width 75%
+			text-align: left
 		&__item
 			full-width()
+			position relative !important
+
 		&__date
 			color blue2
 			font-size 10px
@@ -47,7 +66,9 @@
 			font-size 13px
 			line-height 16px
 			float left
-			margin-bottom 25px
+			margin-bottom 0
+			@media (min-width: scr_sm)
+				margin-bottom 25px
 			&:hover
 				color blue2
 		&__more
@@ -57,3 +78,10 @@
 			font-weight bold
 			&:hover
 				text-decoration underline
+article.index-page
+	.news
+		height auto !important
+		
+		&__more
+			full-width()
+			margin 10px 0

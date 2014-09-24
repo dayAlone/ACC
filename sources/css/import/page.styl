@@ -1,44 +1,74 @@
 .page
 	padding-bottom 40px
 	color white
+	.xs-center
+		full-width()
+		text-align center
+		@media (min-width: scr_sm)
+			text-align inherit
+	img.map
+		display none
+		@media (min-width: scr_sm)
+			display block
+	img
+		max-width 100%
 	.index &
 		padding-bottom 0
 	&__title
-		font-size 45px
-		line-height 40px
+		font-size 35px
+		line-height 30px
 		color white
 		text-transform: uppercase
 		font-weight: bold
 		position relative
+		margin-top 0
+		@media (min-width: scr_sm)
+			margin-top 20px
+			font-size 45px
+			line-height 40px
 		&:after
 			margin-left 20px
 			content attr(data-more)
 			position absolute
 			left 100%
 			font-weight normal
-			width 100%
 			top -5px
-			font-size 14px
-			line-height 18px
 			color #a3a3a3
 			text-transform none
+			display none
+			@media (min-width: scr_md)
+				display block
+				width 55%
+				font-size 12px
+				line-height 14px
+			@media (min-width: scr_lg)
+				width 100%
+				font-size 14px
+				line-height 18px
 	&__blue-title
 		color blue2
 		margin-bottom 15px
 	&__divider
 		width 100%
 		border-bottom 1px solid rgba(255,255,255,.25)
-		margin 30px 0
+		margin 20px 0
+		@media (min-width: scr_sm)
+			margin 30px 0
 	a
 		color white
 		&:hover
 			color blue2
 			text-decoration: underline
 	p
-		font-size 16px
+		font-size 15px	
+		@media (min-width: scr_sm)
+			font-size 16px
 		font-weight 300
 	h2
 		font-weight 300
+		font-size 22px
+		@media (min-width: scr_sm)
+			font-size 30px
 	h4
 		font-size 12px
 		text-transform: uppercase
@@ -49,11 +79,19 @@
 		margin 20px 0 0
 		font-size 16px
 		list-style none
+		margin-left 20px
+		@media (min-width: scr_sm)
+			margin-left 0
 		li
 			margin-bottom 10px
 			max-width 90%
 			font-weight 300
 			position relative
+			font-size 15px
+			line-height 16px
+			@media (min-width: scr_sm)
+				font-size 16px
+				line-height inherit
 			&:after
 				content ""
 				width 5px
@@ -61,12 +99,16 @@
 				border-radius 5px
 				background blue2
 				position absolute
-				top 8px
+				top 6px
 				left -15px
+				@media (min-width: scr_sm)
+					top 8px
 	big
-		font-size 20px
-		line-height 35px
+		font-size 16px
 		display inline-block
+		@media (min-width: scr_sm)
+			font-size 20px
+			line-height 35px
 	.button
 		display inline-block
 		padding 0 23px
@@ -89,6 +131,10 @@
 		&--big
 			padding 0 33px
 			min-width 216px 
+			max-width 100%
+			@media (min-width: scr_sm)
+				min-width 100px
+				padding 0 15px
 		&--white
 			color white
 			border-color white
@@ -99,21 +145,32 @@
 		text-align center
 	.tech
 		&__item
-			margin-top 30px
+			.row
+				> div:last-of-type
+					padding-left 0
+					@media (min-width: scr_xs)
+						padding-left 15px
+			margin-top 20px
+
 			full-width()
 			background rgba(0,0,0,.45)
-			padding 13px 13px 10px
+			padding 13px 13px 7px
 			t(background)
 			&:hover
 				background #0082dc
 				.tech__link
 					opacity 1
+			@media (min-width: scr_sm)
+				margin-top 30px
+				padding 13px 13px 10px
 		&__image
 			full-width()
-			height 120px
+			height 80px
 			background-size cover
 			background-position center center
 			margin-bottom 7px
+			@media (min-width: scr_sm)
+				height 120px
 		&__title
 			full-width()
 			font-size 14px
@@ -121,8 +178,11 @@
 			line-height 17px
 			padding-bottom 8px
 			font-weight 300
+			&:hover
+				text-decoration none
+				color white
 		&__link
-			padding-left 31px
+			padding-left 23px
 			position relative
 			full-width()
 			line-height 26px
@@ -134,44 +194,78 @@
 			&:hover
 				text-decoration: none
 				color white
+			font-size 8px
+			@media (min-width: scr_xs)
+				padding-left 31px
+				font-size 10px
 			svg
 				position absolute
 				left 0
 				top 0
-				max-width 26px
+				max-width 17px
 				max-height 22px
+				@media (min-width: scr_xs)
+					max-width 26px
+					max-height 22px
 		&__photos
 			left -5px
 			svg
 				max-height 20px
 				top 0px
+	.filter + .services
+		margin-top 20px
+		@media (min-width: scr_sm)
+			display none
+		full-width()
 	.services
 		margin-top 30px
+		width 100%
 		&__image
-			height 100px
+			height 80px
 			full-width()
+			background-repeat no-repeat
+			background-position center center
+			background-size cover
+			@media (min-width: scr_sm)
+				height 100px
 		&__title
 			middle()
-			font-size 18px
+			font-size 12px
 			font-weight bold
 			color #a7a8a8
-			line-height 20px
+			line-height 14px
 			t(color)
+			@media (min-width: scr_sm)
+				font-size 18px
+				line-height 20px
+
 		&__item
+			.row
+				> div:last-of-type
+					padding-left 0
+					padding-right 5px
+					@media (min-width: scr_sm)
+						padding-left 15px
+						padding-right 15px
 			display inline-block
 			width 100%
-			padding 7px 13px
+			padding 7px 13px 0px
 			margin-left -13px
-			line-height 100px
+			line-height 85px
+			@media (min-width: scr_sm)
+				line-height 105px
 			&:hover
-				padding 13px
+				padding 13px 13px 8px
 				margin-top -6px
-				margin-bottom -6px
+				margin-bottom -8px
 				t(background)
 				background black
 				.services__title
 					color white
-	.years
+	.years, .pages
+		display none
+		@media (min-width: scr_sm)
+			display inline-block
 		&__item
 			middle()
 			font-size 11px
@@ -188,6 +282,12 @@
 				border 1px solid blue
 			&--active
 				border 1px solid blue
+	.pages
+		margin-top: 20px
+		&__item
+			font-size 12px
+			line-height 26px
+			height 24px
 	article
 		.news
 			margin-right -7px
@@ -199,22 +299,34 @@
 				font-size 10px
 				color blue2
 			&__picture + .news__date
-				line-height 42px
-				height 40px
+				@media (min-width: scr_sm)
+					line-height 42px
+					height 40px
 			&__title
 				display inline-block
 				font-size 14px
 				line-height 16px
 				font-weight 300
+				&:hover
+					color white
 			&__item
-				width (100/3)%
+				width 100%
+				vertical-align top
 				display inline-block
 				padding 0 7px 14px
+				@media (min-width: scr_sm)
+					width (100/2)%
+				@media (min-width: scr_md)
+					width (100/3)%
 			&__picture
 				full-width()
-				background-size cover
 				background-repeat no-repeat
+				background-position center center
+				background-size cover
 				height 130px
+				display none
+				@media (min-width: scr_sm)
+					display block
 			&__frame
 				padding 15px 15px 12px
 				t(background)
@@ -226,6 +338,8 @@
 						color white
 	.filter
 		full-width()
+		position relative
+		z-index 20
 		background #161616
 		height 37px
 		margin-top 10px
@@ -238,6 +352,10 @@
 			margin-right 20px
 			color #9c9c9c
 			position relative
+			span
+				display none
+				@media (min-width: scr_lg)
+					display inline
 			&:after
 				border-bottom 1px dotted #595959
 				width 100%
@@ -273,11 +391,21 @@
 		margin-left 5px
 		margin-right -10px
 		position relative
+		font-size 12px
+		font-weight bold
+		text-transform: uppercase
+		.news &
+			display inline-block
+			margin-top 10px
+			@media (min-width: scr_sm)
+				display none
 		&__trigger
+			
 			color #9c9c9c
 			z-index: 2
 			position relative
 			padding-right 10px
+			line-height 8px
 			svg
 				margin-left 5px
 				position relative
@@ -294,6 +422,8 @@
 			border-bottom 1px dotted #595959
 			max-height 26px
 			display inline-block
+			&--white
+				color white
 		&__frame
 			background blue
 			display none
