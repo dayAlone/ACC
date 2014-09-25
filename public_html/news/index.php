@@ -36,7 +36,7 @@ array(
    ),
    false
 );
-if(strlen($_REQUEST['ELEMENT_CODE'])>0)
+if(strlen($_REQUEST['ELEMENT_CODE'])>0 && !isset($_GLOBALS['currentNewsSection']))
 {?>
 <script type="text/javascript" charset="utf-8" async defer>
   $(function(){
