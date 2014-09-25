@@ -24,7 +24,15 @@
   <div class="modal-dialog">
     <div class="modal-content"><a data-dismiss="modal" href="#" class="close"><?=svg('close')?></a>
       <div data-variant="russian,english" class="lang-trigger lang-trigger--lang_russian"><span class="lang-trigger__label">RU</span><span class="lang-trigger__carriage"></span><span class="lang-trigger__label">EN</span></div>
-      <div class="nav-popup"><a href="about.html" class="nav-popup__item">О компании</a><a href="news.html" class="nav-popup__item">Новости</a><a href="services.html" class="nav-popup__item">Услуги</a><a href="tech.html" class="nav-popup__item">Технологии</a><a href="projects.html" class="nav-popup__item">Наши проекты</a><a href="partners.html" class="nav-popup__item">Партнеры</a><a href="contacts.html" class="nav-popup__item">Контакты</a></div>
+      <?php
+        $APPLICATION->IncludeComponent("bitrix:menu", "left_popup", 
+        array(
+            "ALLOW_MULTI_SELECT" => "Y",
+            "MENU_CACHE_TYPE"    => "A",
+            "ROOT_MENU_TYPE"     => "left",
+            "MAX_LEVEL"          => "1",
+            ),
+        false);?>
     </div>
   </div>
 </div>
@@ -32,7 +40,15 @@
   <div class="modal-dialog">
     <div class="modal-content"><a data-dismiss="modal" href="#" class="close"><?=svg('close')?></a>
       <div class="modal-title">Сайты холдинга</div>
-      <div class="nav-popup"><a href="#" class="nav-popup__item">ТКС-холдинг</a><a href="#" class="nav-popup__item">аргус пайплайн сервис</a><a href="#" class="nav-popup__item">трубопровод контроль сервис</a><a href="#" class="nav-popup__item">спецнефтегаз-т</a><a href="#" class="nav-popup__item">уиц ронктд “спектр”</a><a href="#" class="nav-popup__item">интера</a><a href="#" class="nav-popup__item">мнпо “спектр”</a><a href="#" class="nav-popup__item">асц сварка стройтэк</a><a href="#" class="nav-popup__item">зто</a></div>
+      <?php
+        $APPLICATION->IncludeComponent("bitrix:menu", "left_popup", 
+        array(
+            "ALLOW_MULTI_SELECT" => "Y",
+            "MENU_CACHE_TYPE"    => "A",
+            "ROOT_MENU_TYPE"     => "sites",
+            "MAX_LEVEL"          => "1",
+            ),
+        false);?>
     </div>
   </div>
 </div>
