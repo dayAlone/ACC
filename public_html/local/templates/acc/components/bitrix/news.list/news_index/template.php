@@ -1,4 +1,4 @@
-<div class="news <?=$arProps['CLASS']?>">
+<div class="news <?=$arParams['CLASS']?>">
 	<?foreach ($arResult['ITEMS'] as $item):?>
 	  <div class="news__item">
 	    <div class="news__date"><?=$item['ACTIVE_FROM']?></div>
