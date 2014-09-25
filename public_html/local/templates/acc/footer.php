@@ -7,7 +7,8 @@
           "SORT_ORDER1" => "DESC",
           "DETAIL_URL"  => "/news/#ELEMENT_CODE#/",
           "CACHE_TYPE"  => "A",
-          "SET_TITLE"   => "N"
+          "SET_TITLE"   => "N",
+          "CLASS"       => "visible-xs"
            ),
            false
         );
