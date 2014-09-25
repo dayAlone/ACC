@@ -33,6 +33,14 @@ $APPLICATION->SetPageProperty('body_class', "about");
   </div>
   <div class="col-sm-6"><img src="/layout/images/map.png" class="map"></div>
 </div>
+<?$APPLICATION->AddViewContent('footer', '
+<div id="contactsMap" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content"><a data-dismiss="modal" href="#" class="close">'.svg('close').'</a>
+      <iframe src="//player.vimeo.com/video/105264011?title=0&amp;byline=0&amp;badge=0&amp;color=0075cb" width="858" height="483" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+    </div>
+  </div>
+</div>');
 <?
 require($_SERVER['DOCUMENT_ROOT'].'/bitrix/footer.php');
 ?>
