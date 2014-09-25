@@ -10,7 +10,7 @@ $APPLICATION->SetPageProperty('body_class', "contacts");
     <div class="xs-center"><a data-toggle="modal" data-target="#contactsMap" href="#contactsMap" class="button button--big button--white">схема проезда</a></div>
   </div>
   <div class="col-sm-4 right">
-    <div class="xs-center"><a data-toggle="modal" data-target="#contactsForm" href="#contactsForm" class="no-margin-top button button--big button--white">напишите нам</a></div>
+    <div class="xs-center"><a data-toggle="modal" data-target="#Feedback" href="#Feedback" class="no-margin-top button button--big button--white">напишите нам</a></div>
   </div>
 </div>
 <?$APPLICATION->AddViewContent('footer', '

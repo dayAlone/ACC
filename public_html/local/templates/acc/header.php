@@ -43,7 +43,7 @@
           <div data-variant="russian,english" class="lang-trigger lang-trigger--lang_russian"><span class="lang-trigger__label">RU</span><span class="lang-trigger__carriage"></span><span class="lang-trigger__label">EN</span></div>
         </div>
         <div class="col-xs-3 col-md-3 col-lg-2"><a href="tel:88002005001" class="phone"><?=svg('phone')?></svg>8 800 200 500 1</a></div>
-        <div class="col-xs-2"><a href="#" class="feedback">Обратная связь</a><a data-toggle="modal" data-target="#Nav" href="#Nav" class="nav-trigger"><span>Меню</span><?=svg('nav')?></a></div>
+        <div class="col-xs-2"><a data-toggle="modal" data-target="#Feedback" href="#Feedback" class="feedback">Обратная связь</a><a data-toggle="modal" data-target="#Nav" href="#Nav" class="nav-trigger"><span>Меню</span><?=svg('nav')?></a></div>
         <div class="col-xs-2">
           <form class="search">
             <input type="text" name="q" class="search__input">

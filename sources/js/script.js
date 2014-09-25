@@ -1,5 +1,5 @@
 (function() {
-  var delay, map, newsInit, size, urlInitial;
+  var delay, getCaptcha, map, newsInit, setCaptcha, size, urlInitial;
 
   delay = function(ms, func) {
     return setTimeout(func, ms);
@@ -44,8 +44,38 @@
     }
   };
 
+  getCaptcha = function() {
+    return $.get('/include/captcha.php', function(data) {
+      return setCaptcha(data);
+    });
+  };
+
+  setCaptcha = function(code) {
+    $('input[name=captcha_code]').val(code);
+    return $('.captcha').css('background-image', "url(/include/captcha.php?captcha_sid=" + code + ")");
+  };
+
   $(document).ready(function() {
     var bgMapInit, closeDropdown, initType, mapInit, openDropdown, timer, x;
+    $('a.captcha_refresh').click(function(e) {
+      getCaptcha();
+      return e.preventDefault();
+    });
+    $('.form').submit(function(e) {
+      var data;
+      data = $(this).serialize();
+      $.post('/include/send.php', data, function(data) {
+        data = $.parseJSON(data);
+        if (data.status === "ok") {
+          $('.form').hide();
+          return $('.form').parents('.modal').find('.success').show();
+        } else if (data.status === "error") {
+          $('input[name=captcha_word]').addClass('parsley-error');
+          return getCaptcha();
+        }
+      });
+      return e.preventDefault();
+    });
     $('.modal').on('show.bs.modal', function(a, b) {
       var id, url;
       url = $(a.relatedTarget).data('url');

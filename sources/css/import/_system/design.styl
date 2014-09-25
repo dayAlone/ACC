@@ -26,6 +26,8 @@ value = 0px 5px 10px 15px 20px 25px 30px
 value_sm = 5px 10px 15px 20px 25px 30px 35px
 
 for vx in margin padding
+	.no-{vx}
+		{vx} 0 !important
 	for vy in top left bottom right
 		.no-{vx}-{vy}
 			{vx}-{vy} 0 !important

@@ -24,6 +24,9 @@ input:focus {
 .right {
   text-align: right !important;
 }
+.no-margin {
+  margin: 0 !important;
+}
 .no-margin-top {
   margin-top: 0 !important;
 }
@@ -259,6 +262,9 @@ input:focus {
   .xxl-margin-right {
     margin-right: 35px !important;
   }
+}
+.no-padding {
+  padding: 0 !important;
 }
 .no-padding-top {
   padding-top: 0 !important;
@@ -890,6 +896,9 @@ article {
     height: 505.80000000000007px;
   }
 }
+#Feedback .modal-dialog {
+  max-width: 600px;
+}
 .modal-content {
   float: left;
   width: 100%;
@@ -1038,6 +1047,11 @@ article {
     display: block;
   }
 }
+#Feedback .form {
+  display: block;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
 .modal .lang-trigger {
   margin: 17px 20px 15px;
 }
@@ -1060,6 +1074,9 @@ article {
   text-align: center;
   text-transform: uppercase;
 }
+.modal .success {
+  display: none;
+}
 .modal .form {
   float: left;
   width: 100%;
@@ -1074,6 +1091,14 @@ article {
   text-align: center;
   font-size: 10px;
   text-transform: uppercase;
+}
+.modal .form .captcha_refresh {
+  float: left;
+  margin-top: 39px;
+}
+.modal .form .captcha_refresh svg {
+  width: 29px;
+  height: 30px;
 }
 .modal .form input[type="text"],
 .modal .form input[type="email"],
@@ -1091,6 +1116,22 @@ article {
   padding-top: 12px;
   line-height: 27px;
   height: 30px;
+}
+@media (min-width: 768px) {
+  .modal .form input[type="text"],
+  .modal .form input[type="email"],
+  .modal .form textarea {
+    padding-top: 8px;
+  }
+}
+.modal .form input[type="text"].parsley-error,
+.modal .form input[type="email"].parsley-error,
+.modal .form textarea.parsley-error {
+  -webkit-box-shadow: 0 0 0 2px #f00;
+  box-shadow: 0 0 0 2px #f00;
+}
+.modal .form .parsley-errors-list {
+  display: none !important;
 }
 .modal .form textarea {
   height: 180px;
@@ -1114,7 +1155,8 @@ article {
   -webkit-border-radius: 30px;
   border-radius: 30px;
   height: 30px;
-  border: 1px solid #00aafa;
+  font-size: 14px;
+  border: 2px solid #0049d3;
   padding: 5px 25px 0;
   font-weight: bold;
   text-transform: uppercase;

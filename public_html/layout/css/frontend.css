@@ -4057,6 +4057,10 @@ input:focus
 {
     text-align: right !important;
 }
+.no-margin
+{
+    margin: 0 !important;
+}
 .no-margin-top
 {
     margin-top: 0 !important;
@@ -4380,6 +4384,10 @@ input:focus
     {
         margin-right: 35px !important;
     }
+}
+.no-padding
+{
+    padding: 0 !important;
 }
 .no-padding-top
 {
@@ -5223,6 +5231,10 @@ article
         height: 505.80000000000007px;
     }
 }
+#Feedback .modal-dialog
+{
+    max-width: 600px;
+}
 .modal-content
 {
     float: left;
@@ -5425,6 +5437,13 @@ article
         display: block;
     }
 }
+#Feedback .form
+{
+    display: block;
+
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
 .modal .lang-trigger
 {
     margin: 17px 20px 15px;
@@ -5458,6 +5477,10 @@ article
     color: #f4f4f4;
     border-bottom: 1px dotted #f4f4f4;
 }
+.modal .success
+{
+    display: none;
+}
 .modal .form
 {
     display: none;
@@ -5478,6 +5501,17 @@ article
 
     text-align: center;
     text-transform: uppercase;
+}
+.modal .form .captcha_refresh
+{
+    float: left;
+
+    margin-top: 39px;
+}
+.modal .form .captcha_refresh svg
+{
+    width: 29px;
+    height: 30px;
 }
 .modal .form input[type='text'],
 .modal .form input[type='email'],
@@ -5502,6 +5536,26 @@ article
        -moz-appearance: none;
             appearance: none;
 }
+@media (min-width: 768px)
+{
+    .modal .form input[type='text'],
+  .modal .form input[type='email'],
+  .modal .form textarea
+    {
+        padding-top: 8px;
+    }
+}
+.modal .form input[type='text'].parsley-error,
+.modal .form input[type='email'].parsley-error,
+.modal .form textarea.parsley-error
+{
+    -webkit-box-shadow: 0 0 0 2px #f00;
+            box-shadow: 0 0 0 2px #f00;
+}
+.modal .form .parsley-errors-list
+{
+    display: none !important;
+}
 .modal .form textarea
 {
     height: 180px;
@@ -5519,6 +5573,7 @@ article
 }
 .modal .form input[type='submit']
 {
+    font-size: 14px;
     font-weight: bold;
 
     display: inline-block;
@@ -5531,7 +5586,7 @@ article
     vertical-align: middle;
     text-transform: uppercase;
 
-    border: 1px solid #00aafa;
+    border: 2px solid #0049d3;
     -webkit-border-radius: 30px;
             border-radius: 30px;
     background: transparent;

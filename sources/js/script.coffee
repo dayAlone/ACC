@@ -27,7 +27,34 @@ $.openModal = (url, id, open)->
 				History.pushState({'url':url}, $(id).find('.text h1').text(), url);
 				window.title = $(id).find('.text h1').text()
 
+getCaptcha = ()->
+	$.get '/include/captcha.php', (data)->
+		setCaptcha data
+
+setCaptcha = (code)->
+	$('input[name=captcha_code]').val(code)
+	$('.captcha').css 'background-image', "url(/include/captcha.php?captcha_sid=#{code})"
+
 $(document).ready ->
+
+
+	$('a.captcha_refresh').click (e)->
+		getCaptcha()
+		e.preventDefault()
+
+	$('.form').submit (e)->
+		data = $(this).serialize()
+		$.post '/include/send.php',
+	        data,
+	        (data) -> 
+	        	data = $.parseJSON(data)
+	        	if data.status == "ok"
+	        		$('.form').hide()
+	        		$('.form').parents('.modal').find('.success').show()
+	        	else if data.status == "error"
+	        		$('input[name=captcha_word]').addClass('parsley-error')
+	        		getCaptcha()
+		e.preventDefault()
 
 	$('.modal').on 'show.bs.modal', (a,b)->
 		url = $(a.relatedTarget).data 'url'

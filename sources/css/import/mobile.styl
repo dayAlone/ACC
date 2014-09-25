@@ -1,3 +1,8 @@
+#Feedback .form
+	display block
+	margin-bottom 0
+	padding-bottom 0
+
 .modal
 	.lang-trigger
 		margin 17px 20px 15px
@@ -17,6 +22,8 @@
 		border-bottom 1px dotted white
 		text-align center
 		text-transform: uppercase
+	.success
+		display none
 	.form
 		full-width()
 		padding-bottom 40px
@@ -28,6 +35,12 @@
 			text-align center
 			font-size 10px
 			text-transform: uppercase
+		.captcha_refresh
+			float: left
+			margin-top 39px
+			svg
+				width 29px
+				height 30px
 		input[type="text"], input[type="email"], textarea
 			border 0
 			appearance none
@@ -38,6 +51,12 @@
 			padding-top 12px
 			line-height 27px
 			height 30px
+			@media (min-width: scr_sm)
+				padding-top 8px
+			&.parsley-error
+				box-shadow 0 0 0 2px red
+		.parsley-errors-list
+			display none !important
 		textarea
 			height 180px
 			text-align left
@@ -53,7 +72,8 @@
 			margin-bottom 20px
 			border-radius 30px
 			height 30px
-			border 1px solid blue2
+			font-size 14px
+			border 2px solid blue
 			padding 5px 25px 0
 			font-weight bold
 			text-transform: uppercase

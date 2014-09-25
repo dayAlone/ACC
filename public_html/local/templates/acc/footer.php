@@ -52,31 +52,18 @@
     <div class="modal-content"><a data-dismiss="modal" href="#" class="close"><?=svg('close')?></a>
       <div class="modal-title">связаться с нами</div><a href="tel:+78002005001" class="phone">8 800 200 500 1</a>
       <div class="full-width center"><a href="#" class="form-trigger">напишите нам</a></div>
-      <form class="form">
-        <label>представьтесь, пожалуйста</label>
-        <input name="name" type="text">
-        <label>какую компанию вы представляете</label>
-        <input name="company" type="text">
-        <label>Ваш e-mail</label>
-        <input name="email" type="email">
-        <label>телефон для связи с вами</label>
-        <input name="phone" type="text">
-        <label>ваше сообщение</label>
-        <textarea></textarea>
-        <div class="row">
-          <div class="col-xs-6">
-            <label class="left">введите данный код</label>
-            <div class="captcha"></div>
-          </div>
-          <div class="col-xs-6">
-            <label class="right">в это поле</label>
-            <input name="captcha_word" type="text">
-          </div>
-        </div>
-        <div class="center">
-          <input type="submit" value="Отправить">
-        </div>
-      </form>
+      <?
+        require($_SERVER['DOCUMENT_ROOT'].'/include/form.php');
+      ?>
+    </div>
+  </div>
+</div>
+<div id="Feedback" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content"><a data-dismiss="modal" href="#" class="close"><?=svg('close')?></a>
+    <?
+      require($_SERVER['DOCUMENT_ROOT'].'/include/form.php');
+    ?>
     </div>
   </div>
 </div>
