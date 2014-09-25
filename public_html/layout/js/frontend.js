@@ -23211,7 +23211,10 @@ if ('undefined' !== typeof window.ParsleyValidator)
         History.pushState({
           'url': urlInitial.url
         }, urlInitial.title, urlInitial.url);
-        return window.title = urlInitial.title;
+        window.title = urlInitial.title;
+      }
+      if ($(this).find('iframe').length > 0) {
+        return $(this).find('iframe').remove();
       }
     });
     $('.lang-trigger__carriage').click(function(e) {

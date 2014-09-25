@@ -65,6 +65,8 @@ $(document).ready ->
 		if urlInitial
 			History.pushState({'url':urlInitial.url}, urlInitial.title, urlInitial.url);
 			window.title = urlInitial.title
+		if $(this).find('iframe').length > 0
+			$(this).find('iframe').remove()
 
 	$('.lang-trigger__carriage').click (e)->
 		el = $(this).parents('.lang-trigger')
