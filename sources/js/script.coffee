@@ -9,10 +9,7 @@ size = ()->
 		newsInit = true
 		$('article .news').isotope
 	  		itemSelector: '.news__item'
-	$('header.toolbar, article.index-page, .news__frame').blurjs
-		source: '.wrap'
-		radius: 15
-		overlay: 'rgba(0,0,0,0.1)'
+	blur()
 
 urlInitial = undefined
 
@@ -64,10 +61,15 @@ addTrigger = ()->
 		
 		e.preventDefault()
 
+blur = ()->
+	$('header.toolbar, article.index-page, .news__frame').blurjs
+		source: '.wrap'
+		radius: 15
+		overlay: 'rgba(0,0,0,0.1)'
 
 $(document).ready ->
 
-	
+	blur()
 
 	addTrigger()
 
@@ -264,7 +266,7 @@ $(document).ready ->
 	x = undefined
 	$(window).resize ->
 		clearTimeout(x)
-		x = delay 400, ()->
+		x = delay 200, ()->
 			size()
    
 
