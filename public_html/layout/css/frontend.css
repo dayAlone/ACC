@@ -6015,7 +6015,7 @@ article
 }
 .page .tech__item:hover
 {
-    background: #0082dc;
+    background: #0082dc !important;
 }
 .page .tech__item:hover .tech__link
 {
