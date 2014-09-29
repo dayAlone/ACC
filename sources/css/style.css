@@ -1957,11 +1957,16 @@ article {
   }
 }
 .sidebar .logo svg {
-  max-width: 70%;
+  max-width: 40%;
 }
 @media (min-width: 768px) {
   .sidebar .logo svg {
-    max-width: 100%;
+    max-width: 120%;
+  }
+}
+@media (min-width: 992px) {
+  .sidebar .logo svg {
+    max-width: 70%;
   }
 }
 .sidebar .nav-left {
@@ -2187,7 +2192,6 @@ article.index-page .news__more {
 .toolbar {
   float: left;
   width: 100%;
-  background-position: top center !important;
   position: relative;
   height: 62px;
   line-height: 63px;

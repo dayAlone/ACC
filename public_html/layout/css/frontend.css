@@ -6683,13 +6683,20 @@ article
 }
 .sidebar .logo svg
 {
-    max-width: 70%;
+    max-width: 40%;
 }
 @media (min-width: 768px)
 {
     .sidebar .logo svg
     {
-        max-width: 100%;
+        max-width: 120%;
+    }
+}
+@media (min-width: 992px)
+{
+    .sidebar .logo svg
+    {
+        max-width: 70%;
     }
 }
 .sidebar .nav-left
@@ -7006,7 +7013,6 @@ article.index-page .news__more
     white-space: nowrap;
 
     background: rgba(0,0,0,.8);
-    background-position: top center !important;
 }
 @media (min-width: 768px)
 {
