@@ -69,7 +69,8 @@ blur = ()->
 
 $(document).ready ->
 
-	blur()
+	$('.wrap').imagesLoaded ()->
+		blur()
 
 	addTrigger()
 

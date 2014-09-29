@@ -93,7 +93,9 @@
 
   $(document).ready(function() {
     var bgMapInit, closeDropdown, initType, mapInit, openDropdown, timer, x;
-    blur();
+    $('.wrap').imagesLoaded(function() {
+      return blur();
+    });
     addTrigger();
     $('a[onclick*=grain_TableAddRow]').click(function() {
       return addTrigger();

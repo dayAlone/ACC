@@ -57,6 +57,8 @@ module.exports = (grunt)->
 				js : '/jquery.browser/dist/jquery.browser.js'
 			hoverIntent :
 				js : '/hoverIntent/jquery.hoverIntent.js'
+			imagesLoaded :
+				js : '/imagesloaded/imagesloaded.pkgd.js'
 
 		for i in x
 			elm = plugins[i]
@@ -76,7 +78,7 @@ module.exports = (grunt)->
 			sources : 'sources'
 			layout  : 'public_html/layout'
 
-		use : loadPlugins [ 'jquery', 'bootstrap', 'browser', 'isotope', 'blurjs', 'fotorama', 'bem', 'hoverIntent', 'history', 'spin', 'velocity', 'parsley' ]
+		use : loadPlugins [ 'jquery', 'bootstrap', 'browser', 'isotope', 'blurjs', 'fotorama', 'imagesLoaded','bem', 'hoverIntent', 'history', 'spin', 'velocity', 'parsley' ]
 
 		files:
 			css:
