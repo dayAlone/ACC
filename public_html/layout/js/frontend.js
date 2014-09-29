@@ -24439,9 +24439,7 @@ if ('undefined' !== typeof window.ParsleyValidator)
 
   $(document).ready(function() {
     var bgMapInit, closeDropdown, initType, mapInit, openDropdown, timer, x;
-    $('.wrap').imagesLoaded(function() {
-      return blur();
-    });
+    blur();
     addTrigger();
     $('a[onclick*=grain_TableAddRow]').click(function() {
       return addTrigger();
