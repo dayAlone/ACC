@@ -17,6 +17,10 @@ module.exports = (grunt)->
 			slick :
 				js  : '/slick/slick/slick.js'
 				css : '/slick/slick/slick.css'
+			blurjs:
+				js : '/blurjs/blur.js'
+			html2canvas:
+				js: '/html2canvas/build/html2canvas.js'
 			spin :
 				js : ['/spin.js/spin.js', '/spin.js/jquery.spin.js']
 			prettyPhoto :
@@ -72,7 +76,7 @@ module.exports = (grunt)->
 			sources : 'sources'
 			layout  : 'public_html/layout'
 
-		use : loadPlugins [ 'jquery', 'bootstrap', 'browser', 'isotope', 'fotorama', 'bem', 'hoverIntent', 'history', 'spin', 'velocity', 'parsley' ]
+		use : loadPlugins [ 'jquery', 'bootstrap', 'browser', 'isotope', 'blurjs', 'fotorama', 'bem', 'hoverIntent', 'history', 'spin', 'velocity', 'parsley' ]
 
 		files:
 			css:
@@ -206,6 +210,11 @@ module.exports = (grunt)->
 		      paths: ['<%= path.sources %>/css/bootstrap/']
 		    files:
 		      "<%= path.sources %>/css/bootstrap.css": "<%= path.sources %>/css/bootstrap/bootstrap.less"
+		  modal:
+		    options:
+		      paths: ['<%= path.layout %>/css/']
+		    files:
+		      "<%= path.layout %>/css/modals.css": "<%= path.sources %>/css/bootstrap/modals.less"
 		    
 
 		# Причесываем CSS

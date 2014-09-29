@@ -216,7 +216,8 @@ article
 	full-width()
 	float right
 	max-width 715px
-	margin-top 240px
+	margin-top 220px
+	padding-top 20px
 	@media (min-width: scr_sm)
 		margin-top 495px
 	h1
@@ -819,10 +820,10 @@ article
 					display block
 			&__frame
 				padding 15px 15px 12px
-				t(background)
+				t(background-color)
 				background rgba(0,0,0,.45)
 				&:hover
-					background #0082dc
+					background #0082dc !important
 					color white
 					.news__date
 						color white
@@ -1102,6 +1103,7 @@ article.index-page
 		padding-top 0
 .toolbar
 	full-width()
+	background-position top center !important
 	position relative
 	height 62px
 	line-height 63px

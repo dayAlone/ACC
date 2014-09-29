@@ -9,6 +9,10 @@ size = ()->
 		newsInit = true
 		$('article .news').isotope
 	  		itemSelector: '.news__item'
+	$('header.toolbar, article.index-page, .news__frame').blurjs
+		source: '.wrap'
+		radius: 15
+		overlay: 'rgba(0,0,0,0.1)'
 
 urlInitial = undefined
 
@@ -35,8 +39,40 @@ setCaptcha = (code)->
 	$('input[name=captcha_code]').val(code)
 	$('.captcha').css 'background-image', "url(/include/captcha.php?captcha_sid=#{code})"
 
+addTrigger = ()->
+	$('.grain-tables-table-edit-admin tbody tr:not(.triggered) td:last-of-type').each ()->
+		$(this).closest('tr').addClass 'triggered'
+		$(this).after "<td><a href='#' class='openMap'>Открыть карту</a></td>"
+
+	$('#mapPopup .adm-btn-save')
+		.click (e)->
+			val = $('#mapPopup input[name="value"]').val()
+			$("input[name='#{$(this).data('id')}']").val "#{val}"
+			$('#mapPopup').modal('hide');
+			e.preventDefault()
+
+	$('a.openMap').off('click').on 'click', (e)->
+		val = $(this).closest('tr').find('input[name*=cords]').val()
+		id = $(this).closest('tr').find('input[name*=cords]').attr 'name'
+		
+		console.log id
+
+		$('#mapPopup .adm-btn-save').data 'id':id
+		
+		$('#mapPopup .modal-content .map').load "/include/map.php?ajax=1&val=#{val}", ()->
+			$('#mapPopup').modal()
+		
+		e.preventDefault()
+
+
 $(document).ready ->
 
+	
+
+	addTrigger()
+
+	$('a[onclick*=grain_TableAddRow]').click ()->
+		addTrigger()
 
 	$('a.captcha_refresh').click (e)->
 		getCaptcha()

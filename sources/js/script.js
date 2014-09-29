@@ -1,5 +1,5 @@
 (function() {
-  var delay, getCaptcha, map, newsInit, setCaptcha, size, urlInitial;
+  var addTrigger, delay, getCaptcha, map, newsInit, setCaptcha, size, urlInitial;
 
   delay = function(ms, func) {
     return setTimeout(func, ms);
@@ -12,10 +12,15 @@
   size = function() {
     if (!newsInit) {
       newsInit = true;
-      return $('article .news').isotope({
+      $('article .news').isotope({
         itemSelector: '.news__item'
       });
     }
+    return $('header.toolbar, article.index-page, .news__frame').blurjs({
+      source: '.wrap',
+      radius: 15,
+      overlay: 'rgba(0,0,0,0.1)'
+    });
   };
 
   urlInitial = void 0;
@@ -55,8 +60,39 @@
     return $('.captcha').css('background-image', "url(/include/captcha.php?captcha_sid=" + code + ")");
   };
 
+  addTrigger = function() {
+    $('.grain-tables-table-edit-admin tbody tr:not(.triggered) td:last-of-type').each(function() {
+      $(this).closest('tr').addClass('triggered');
+      return $(this).after("<td><a href='#' class='openMap'>Открыть карту</a></td>");
+    });
+    $('#mapPopup .adm-btn-save').click(function(e) {
+      var val;
+      val = $('#mapPopup input[name="value"]').val();
+      $("input[name='" + ($(this).data('id')) + "']").val("" + val);
+      $('#mapPopup').modal('hide');
+      return e.preventDefault();
+    });
+    return $('a.openMap').off('click').on('click', function(e) {
+      var id, val;
+      val = $(this).closest('tr').find('input[name*=cords]').val();
+      id = $(this).closest('tr').find('input[name*=cords]').attr('name');
+      console.log(id);
+      $('#mapPopup .adm-btn-save').data({
+        'id': id
+      });
+      $('#mapPopup .modal-content .map').load("/include/map.php?ajax=1&val=" + val, function() {
+        return $('#mapPopup').modal();
+      });
+      return e.preventDefault();
+    });
+  };
+
   $(document).ready(function() {
     var bgMapInit, closeDropdown, initType, mapInit, openDropdown, timer, x;
+    addTrigger();
+    $('a[onclick*=grain_TableAddRow]').click(function() {
+      return addTrigger();
+    });
     $('a.captcha_refresh').click(function(e) {
       getCaptcha();
       return e.preventDefault();
