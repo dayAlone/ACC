@@ -6368,6 +6368,10 @@ article
 
     vertical-align: top;
 }
+.page article .news__item:hover
+{
+    color: #f4f4f4;
+}
 @media (min-width: 768px)
 {
     .page article .news__item
@@ -6405,6 +6409,8 @@ article
 }
 .page article .news__frame
 {
+    overflow: hidden;
+
     padding: 15px 15px 12px;
 
     -webkit-transition-duration: .3s;

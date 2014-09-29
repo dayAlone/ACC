@@ -62,7 +62,7 @@ addTrigger = ()->
 		e.preventDefault()
 
 blur = ()->
-	$('header.toolbar, article.index-page, .news__frame').blurjs
+	$('header.toolbar, article.index-page, .news__frame, .tech__item').blurjs
 		source: '.wrap'
 		radius: 15
 		overlay: 'rgba(0,0,0,0.1)'

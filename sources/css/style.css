@@ -1729,6 +1729,9 @@ article {
   display: inline-block;
   padding: 0 7px 14px;
 }
+.page article .news__item:hover {
+  color: #f4f4f4;
+}
 @media (min-width: 768px) {
   .page article .news__item {
     width: 50%;
@@ -1768,6 +1771,7 @@ article {
   -ms-transition-duration: 0.3s;
   transition-duration: 0.3s;
   background: rgba(0,0,0,0.45);
+  overflow: hidden;
 }
 .page article .news__frame:hover {
   background: #0082dc !important;
