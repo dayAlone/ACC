@@ -147,8 +147,7 @@ if(strlen($_REQUEST['val'])>0)
 				initialize_<?=$x?>()
 		});
 		$('#mapPopup').on('shown.bs.modal', function(){
-			google.maps.event.clearInstanceListeners(window);
-			google.maps.event.clearInstanceListeners(document);
+			$('#mapPopup').off('shown.bs.modal shown.bs.modal');
 		});
 	</script>
 	<?if(!isset($_REQUEST['ajax'])):
