@@ -73,6 +73,14 @@ $(document).ready ->
 
 	addTrigger()
 
+	$('#mapPopup').on 'hide.bs.modal', ()->
+		if window.google != undefined && google.maps != undefined
+			delete google.maps;
+		$('script').each ()->
+	        if this.src.indexOf('googleapis.com/maps') >= 0 || this.src.indexOf('maps.gstatic.com') >= 0 || this.src.indexOf('earthbuilder.googleapis.com') >= 0
+	            $(this).remove();
+
+
 	$('a[onclick*=grain_TableAddRow]').click ()->
 		addTrigger()
 

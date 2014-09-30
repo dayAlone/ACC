@@ -95,6 +95,16 @@
     var bgMapInit, closeDropdown, initType, mapInit, openDropdown, timer, x;
     blur();
     addTrigger();
+    $('#mapPopup').on('hide.bs.modal', function() {
+      if (window.google !== void 0 && google.maps !== void 0) {
+        delete google.maps;
+      }
+      return $('script').each(function() {
+        if (this.src.indexOf('googleapis.com/maps') >= 0 || this.src.indexOf('maps.gstatic.com') >= 0 || this.src.indexOf('earthbuilder.googleapis.com') >= 0) {
+          return $(this).remove();
+        }
+      });
+    });
     $('a[onclick*=grain_TableAddRow]').click(function() {
       return addTrigger();
     });
