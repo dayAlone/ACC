@@ -37,7 +37,7 @@ function MyOnAdminTabControlBegin(&$form)
 			margin-bottom: 20px;
 		}
 	</style>
-	<div id="mapPopup" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade">
+	<div id="mapPopup" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade" data-backdrop="backdrop">
 	  <div class="modal-dialog modal-lg">
 	  	
         <div class="modal-content">
