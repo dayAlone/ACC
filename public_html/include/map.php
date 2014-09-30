@@ -7,11 +7,6 @@ if(strlen($_REQUEST['val'])>0)
 if(!isset($_REQUEST['ajax'])):
 ?>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script>
-	$(function(){
-		$.getScript("http://maps.google.com/maps/api/js?sensor=true&libraries=places&callback=initialize_<?=$x?>")
-	})
-</script>
 <?endif;?>
 <style>
 	  .controls {
@@ -151,5 +146,10 @@ if(!isset($_REQUEST['ajax'])):
 		$('#mapPopup').on('shown.bs.modal', function(){
 			$.getScript("http://maps.google.com/maps/api/js?sensor=true&libraries=places&callback=initialize_<?=$x?>")
 		});
+	</script>
+	<script>
+	$(function(){
+		$.getScript("http://maps.google.com/maps/api/js?sensor=true&libraries=places&callback=initialize_<?=$x?>")
+	})
 	</script>
 </div>
