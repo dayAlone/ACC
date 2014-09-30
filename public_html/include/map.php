@@ -141,7 +141,14 @@ if(strlen($_REQUEST['val'])>0)
 		  map.panTo(position);
 		}
 		$('#mapPopup').on('shown.bs.modal', function(){
-			$.getScript("http://maps.google.com/maps/api/js?sensor=true&libraries=places&callback=initialize_<?=$x?>")
+			if(!google)
+				$.getScript("http://maps.google.com/maps/api/js?sensor=true&libraries=places&callback=initialize_<?=$x?>")
+			else
+				initialize_<?=$x?>()
+		});
+		$('#mapPopup').on('shown.bs.modal', function(){
+			google.maps.event.clearInstanceListeners(window);
+			google.maps.event.clearInstanceListeners(document);
 		});
 	</script>
 	<?if(!isset($_REQUEST['ajax'])):
