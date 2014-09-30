@@ -101,7 +101,8 @@
       }
       return $('script').each(function() {
         if (this.src.indexOf('googleapis.com/maps') >= 0 || this.src.indexOf('maps.gstatic.com') >= 0 || this.src.indexOf('earthbuilder.googleapis.com') >= 0) {
-          return $(this).remove();
+          $(this).remove();
+          return console.log($(this));
         }
       });
     });

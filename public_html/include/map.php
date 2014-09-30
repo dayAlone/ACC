@@ -4,10 +4,7 @@ CModule::IncludeModule("fileman");
 $x = RandString(5);
 if(strlen($_REQUEST['val'])>0)
 	$value = $_REQUEST['val'];
-if(!isset($_REQUEST['ajax'])):
 ?>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<?endif;?>
 <style>
 	  .controls {
 	  	margin-top: 16px;
@@ -147,9 +144,13 @@ if(!isset($_REQUEST['ajax'])):
 			$.getScript("http://maps.google.com/maps/api/js?sensor=true&libraries=places&callback=initialize_<?=$x?>")
 		});
 	</script>
+	<?if(!isset($_REQUEST['ajax'])):
+	?>
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 	<script>
 	$(function(){
 		$.getScript("http://maps.google.com/maps/api/js?sensor=true&libraries=places&callback=initialize_<?=$x?>")
 	})
 	</script>
+	<?endif;?>
 </div>

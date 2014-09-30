@@ -79,6 +79,7 @@ $(document).ready ->
 		$('script').each ()->
 	        if this.src.indexOf('googleapis.com/maps') >= 0 || this.src.indexOf('maps.gstatic.com') >= 0 || this.src.indexOf('earthbuilder.googleapis.com') >= 0
 	            $(this).remove();
+	            console.log($(this));
 
 
 	$('a[onclick*=grain_TableAddRow]').click ()->
