@@ -77,8 +77,11 @@
 .toolbar
 	full-width()
 	position relative
-	height 120px
-	line-height 58px
+	height 61px
+	line-height 63px
+	@media (min-width: scr_md)
+		height 120px
+		line-height 58px
 	z-index 20
 	white-space nowrap
 	background rgba(0,0,0,.5)
@@ -158,7 +161,9 @@
 			svg
 				margin-left 5px
 			span
-				display none
+				display inline
+				@media (min-width: scr_md)
+					display none
 				@media (min-width: scr_lg)
 					display inline
 		&__dropdown
@@ -223,6 +228,15 @@
 		font-size 10px
 		color white
 		font-weight bold
+		&:hover
+			color #084ed0
+	.filials
+		svg
+			middle()
+			position relative
+			top -1px
+			margin-right 9px
+			margin-left -9px
 	.feedback
 		margin 0 25px
 	.search, .phone, .lang-trigger, .feedback, .filials

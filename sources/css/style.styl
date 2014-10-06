@@ -24,20 +24,28 @@ for vx in left center right
 
 value = 0px 5px 10px 15px 20px 25px 30px
 value_sm = 5px 10px 15px 20px 25px 30px 35px
+sizes = scr_xs scr_sm scr_md scr_lg
 
 for vx in margin padding
 	.no-{vx}
 		{vx} 0 !important
+	for vq, key in xs sm md lg
+		@media (min-width: sizes[key])
+			.no-{vx}-{vq}
+				{vx} 0 !important
 	for vy in top left bottom right
 		.no-{vx}-{vy}
 			{vx}-{vy} 0 !important
+		for vq, key in xs sm md lg
+			@media (min-width: sizes[key])
+				.no-{vx}-{vy}-{vq}
+					{vx}-{vy} 0 !important
 		for vz, key in xxs xs s m l xl xxl
 			/.{vz}-{vx}-{vy}
 				{vx}-{vy}: value[key] !important
 				@media (min-width: scr_sm)
 					{vx}-{vy}: value_sm[key] !important
 
-sizes = scr_xs scr_sm scr_md scr_lg
 for vx in center right left
 	for vz, key in xs sm md lg
 		.{vz}-{vx}
@@ -1088,8 +1096,11 @@ article.index-page
 .toolbar
 	full-width()
 	position relative
-	height 120px
-	line-height 58px
+	height 61px
+	line-height 63px
+	@media (min-width: scr_md)
+		height 120px
+		line-height 58px
 	z-index 20
 	white-space nowrap
 	background rgba(0,0,0,.5)
@@ -1169,7 +1180,9 @@ article.index-page
 			svg
 				margin-left 5px
 			span
-				display none
+				display inline
+				@media (min-width: scr_md)
+					display none
 				@media (min-width: scr_lg)
 					display inline
 		&__dropdown
@@ -1234,6 +1247,15 @@ article.index-page
 		font-size 10px
 		color white
 		font-weight bold
+		&:hover
+			color #084ed0
+	.filials
+		svg
+			middle()
+			position relative
+			top -1px
+			margin-right 9px
+			margin-left -9px
 	.feedback
 		margin 0 25px
 	.search, .phone, .lang-trigger, .feedback, .filials

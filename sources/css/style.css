@@ -27,8 +27,48 @@ input:focus {
 .no-margin {
   margin: 0 !important;
 }
+@media (min-width: 480px) {
+  .no-margin-xs {
+    margin: 0 !important;
+  }
+}
+@media (min-width: 768px) {
+  .no-margin-sm {
+    margin: 0 !important;
+  }
+}
+@media (min-width: 992px) {
+  .no-margin-md {
+    margin: 0 !important;
+  }
+}
+@media (min-width: 1200px) {
+  .no-margin-lg {
+    margin: 0 !important;
+  }
+}
 .no-margin-top {
   margin-top: 0 !important;
+}
+@media (min-width: 480px) {
+  .no-margin-top-xs {
+    margin-top: 0 !important;
+  }
+}
+@media (min-width: 768px) {
+  .no-margin-top-sm {
+    margin-top: 0 !important;
+  }
+}
+@media (min-width: 992px) {
+  .no-margin-top-md {
+    margin-top: 0 !important;
+  }
+}
+@media (min-width: 1200px) {
+  .no-margin-top-lg {
+    margin-top: 0 !important;
+  }
 }
 .xxs-margin-top {
   margin-top: 0px !important;
@@ -89,6 +129,26 @@ input:focus {
 .no-margin-left {
   margin-left: 0 !important;
 }
+@media (min-width: 480px) {
+  .no-margin-left-xs {
+    margin-left: 0 !important;
+  }
+}
+@media (min-width: 768px) {
+  .no-margin-left-sm {
+    margin-left: 0 !important;
+  }
+}
+@media (min-width: 992px) {
+  .no-margin-left-md {
+    margin-left: 0 !important;
+  }
+}
+@media (min-width: 1200px) {
+  .no-margin-left-lg {
+    margin-left: 0 !important;
+  }
+}
 .xxs-margin-left {
   margin-left: 0px !important;
 }
@@ -147,6 +207,26 @@ input:focus {
 }
 .no-margin-bottom {
   margin-bottom: 0 !important;
+}
+@media (min-width: 480px) {
+  .no-margin-bottom-xs {
+    margin-bottom: 0 !important;
+  }
+}
+@media (min-width: 768px) {
+  .no-margin-bottom-sm {
+    margin-bottom: 0 !important;
+  }
+}
+@media (min-width: 992px) {
+  .no-margin-bottom-md {
+    margin-bottom: 0 !important;
+  }
+}
+@media (min-width: 1200px) {
+  .no-margin-bottom-lg {
+    margin-bottom: 0 !important;
+  }
 }
 .xxs-margin-bottom {
   margin-bottom: 0px !important;
@@ -207,6 +287,26 @@ input:focus {
 .no-margin-right {
   margin-right: 0 !important;
 }
+@media (min-width: 480px) {
+  .no-margin-right-xs {
+    margin-right: 0 !important;
+  }
+}
+@media (min-width: 768px) {
+  .no-margin-right-sm {
+    margin-right: 0 !important;
+  }
+}
+@media (min-width: 992px) {
+  .no-margin-right-md {
+    margin-right: 0 !important;
+  }
+}
+@media (min-width: 1200px) {
+  .no-margin-right-lg {
+    margin-right: 0 !important;
+  }
+}
 .xxs-margin-right {
   margin-right: 0px !important;
 }
@@ -266,8 +366,48 @@ input:focus {
 .no-padding {
   padding: 0 !important;
 }
+@media (min-width: 480px) {
+  .no-padding-xs {
+    padding: 0 !important;
+  }
+}
+@media (min-width: 768px) {
+  .no-padding-sm {
+    padding: 0 !important;
+  }
+}
+@media (min-width: 992px) {
+  .no-padding-md {
+    padding: 0 !important;
+  }
+}
+@media (min-width: 1200px) {
+  .no-padding-lg {
+    padding: 0 !important;
+  }
+}
 .no-padding-top {
   padding-top: 0 !important;
+}
+@media (min-width: 480px) {
+  .no-padding-top-xs {
+    padding-top: 0 !important;
+  }
+}
+@media (min-width: 768px) {
+  .no-padding-top-sm {
+    padding-top: 0 !important;
+  }
+}
+@media (min-width: 992px) {
+  .no-padding-top-md {
+    padding-top: 0 !important;
+  }
+}
+@media (min-width: 1200px) {
+  .no-padding-top-lg {
+    padding-top: 0 !important;
+  }
 }
 .xxs-padding-top {
   padding-top: 0px !important;
@@ -328,6 +468,26 @@ input:focus {
 .no-padding-left {
   padding-left: 0 !important;
 }
+@media (min-width: 480px) {
+  .no-padding-left-xs {
+    padding-left: 0 !important;
+  }
+}
+@media (min-width: 768px) {
+  .no-padding-left-sm {
+    padding-left: 0 !important;
+  }
+}
+@media (min-width: 992px) {
+  .no-padding-left-md {
+    padding-left: 0 !important;
+  }
+}
+@media (min-width: 1200px) {
+  .no-padding-left-lg {
+    padding-left: 0 !important;
+  }
+}
 .xxs-padding-left {
   padding-left: 0px !important;
 }
@@ -387,6 +547,26 @@ input:focus {
 .no-padding-bottom {
   padding-bottom: 0 !important;
 }
+@media (min-width: 480px) {
+  .no-padding-bottom-xs {
+    padding-bottom: 0 !important;
+  }
+}
+@media (min-width: 768px) {
+  .no-padding-bottom-sm {
+    padding-bottom: 0 !important;
+  }
+}
+@media (min-width: 992px) {
+  .no-padding-bottom-md {
+    padding-bottom: 0 !important;
+  }
+}
+@media (min-width: 1200px) {
+  .no-padding-bottom-lg {
+    padding-bottom: 0 !important;
+  }
+}
 .xxs-padding-bottom {
   padding-bottom: 0px !important;
 }
@@ -445,6 +625,26 @@ input:focus {
 }
 .no-padding-right {
   padding-right: 0 !important;
+}
+@media (min-width: 480px) {
+  .no-padding-right-xs {
+    padding-right: 0 !important;
+  }
+}
+@media (min-width: 768px) {
+  .no-padding-right-sm {
+    padding-right: 0 !important;
+  }
+}
+@media (min-width: 992px) {
+  .no-padding-right-md {
+    padding-right: 0 !important;
+  }
+}
+@media (min-width: 1200px) {
+  .no-padding-right-lg {
+    padding-right: 0 !important;
+  }
 }
 .xxs-padding-right {
   padding-right: 0px !important;
@@ -2206,8 +2406,8 @@ article.index-page .news__more {
   float: left;
   width: 100%;
   position: relative;
-  height: 120px;
-  line-height: 58px;
+  height: 61px;
+  line-height: 63px;
   z-index: 20;
   white-space: nowrap;
   background: rgba(0,0,0,0.5);
@@ -2218,6 +2418,12 @@ article.index-page .news__more {
 /* Выбор сайтов холдинга */
 /* Тригер мобильного меню */
 /* Тригеры попапов */
+}
+@media (min-width: 992px) {
+  .toolbar {
+    height: 120px;
+    line-height: 58px;
+  }
 }
 @media (min-width: 768px) {
   .toolbar {
@@ -2324,7 +2530,12 @@ article.index-page .news__more {
   margin-left: 5px;
 }
 .toolbar .site-select__trigger span {
-  display: none;
+  display: inline;
+}
+@media (min-width: 992px) {
+  .toolbar .site-select__trigger span {
+    display: none;
+  }
 }
 @media (min-width: 1200px) {
   .toolbar .site-select__trigger span {
@@ -2415,6 +2626,18 @@ article.index-page .news__more {
   font-size: 10px;
   color: #f4f4f4;
   font-weight: bold;
+}
+.toolbar .feedback:hover,
+.toolbar .filials:hover {
+  color: #084ed0;
+}
+.toolbar .filials svg {
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
+  margin-right: 9px;
+  margin-left: -9px;
 }
 .toolbar .feedback {
   margin: 0 25px;

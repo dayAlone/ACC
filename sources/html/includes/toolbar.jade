@@ -1,12 +1,12 @@
 header.toolbar
 	.container
 		.row.no-gutter
-			.col-xs-3
+			.col-xs-3.visible-md.visible-lg
 				a(href="/").logo
 					include ../../../public_html/layout/images/svg/logo.svg
-			.col-xs-9.no-padding-right
+			.col-xs-12.col-md-9.no-padding-right-md
 				.row
-					.col-xs-2
+					.col-xs-3.col-md-2
 						.site-select
 							a.site-select__trigger(href="#")
 								span Все 
@@ -36,16 +36,18 @@ header.toolbar
 							include ../../../public_html/layout/images/svg/phone.svg
 							| 8 800 200 500 1
 
-					.col-xs-5.col-lg-4.right
-						a.filials(href="#") Филиальная сеть
-						a.feedback(href="#") Обратная связь
+					.col-xs-4.col-md-5.col-lg-4.right
+						a.filials(href="#").visible-md-inline.visible-lg-inline
+							include ../../../public_html/layout/images/svg/pin.svg
+							| Филиальная сеть
+						a.feedback(href="#").visible-md-inline.visible-lg-inline Обратная связь
 						a.search-trigger(href="#")
 							include ../../../public_html/layout/images/svg/seach.svg
 						a(data-toggle="modal", data-target="#Nav", href="#Nav").nav-trigger
 							span Меню
 							include ../../../public_html/layout/images/svg/nav.svg
-				.divider
-				.row
+				.divider.visible-md.visible-lg
+				.row.visible-md.visible-lg
 					.col-xs-12
 						nav.nav
 							a(href="about.html").nav__item О компании

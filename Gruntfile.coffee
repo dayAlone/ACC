@@ -129,8 +129,13 @@ module.exports = (grunt)->
 		# Оптимизируем SVG
 		svgmin:
 			options: 
-				plugins: [
-							{ moveGroupAttrsToElems: false },
+				plugins: [{ moveGroupAttrsToElems: false },
+						{ removeViewBox: false },
+						{ removeUselessStrokeAndFill: false },
+						{ cleanupIDs: false }, 
+						{ removeComments: true }, 
+						{ moveGroupAttrsToElems: false },
+						{ convertPathData: { straightCurves: false}}
 						]
 			dist:
 				files: [{
