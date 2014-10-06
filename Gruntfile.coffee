@@ -7,7 +7,7 @@ module.exports = (grunt)->
 		data =
 			css : []
 			js  : []
-
+		
 		plugins =
 			jquery :
 				js : '/jquery/dist/jquery.js'

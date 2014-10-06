@@ -4,28 +4,27 @@ newsInit = false
 
 map = undefined
 
-size = ()->
+size = ->
 	if !newsInit
 		newsInit = true
 		$('article .news').isotope
-	  		itemSelector: '.news__item'
-	blur()
+			itemSelector: '.news__item'
 
 urlInitial = undefined
 
 $.openModal = (url, id, open)->
 	if url
 		if(open)
-			$(id).modal()	
+			$(id).modal()
 		$(id).find('.text').load "/ajax#{url}", (data)->
 			$('.modal .fotorama').fotorama()
 			if History.enabled
 				info = History.getState()
 				console.log info
-				urlInitial = 
+				urlInitial =
 					url : info.cleanUrl
 					title : document.title
-				History.pushState({'url':url}, $(id).find('.text h1').text(), url);
+				History.pushState {'url':url}, $(id).find('.text h1').text(), url
 				window.title = $(id).find('.text h1').text()
 
 getCaptcha = ()->
@@ -45,7 +44,7 @@ addTrigger = ()->
 		.click (e)->
 			val = $('#mapPopup input[name="value"]').val()
 			$("input[name='#{$(this).data('id')}']").val "#{val}"
-			$('#mapPopup').modal('hide');
+			$('#mapPopup').modal 'hide'
 			e.preventDefault()
 
 	$('a.openMap').off('click').on 'click', (e)->
@@ -69,7 +68,6 @@ blur = ()->
 
 $(document).ready ->
 
-	blur()
 
 	addTrigger()
 
@@ -82,9 +80,8 @@ $(document).ready ->
 
 	$('.form').submit (e)->
 		data = $(this).serialize()
-		$.post '/include/send.php',
-	        data,
-	        (data) -> 
+		$.post '/include/send.php', data,
+	        (data) ->
 	        	data = $.parseJSON(data)
 	        	if data.status == "ok"
 	        		$('.form').hide()
@@ -101,7 +98,7 @@ $(document).ready ->
 	
 	$('.modal').on 'hide.bs.modal', (a,b)->
 		if urlInitial
-			History.pushState({'url':urlInitial.url}, urlInitial.title, urlInitial.url);
+			History.pushState {'url':urlInitial.url}, urlInitial.title, urlInitial.url
 			window.title = urlInitial.title
 		if $(this).find('iframe').length > 0
 			$(this).find('iframe').remove()
@@ -150,7 +147,7 @@ $(document).ready ->
 		clearTimeout timer
 		text = x.elem('text').text()
 		x.elem('item').show()
-		x.elem('frame').find("a:contains(#{text})").hide();
+		x.elem('frame').find("a:contains(#{text})").hide()
 		x.elem('frame').velocity
 			properties: "transition.slideDownIn"
 			options:
@@ -295,7 +292,7 @@ $(document).ready ->
 				new google.maps.LatLng(55.865354, 125.561991),
 				new google.maps.LatLng(56.93747, 148.237773),
 				new google.maps.LatLng(58.258556, 151.401835)
-			];
+			]
 
 			circle =
 				path: google.maps.SymbolPath.CIRCLE
@@ -321,9 +318,9 @@ $(document).ready ->
 
 			initType()
 
-			path.setMap(map);
+			path.setMap(map)
 			google.maps.event.addDomListener window, "resize", ()->
-	     		google.maps.event.trigger(map, "resize");
-	     		map.setCenter mapOptions['center'] 			
+	     		google.maps.event.trigger(map, "resize")
+	     		map.setCenter mapOptions['center']
 		
-		google.maps.event.addDomListener(window, 'load', bgMapInit);
+		google.maps.event.addDomListener(window, 'load', bgMapInit)

@@ -12,11 +12,10 @@
   size = function() {
     if (!newsInit) {
       newsInit = true;
-      $('article .news').isotope({
+      return $('article .news').isotope({
         itemSelector: '.news__item'
       });
     }
-    return blur();
   };
 
   urlInitial = void 0;
@@ -93,7 +92,6 @@
 
   $(document).ready(function() {
     var bgMapInit, closeDropdown, initType, mapInit, openDropdown, timer, x;
-    blur();
     addTrigger();
     $('a[onclick*=grain_TableAddRow]').click(function() {
       return addTrigger();

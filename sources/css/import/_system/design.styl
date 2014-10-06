@@ -37,7 +37,20 @@ for vx in margin padding
 				@media (min-width: scr_sm)
 					{vx}-{vy}: value_sm[key] !important
 
+sizes = scr_xs scr_sm scr_md scr_lg
+for vx in center right left
+	for vz, key in xs sm md lg
+		.{vz}-{vx}
+			@media (min-width: sizes[key])
+				text-align: vx
+
+
+
 for vx in line-height
 	for vz, key in xxs xs s m l xl xxl
 		/.{vz}-{vx}
 			{vx}: value_sm[key] !important
+
+.no-gutter > [class*='col-']
+	padding-right 0
+	padding-left 0

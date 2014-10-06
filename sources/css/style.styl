@@ -37,11 +37,23 @@ for vx in margin padding
 				@media (min-width: scr_sm)
 					{vx}-{vy}: value_sm[key] !important
 
+sizes = scr_xs scr_sm scr_md scr_lg
+for vx in center right left
+	for vz, key in xs sm md lg
+		.{vz}-{vx}
+			@media (min-width: sizes[key])
+				text-align: vx
+
+
+
 for vx in line-height
 	for vz, key in xxs xs s m l xl xxl
 		/.{vz}-{vx}
 			{vx}: value_sm[key] !important
 
+.no-gutter > [class*='col-']
+	padding-right 0
+	padding-left 0
 /*!
  * Примеси
  */
@@ -948,39 +960,6 @@ article
 	padding-bottom 30px
 	@media (min-width: scr_sm)
 		padding-bottom 80px
-	.logo
-		full-width()
-		@media (min-width: scr_sm)
-			margin-bottom 90px
-		svg
-			max-width 40%
-			@media (min-width: scr_sm)
-				max-width 120%
-			@media (min-width: scr_md)
-				max-width 70%
-	.nav-left
-		full-width()
-		margin-bottom 60px
-		&__item
-			float left
-			clear both
-			font-size 18px
-			font-weight bold
-			text-transform uppercase
-			color white
-			line-height 31px
-			height 32px
-			padding 3px 15px 0
-			margin-left -15px
-			margin-bottom 5px
-			white-space nowrap
-			&--active
-				color blue
-				border 1px solid blue
-				border-radius 20px
-			&:hover
-				color blue
-				text-decoration: none
 .sidebar, article.index-page	
 	.news
 		full-width()
@@ -1109,11 +1088,11 @@ article.index-page
 .toolbar
 	full-width()
 	position relative
-	height 62px
-	line-height 63px
+	height 120px
+	line-height 58px
 	z-index 20
 	white-space nowrap
-	background rgba(0,0,0,.8)
+	background rgba(0,0,0,.5)
 	margin-bottom 20px
 	top 0
 	left 0
@@ -1122,6 +1101,53 @@ article.index-page
 		position relative
 		background rgba(0,0,0,.5)
 		margin-bottom 35px
+	.divider
+		full-width()
+		margin-top -5px
+		margin-bottom -5px
+		border-bottom 1px solid rgba(255,255,255,.2)
+		line-height 50px
+	.logo
+		full-width()
+		margin-left 20px
+		line-height 120px
+		svg
+			middle()
+			max-width 43%
+			@media (min-width: scr_sm)
+				max-width 70%
+			@media (min-width: scr_lg)
+				max-width 188px
+	.nav
+		full-width()
+		text-align justify
+		&__item
+			font-weight bold
+			text-transform uppercase
+			color white
+			line-height 31px
+			height 32px
+			@media (min-width: scr_sm)
+				font-size 15px
+				padding 3px 8.8px 0
+			@media (min-width: scr_lg)
+				font-size 16px
+				padding 3px 16.4px 0
+			margin-bottom 5px
+			white-space nowrap
+			&--active
+				color blue
+			&:first-of-type
+				padding-left 0
+			&:hover
+				color blue
+				text-decoration: none
+	.lang-trigger
+		@media (min-width: scr_sm)
+			margin-left 0px
+		@media (min-width: scr_lg)
+			margin-left 18px
+	/* Выбор сайтов холдинга */
 	.site-select
 		middle()
 		width 200px
@@ -1129,6 +1155,7 @@ article.index-page
 		font-size 10px
 		text-transform uppercase
 		position: relative
+		z-index 200
 		&--open
 			.site-select__trigger
 				svg
@@ -1137,9 +1164,14 @@ article.index-page
 		&__trigger
 			color white
 			position relative
+			top 1px
 			z-index 3
 			svg
 				margin-left 5px
+			span
+				display none
+				@media (min-width: scr_lg)
+					display inline
 		&__dropdown
 			display none
 			position absolute
@@ -1158,6 +1190,7 @@ article.index-page
 			&:hover
 				color blue2
 				text-decoration none
+	/* Тригер мобильного меню */
 	.nav-trigger
 		float right
 		position relative
@@ -1173,6 +1206,7 @@ article.index-page
 			middle()
 			max-width 23px
 			margin-left 7px
+	/* Тригеры попапов */
 	.popup-trigger
 		middle()
 		display inline
@@ -1194,17 +1228,15 @@ article.index-page
 			position relative
 			top -1px
 			margin-right 10px
-	.feedback
+	.feedback, .filials
 		middle()
 		text-transform uppercase
 		font-size 10px
 		color white
 		font-weight bold
-	.site-select span
+	.feedback
+		margin 0 25px
+	.search, .phone, .lang-trigger, .feedback, .filials
 		display none
 		@media (min-width: scr_sm)
-			display inline
-	.search, .phone, .lang-trigger, .feedback
-		display none
-		@media (min-width: scr_sm)
-			display block
+			display inline-block
