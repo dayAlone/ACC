@@ -59,6 +59,13 @@ for vx in line-height
 		/.{vz}-{vx}
 			{vx}: value_sm[key] !important
 
+
 .no-gutter > [class*='col-']
 	padding-right 0
 	padding-left 0
+
+for vz, key in xs sm md lg
+	@media (min-width: sizes[key])
+		.no-gutter-{vz} > [class*='col-']
+			padding-right 0
+			padding-left 0

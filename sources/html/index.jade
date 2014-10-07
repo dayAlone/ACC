@@ -7,16 +7,32 @@ include includes/header
 	main.page
 		.container
 			.row
-				.col-sm-3.col-md-4
+				.col-sm-12.col-md-4
 					aside.sidebar
+						a(href="/").logo
+							include ../../public_html/layout/images/svg/logo.svg
+						.bages
+							.bages__item
+								img(src='./layout/images/icon-1.png').bages__image
+								.bages__title Ассоциированный член росснгс
+						
+							.bages__item
+								img(src='./layout/images/icon-2.png').bages__image
+								.bages__title Ассоциированный член iploca
+						
+							.bages__item
+								img(src='./layout/images/icon-3.png').bages__image
+								.bages__title Сертификация по стандарту ISO
 						.news.no-mobile
 							.news__item
 								.news__date 12.07.2014
 								a(href="#").news__title Представляем новые высокопроизводительные системы автоматической сварки трубопроводов Р-700 и М-400
 							a(href="#").news__more еще новости
-				.col-sm-9.col-md-8
+				.col-sm-12.col-md-8
 					article.index-page
-						h1 Международная команда экспертов автоматической сварки трубопроводов мирового уровня
+						.highlight
+							h1 Наш профессионализм <br> – ваш успех
+							p «Аргус Свар Сервис» (АСС) – ведущая международная команда экспертов автоматической сварки трубопроводов мирового уровня
 						.bages
 							.row
 								.col-xs-4
@@ -31,9 +47,10 @@ include includes/header
 									.bages__item
 										img(src='./layout/images/icon-3.png').bages__image
 										.bages__title Сертификация по стандарту ISO
-						.news.visible-xs
-							.news__item
-								.news__date 12.07.2014
-								a(href="#").news__title Представляем новые высокопроизводительные системы автоматической сварки трубопроводов Р-700 и М-400
-							a(href="#").news__more еще новости
+		.index-news
+			.news
+				.news__item
+					.news__date 12.07.2014
+					a(href="#").news__title Представляем новые высокопроизводительные системы автоматической сварки трубопроводов Р-700 и М-400
+				a(href="#").news__more еще новости
 include includes/footer

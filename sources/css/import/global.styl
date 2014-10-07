@@ -14,6 +14,7 @@ a
 .container
 	max-width 1150px
 .wrap 
+	full-width()
 	min-height: 100%
 	padding-bottom 65px
 	margin-bottom: -65px
@@ -28,12 +29,15 @@ a
 			b('bg_'+x+'.jpg', top center no-repeat, black, cover)
 			
 	.index &
+		background-position 45% top
 		background-size 350% auto
-		background-position 54% 40px
 		@media (min-width: scr_xs)
+			background-position top center
+			background-size 200% auto
+		@media (min-width: scr_sm)
+			background-size 140% auto
+		@media (min-width: scr_md)
 			background-size cover
-			background-position center center
-
 html
 	height 100%
 
@@ -44,31 +48,65 @@ article
 .index-page
 	full-width()
 	float right
-	max-width 715px
-	margin-top 220px
+	margin-top 180px
 	padding-top 20px
+	@media (min-width: scr_xs)
+		margin-top 230px
+	@media (min-width: scr_md)
+		margin-top 295px
+		max-width 509px
 	@media (min-width: scr_sm)
-		margin-top 495px
-	h1
-		float right
-		padding-bottom 15px
-		margin-bottom 20px
-		text-transform: uppercase
-		border-bottom 1px solid rgba(255,255,255,.5)
-		text-align center
-		font-size 18px
+		max-width none
+	.bages
 		@media (min-width: scr_sm)
-			text-align: right
-			font-size 24px
+			left 2%
+	.highlight
+		text-align center
+		full-width()
+		margin-bottom 35px
+		@media (min-width: scr_md)
+			text-align right
+		h1
+			width 100%
+			float right
+			padding-bottom 10px
+			margin-bottom 0px
+			text-transform: uppercase
+			font-weight bold
+			font-size 20px
+			line-height 20px
+			@media (min-width: scr_xs)
+				font-size 25px
+				line-height 30px
+			@media (min-width: scr_sm)
+				font-size 35px
+				line-height 35px
+			br
+				@media (min-width: scr_sm)
+					display none
+				@media (min-width: scr_md)
+					display inline
+
+		p
+			full-width()
+			font-size 14px
+			line-height 18px
+			@media (min-width: scr_sm)
+				font-size 20px
+				line-height 25px
+.page
 	.bages
 		text-align center
-		margin-bottom 30px
+		position relative
 		@media (min-width: scr_sm)
 			margin-bottom 0
 			text-align left
 			line-height: 54px
+			margin-bottom 30px
+		@media (min-width: scr_md)
+			display none
 		&__image
-			max-width 44px
+			max-width 54px
 			margin-bottom 10px
 			@media (min-width: scr_sm)
 				margin-bottom 0
@@ -79,7 +117,9 @@ article
 			text-transform: uppercase
 			font-weight: bold
 			max-width 100%
-			font-size 7px
+			font-size 8px
+			@media (min-width: scr_xs)
+				font-size 11px
 			@media (min-width: scr_sm)
 				max-width 60%
 				line-height 16px
@@ -161,11 +201,6 @@ article
 			max-width 30px
 			path
 				fill blue
-		@media (min-width: scr_sm)
-			right -65px
-			top 0
-			svg
-				max-width 50px
 		@media (min-width: scr_md)
 			right -100px
 			svg
@@ -174,7 +209,7 @@ article
 		max-width 100%
 .modal-backdrop.in
 	opacity .99
-	@media (min-width: scr_sm)
+	@media (min-width: scr_md)
 		opacity .8
 
 #map

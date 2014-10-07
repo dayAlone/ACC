@@ -12,7 +12,7 @@
   size = function() {
     if (!newsInit) {
       newsInit = true;
-      return $('article .news').isotope({
+      return $('article:not(.index-page) .news').isotope({
         itemSelector: '.news__item'
       });
     }

@@ -7,7 +7,7 @@ map = undefined
 size = ->
 	if !newsInit
 		newsInit = true
-		$('article .news').isotope
+		$('article:not(.index-page) .news').isotope
 			itemSelector: '.news__item'
 
 urlInitial = undefined

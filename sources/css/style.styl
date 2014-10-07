@@ -59,9 +59,17 @@ for vx in line-height
 		/.{vz}-{vx}
 			{vx}: value_sm[key] !important
 
+
 .no-gutter > [class*='col-']
 	padding-right 0
 	padding-left 0
+
+for vz, key in xs sm md lg
+	@media (min-width: sizes[key])
+		.no-gutter-{vz} > [class*='col-']
+			padding-right 0
+			padding-left 0
+
 /*!
  * Примеси
  */
@@ -205,6 +213,7 @@ a
 .container
 	max-width 1150px
 .wrap 
+	full-width()
 	min-height: 100%
 	padding-bottom 65px
 	margin-bottom: -65px
@@ -219,12 +228,15 @@ a
 			b('bg_'+x+'.jpg', top center no-repeat, black, cover)
 			
 	.index &
+		background-position 45% top
 		background-size 350% auto
-		background-position 54% 40px
 		@media (min-width: scr_xs)
+			background-position top center
+			background-size 200% auto
+		@media (min-width: scr_sm)
+			background-size 140% auto
+		@media (min-width: scr_md)
 			background-size cover
-			background-position center center
-
 html
 	height 100%
 
@@ -235,31 +247,65 @@ article
 .index-page
 	full-width()
 	float right
-	max-width 715px
-	margin-top 220px
+	margin-top 180px
 	padding-top 20px
+	@media (min-width: scr_xs)
+		margin-top 230px
+	@media (min-width: scr_md)
+		margin-top 295px
+		max-width 509px
 	@media (min-width: scr_sm)
-		margin-top 495px
-	h1
-		float right
-		padding-bottom 15px
-		margin-bottom 20px
-		text-transform: uppercase
-		border-bottom 1px solid rgba(255,255,255,.5)
-		text-align center
-		font-size 18px
+		max-width none
+	.bages
 		@media (min-width: scr_sm)
-			text-align: right
-			font-size 24px
+			left 2%
+	.highlight
+		text-align center
+		full-width()
+		margin-bottom 35px
+		@media (min-width: scr_md)
+			text-align right
+		h1
+			width 100%
+			float right
+			padding-bottom 10px
+			margin-bottom 0px
+			text-transform: uppercase
+			font-weight bold
+			font-size 20px
+			line-height 20px
+			@media (min-width: scr_xs)
+				font-size 25px
+				line-height 30px
+			@media (min-width: scr_sm)
+				font-size 35px
+				line-height 35px
+			br
+				@media (min-width: scr_sm)
+					display none
+				@media (min-width: scr_md)
+					display inline
+
+		p
+			full-width()
+			font-size 14px
+			line-height 18px
+			@media (min-width: scr_sm)
+				font-size 20px
+				line-height 25px
+.page
 	.bages
 		text-align center
-		margin-bottom 30px
+		position relative
 		@media (min-width: scr_sm)
 			margin-bottom 0
 			text-align left
 			line-height: 54px
+			margin-bottom 30px
+		@media (min-width: scr_md)
+			display none
 		&__image
-			max-width 44px
+			max-width 54px
 			margin-bottom 10px
 			@media (min-width: scr_sm)
 				margin-bottom 0
@@ -270,7 +316,9 @@ article
 			text-transform: uppercase
 			font-weight: bold
 			max-width 100%
-			font-size 7px
+			font-size 8px
+			@media (min-width: scr_xs)
+				font-size 11px
 			@media (min-width: scr_sm)
 				max-width 60%
 				line-height 16px
@@ -352,11 +400,6 @@ article
 			max-width 30px
 			path
 				fill blue
-		@media (min-width: scr_sm)
-			right -65px
-			top 0
-			svg
-				max-width 50px
 		@media (min-width: scr_md)
 			right -100px
 			svg
@@ -365,7 +408,7 @@ article
 		max-width 100%
 .modal-backdrop.in
 	opacity .99
-	@media (min-width: scr_sm)
+	@media (min-width: scr_md)
 		opacity .8
 
 #map
@@ -512,6 +555,7 @@ article
 .page
 	padding-bottom 40px
 	color white
+	full-width()
 	.xs-center
 		full-width()
 		text-align center
@@ -965,18 +1009,38 @@ article
 	full-width()
 	z-index 10
 	position relative
-	padding-bottom 30px
-	@media (min-width: scr_sm)
-		padding-bottom 80px
-.sidebar, article.index-page	
+	
+	@media (min-width: scr_md)
+		.index &
+			padding-bottom 80px
+	.logo
+		full-width()
+		@media (min-width: scr_md)
+			display none
+		svg
+			max-width 188px
+	.bages
+		display none
+		margin-bottom 95px
+		margin-top 90px
+		&__item
+			max-width 200px
+			margin-bottom 13px
+			line-height 54px
+		&__title
+			top 4px
+			position relative
+		&__image
+			max-width 54px
+		@media (min-width: scr_md)
+			display block
+.sidebar, .index-news
 	.news
 		full-width()
 		text-align: center
 		background #1b1b1b
-		width 110%
 		padding 12px 0 5px
-		margin-left -5%
-		@media (min-width: scr_sm)
+		@media (min-width: scr_md)
 			padding 0
 			width 100%
 			margin-left 0
@@ -986,21 +1050,32 @@ article
 		&__item
 			full-width()
 			position relative !important
-
+			text-align center
+			padding-bottom 0
+			@media (min-width: scr_md)
+				text-align left
 		&__date
 			color blue2
 			font-size 10px
 			font-weight bold
 			margin-bottom 2px
+			margin-top 6px
 		&__title
 			color white
-			text-decoration underline
+			float none
 			font-size 13px
 			line-height 16px
-			float left
 			margin-bottom 0
+			text-decoration underline
+			max-width 70%
+			display inline-block
 			@media (min-width: scr_sm)
+				font-size 15px
+			@media (min-width: scr_md)
+				font-size 13px
+				float left
 				margin-bottom 25px
+				max-width none
 			&:hover
 				color blue2
 		&__more
@@ -1010,13 +1085,23 @@ article
 			font-weight bold
 			&:hover
 				text-decoration underline
-article.index-page
+
+.sidebar
+	.news
+		display none
+		@media (min-width: scr_md)
+			display block
+.index-news
+	full-width()
 	.news
 		height auto !important
-		
+		display block
+		margin-top 30px
+		@media (min-width: scr_md)
+			display none
 		&__more
 			full-width()
-			margin 10px 0
+			margin 15px 0 10px
 .search
 	position relative
 	middle()
@@ -1103,7 +1188,7 @@ article.index-page
 		line-height 58px
 	z-index 20
 	white-space nowrap
-	background rgba(0,0,0,.5)
+	background rgba(0,0,0,.8)
 	margin-bottom 20px
 	top 0
 	left 0
@@ -1120,7 +1205,8 @@ article.index-page
 		line-height 50px
 	.logo
 		full-width()
-		margin-left 20px
+		@media (min-width: scr_sm)
+			margin-left 20px
 		line-height 120px
 		svg
 			middle()
@@ -1161,7 +1247,9 @@ article.index-page
 	/* Выбор сайтов холдинга */
 	.site-select
 		middle()
-		width 200px
+		width 100%
+		@media (min-width: scr_md)
+			width 200px
 		font-weight bold
 		font-size 10px
 		text-transform uppercase
@@ -1180,7 +1268,9 @@ article.index-page
 			svg
 				margin-left 5px
 			span
-				display inline
+				display none
+				@media (min-width: scr_xs)
+					display inline
 				@media (min-width: scr_md)
 					display none
 				@media (min-width: scr_lg)
@@ -1203,12 +1293,21 @@ article.index-page
 			&:hover
 				color blue2
 				text-decoration none
+	.search-trigger
+		display none
+		@media (min-width: scr_sm)
+			display inline
+		svg
+			middle()
+			top -2px
+			position relative
 	/* Тригер мобильного меню */
 	.nav-trigger
 		float right
 		position relative
-		z-index 22
-		@media (min-width: scr_sm)
+		z-index 220
+		margin-left 40px
+		@media (min-width: scr_md)
 			display none
 		span
 			color white
@@ -1225,7 +1324,9 @@ article.index-page
 		display inline
 		margin 0 7px
 		&:first-of-type
-			margin-left 20px
+			margin-left 40px
+			@media (min-width: scr_xs)
+				margin-left 10px
 		svg
 			middle()
 			position relative
