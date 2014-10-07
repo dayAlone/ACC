@@ -4,7 +4,10 @@ $APPLICATION->SetTitle('Аргус Свар Сервис');
 $APPLICATION->SetPageProperty('body_class', "index");
 $APPLICATION->SetPageProperty('article_class', "index-page");
 ?> 
-<h1>Международная команда экспертов автоматической сварки трубопроводов мирового уровня</h1>
+<div class="highlight">
+  <h1>Наш профессионализм <br> – ваш успех</h1>
+  <p>«Аргус Свар Сервис» (АСС) – ведущая международная команда экспертов автоматической сварки трубопроводов мирового уровня</p>
+</div>
 <div class="bages">
   <div class="row">
     <div class="col-xs-4">

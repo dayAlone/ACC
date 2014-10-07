@@ -50,6 +50,7 @@
             <div class="col-xs-4 col-md-5 col-lg-4 right">
               <a href="#" class="filials visible-md-inline visible-lg-inline"><?=svg('pin')?>Филиальная сеть</a>
               <a href="#" class="feedback visible-md-inline visible-lg-inline">Обратная связь</a>
+              <a data-toggle="modal" data-target="#Nav" href="#Nav" class="nav-trigger"><span>Меню</span><?=svg('nav')?></a>
               <a href="#" class="search-trigger"><?=svg('seach')?></a></div>
           </div>
           <div class="divider visible-md visible-lg"></div>
@@ -74,14 +75,25 @@
   <main class="page">
     <div class="container">
       <div class="row">
-        <div class="col-sm-3 col-md-4">
+        <div class="col-sm-12 col-md-4">
           <aside class="sidebar">
           <a href="/" class="logo"><?=svg('logo')?></a>
             
             <?php
-              
-              
               if($APPLICATION->GetCurDir()=='/'):
+                ?>
+                <div class="bages">
+                  <div class="bages__item"><img src="./layout/images/icon-1.png" class="bages__image">
+                    <div class="bages__title">Ассоциированный член росснгс</div>
+                  </div>
+                  <div class="bages__item"><img src="./layout/images/icon-2.png" class="bages__image">
+                    <div class="bages__title">Ассоциированный член iploca</div>
+                  </div>
+                  <div class="bages__item"><img src="./layout/images/icon-3.png" class="bages__image">
+                    <div class="bages__title">Сертификация по стандарту ISO</div>
+                  </div>
+                </div>
+                <?
                 $APPLICATION->IncludeComponent("bitrix:news.list", "news_index", 
                 array(
                   "IBLOCK_ID"   => 1,
@@ -98,6 +110,6 @@
               endif;?>
           </aside>
         </div>
-        <div class="col-sm-9 col-md-8">
+        <div class="col-sm-12 col-md-8">
           <article class="<?=$APPLICATION->AddBufferContent("article_class");?>">
             

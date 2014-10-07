@@ -1,5 +1,10 @@
-        <?if($APPLICATION->GetCurDir()=='/'):
-        $APPLICATION->IncludeComponent("bitrix:news.list", "news_index", 
+        </article>
+        </div>
+      </div>
+    </div>
+    <?if($APPLICATION->GetCurDir()=='/'):?>
+    <div class="index-news">
+        <?$APPLICATION->IncludeComponent("bitrix:news.list", "news_index", 
         array(
           "IBLOCK_ID"   => 1,
           "NEWS_COUNT"  => "1",
@@ -11,12 +16,9 @@
           "CLASS"       => "visible-xs"
            ),
            false
-        );
-        endif;?>
-        </article>
-        </div>
-      </div>
+        );?>
     </div>
+    <?endif;?>
   </main>
 </div>
 <?$APPLICATION->ShowViewContent('footer');?>
@@ -90,13 +92,13 @@
       <div class="col-xs-8 col-sm-3 col-sm-4 col-md-3">
         <div class="copyright">© 2014 ООО «аргус свар сервис» </div>
       </div>
-      <div class="col-sm-2 col-sm-3 col-md-2">
+      <div class="col-sm-3 col-md-2">
         <div class="contacts"><span>Москва,  ул. усачева, 35А <br></span><a href="mailto:info@argusweld.ru" class="contacts_link">info@argusweld.ru</a></div>
       </div>
       <div class="col-sm-2">
         <div class="map"><a href="#">карта сайта</a></div>
       </div>
-      <div class="col-xs-4 col-sm-2 col-sm-3 col-md-2 social">
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-2 social">
         <?php
             $APPLICATION->IncludeComponent("bitrix:menu", "social", 
             array(
