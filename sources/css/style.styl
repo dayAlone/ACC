@@ -228,15 +228,15 @@ a
 			b('bg_'+x+'.jpg', top center no-repeat, black, cover)
 			
 	.index &
-		background-position 45% top
-		background-size 350% auto
-		@media (min-width: scr_xs)
-			background-position top center
-			background-size 200% auto
+		
+		b('bg_index_xs.jpg', top center no-repeat, black)
+
 		@media (min-width: scr_sm)
-			background-size 140% auto
+			b('bg_index.sm.jpg', top center no-repeat, black)
 		@media (min-width: scr_md)
-			background-size cover
+			b('bg_index_md.jpg', top center no-repeat, black)
+		@media (min-width: scr_lg)
+			b('bg_index_lg.jpg', top center no-repeat, black)
 html
 	height 100%
 
@@ -253,9 +253,8 @@ article
 		margin-top 230px
 	@media (min-width: scr_md)
 		margin-top 295px
+	@media (min-width: scr_md)
 		max-width 509px
-	@media (min-width: scr_sm)
-		max-width none
 	.bages
 		@media (min-width: scr_sm)
 			left 2%

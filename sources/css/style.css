@@ -1076,31 +1076,21 @@ a:hover {
   background-size: cover;
 }
 .index .wrap {
-  background-position: 45% top;
-  -webkit-background-size: 350% auto;
-  -moz-background-size: 350% auto;
-  background-size: 350% auto;
-}
-@media (min-width: 480px) {
-  .index .wrap {
-    background-position: top center;
-    -webkit-background-size: 200% auto;
-    -moz-background-size: 200% auto;
-    background-size: 200% auto;
-  }
+  background: #000 url("../images/bg_index_xs.jpg") top center no-repeat;
 }
 @media (min-width: 768px) {
   .index .wrap {
-    -webkit-background-size: 140% auto;
-    -moz-background-size: 140% auto;
-    background-size: 140% auto;
+    background: #000 url("../images/bg_index.sm.jpg") top center no-repeat;
   }
 }
 @media (min-width: 992px) {
   .index .wrap {
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    background-size: cover;
+    background: #000 url("../images/bg_index_md.jpg") top center no-repeat;
+  }
+}
+@media (min-width: 1200px) {
+  .index .wrap {
+    background: #000 url("../images/bg_index_lg.jpg") top center no-repeat;
   }
 }
 html {
@@ -1125,12 +1115,11 @@ article {
 @media (min-width: 992px) {
   .index-page {
     margin-top: 295px;
-    max-width: 509px;
   }
 }
-@media (min-width: 768px) {
+@media (min-width: 992px) {
   .index-page {
-    max-width: none;
+    max-width: 509px;
   }
 }
 @media (min-width: 768px) {
