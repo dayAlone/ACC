@@ -24613,12 +24613,14 @@ if ('undefined' !== typeof window.ParsleyValidator)
         return closeDropdown($(this));
       }
     });
-    $('.site-select').hoverIntent({
+    $('.site-select .site-select__trigger').hoverIntent({
       over: function() {
+        var p;
         if ($(window).width() > 768) {
           clearTimeout(timer);
-          $(this).mod('open', true);
-          return $(this).elem('dropdown').velocity({
+          p = $(this).parents('.site-select');
+          p.mod('open', true);
+          return p.elem('dropdown').velocity({
             properties: "transition.slideDownIn",
             options: {
               duration: 300,
@@ -24636,9 +24638,15 @@ if ('undefined' !== typeof window.ParsleyValidator)
           });
         }
       },
+      out: function() {}
+    });
+    $('.site-select').hoverIntent({
+      over: function() {},
       out: function() {
-        $(this).mod('open', false);
-        return $(this).elem('dropdown').velocity({
+        var p;
+        p = $(this);
+        p.mod('open', false);
+        return p.elem('dropdown').velocity({
           properties: "transition.slideUpOut",
           options: {
             duration: 300

@@ -209,12 +209,13 @@ $(document).ready ->
 			out : ()->
 				closeDropdown($(this))
 
-	$('.site-select').hoverIntent
+	$('.site-select .site-select__trigger').hoverIntent
 		over : ()->
 			if($(window).width()>768)
 				clearTimeout timer
-				$(this).mod('open', true)
-				$(this).elem('dropdown').velocity
+				p = $(this).parents('.site-select')
+				p.mod('open', true)
+				p.elem('dropdown').velocity
 					properties: "transition.slideDownIn"
 					options:
 						duration: 300
@@ -227,12 +228,18 @@ $(document).ready ->
 										options:
 											duration: 300
 		out : ()->
-			$(this).mod('open', false)
-			$(this).elem('dropdown').velocity
+			return
+
+	$('.site-select').hoverIntent
+		over : ()->
+			return
+		out : ()->
+			p = $(this)
+			p.mod('open', false)
+			p.elem('dropdown').velocity
 				properties: "transition.slideUpOut"
 				options:
 					duration: 300
-	
 	$('a.site-select__trigger').click (e)->
 		if($(window).width()<768)
 			$('#Sites').modal()
