@@ -289,7 +289,7 @@ module.exports = (grunt)->
 						livereload: true
 			css_frontend:
 				files   : ['<%= files.css.sources %>', '<%= files.css.develop %>', '<%= path.sources %>/css/import/*.styl', '<%= path.sources %>/css/import/**/*.styl']
-				tasks   : ['concat:css_stylus', 'stylus', 'concat:css_frontend', 'csscomb', 'notify:css' ]
+				tasks   : ['concat:css_stylus', 'stylus', 'concat:css_frontend', 'notify:css' ]
 				options :
 						livereload: true
 			images:

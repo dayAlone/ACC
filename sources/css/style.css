@@ -929,7 +929,7 @@ input:focus {
     width: 23px;
     height: 23px;
     top: 0;
-    margin: 0 4px;
+    margin: 0 2px;
     line-height: 23px;
   }
 }
@@ -1091,6 +1091,9 @@ a:hover {
 @media (min-width: 1200px) {
   .index .wrap {
     background: #000 url("../images/bg_index_lg.jpg") top center no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
   }
 }
 html {
@@ -2666,7 +2669,7 @@ article {
 }
 @media (min-width: 1200px) {
   .toolbar .lang-trigger {
-    margin-left: 18px;
+    margin-left: 28px;
   }
 }
 .toolbar .site-select {

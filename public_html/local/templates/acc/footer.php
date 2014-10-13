@@ -98,7 +98,7 @@
       <div class="col-sm-2">
         <div class="map"><a href="#">карта сайта</a></div>
       </div>
-      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-2 social">
+      <div class="col-xs-4 col-sm-3 col-md-2 col-lg-2 social">
         <?php
             $APPLICATION->IncludeComponent("bitrix:menu", "social", 
             array(

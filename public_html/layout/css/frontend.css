@@ -5299,7 +5299,7 @@ input:focus
 
         width: 23px;
         height: 23px;
-        margin: 0 4px;
+        margin: 0 2px;
     }
 }
 .footer .social__item:hover
@@ -5506,6 +5506,9 @@ a:hover
     .index .wrap
     {
         background: #000 url('../images/bg_index_lg.jpg') top center no-repeat;
+        -webkit-background-size: cover;
+           -moz-background-size: cover;
+                background-size: cover;
     }
 }
 html
@@ -7670,7 +7673,7 @@ article
 {
     .toolbar .lang-trigger
     {
-        margin-left: 18px;
+        margin-left: 28px;
     }
 }
 .toolbar .site-select

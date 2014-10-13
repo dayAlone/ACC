@@ -1,9 +1,10 @@
 <?
-$obCache = new CPHPCache();
+$obCache       = new CPHPCache();
 $cacheLifetime = 86400; 
-$cacheID = $_REQUEST['ELEMENT_CODE']; 
-$cachePath = '/'.$cacheID;
-if( $obCache->InitCache($cacheLifetime, $cacheID, $cachePath))
+$cacheID       = $_REQUEST['ELEMENT_CODE']; 
+$cachePath     = '/'.$cacheID;
+
+if( $obCache->InitCache($cacheLifetime, $cacheID, $cachePath) )
 {
    $vars = $obCache->GetVars();
    $_GLOBALS['currentNewsSection'] = $vars['current'];
@@ -11,10 +12,12 @@ if( $obCache->InitCache($cacheLifetime, $cacheID, $cachePath))
 elseif( $obCache->StartDataCache()  )
 {
 	CModule::IncludeModule("iblock");
-	$Sections = array();
-	$arSort = array("NAME" => "DESC");
-	$arFilter = array("IBLOCK_ID" => 1);
+	
+	$Sections   = array();
+	$arSort     = array("NAME" => "DESC");
+	$arFilter   = array("IBLOCK_ID" => 1);
 	$rsSections = CIBlockSection::GetList($arSort, $arFilter);
+	
 	while ($s = $rsSections->Fetch()){
 		$Sections[] = $s['ID'];
 		if(strlen($_REQUEST['ELEMENT_CODE'])>0):
@@ -22,11 +25,12 @@ elseif( $obCache->StartDataCache()  )
 				$Current = $s['ID'];
 		endif;
 	}
-	if(strlen($_REQUEST['ELEMENT_CODE'])==0):
+	
+	if(strlen($_REQUEST['ELEMENT_CODE'])==0)
 		$Current = $Sections[0];
-	endif;
+
 	$_GLOBALS['currentNewsSection'] = $Current;
+	
 	$obCache->EndDataCache(array('current' => $Current));
 }
-
 ?>
