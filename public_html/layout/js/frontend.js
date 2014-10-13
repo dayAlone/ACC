@@ -24441,6 +24441,25 @@ if ('undefined' !== typeof window.ParsleyValidator)
     $('.search-trigger').click(function(e) {
       if ($('.toolbar .container').width() <= 750) {
         $('#Search').modal();
+      } else {
+        $('.toolbar .search-form').velocity({
+          properties: "transition.slideDownIn",
+          options: {
+            duration: 300,
+            complete: function() {
+              $('.toolbar .search-form  .search-form__button').css('opacity', 1);
+              return $('.toolbar').one('mouseleave', function() {
+                $('.toolbar .search-form  .search-form__button').css('opacity', 0);
+                return $('.toolbar .search-form').velocity({
+                  properties: "transition.slideUpOut",
+                  options: {
+                    duration: 300
+                  }
+                });
+              });
+            }
+          }
+        });
       }
       return e.preventDefault();
     });

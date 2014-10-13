@@ -51,6 +51,10 @@
               <?/*<a href="#" class="filials visible-md-inline visible-lg-inline"><?=svg('pin')?>Филиальная сеть</a>*/?>
               <a data-toggle="modal" data-target="#Feedback" href="#Feedback" class="feedback visible-md-inline visible-lg-inline">Обратная связь</a>
               <a data-toggle="modal" data-target="#Nav" href="#Nav" class="nav-trigger"><span>Меню</span><?=svg('nav')?></a>
+              <form action="/search/" class="search-form">
+                <input type="text" name="search" class="search-form__text" placeholder="">
+                <button type="submit" class="search-form__button"><?=svg('seach')?></button>
+              </form>
               <a href="#" class="search-trigger"><?=svg('seach')?></a></div>
           </div>
           <div class="divider visible-md visible-lg"></div>

@@ -5204,6 +5204,37 @@ article {
   color: #0049d3;
   text-decoration: none;
 }
+.toolbar .search-form {
+  position: absolute;
+  top: 0px;
+  display: none;
+  right: 9px;
+  line-height: 55px;
+  height: 54px;
+  background: #000;
+}
+.toolbar .search-form__button {
+  background: transparent;
+  border: 0;
+  line-height: auto;
+  position: relative;
+  top: 3px;
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+}
+.toolbar .search-form__text {
+  background: #000;
+  border: 1px solid #0049d3;
+  height: 20px;
+  -webkit-border-radius: 20px;
+  border-radius: 20px;
+  line-height: 24px;
+  min-width: 240px;
+  padding: 0 15px;
+  font-size: 12px;
+  text-transform: uppercase;
+}
 @media (min-width: 768px) {
   .toolbar .lang-trigger {
     margin-left: 0px;
