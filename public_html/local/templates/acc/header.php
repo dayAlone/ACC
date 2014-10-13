@@ -5,8 +5,10 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
   <link href="/layout/css/frontend.css" rel="stylesheet">
   <script type="text/javascript" src="/layout/js/frontend.js"></script>
+  <?$APPLICATION->ShowViewContent('header');?>
   <title><?php 
     $APPLICATION->ShowTitle();
     if($APPLICATION->GetCurDir()!='/') {

@@ -315,7 +315,6 @@ $(document).ready ->
 				new google.maps.LatLng(65.880861, 73.003398),
 				new google.maps.LatLng(65.372506, 77.222148),
 				new google.maps.LatLng(63.157574, 104.819804),
-
 				new google.maps.LatLng(59.88725, 110.972148),
 				new google.maps.LatLng(55.865354, 125.561991),
 				new google.maps.LatLng(56.93747, 148.237773),

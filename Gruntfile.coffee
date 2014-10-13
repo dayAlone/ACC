@@ -31,6 +31,8 @@ module.exports = (grunt)->
 			fotorama :
 				js : '/fotorama/fotorama.js'
 				css : '/fotorama/fotorama.css'
+			tooltip:
+				js : '/tooltip/js/tooltip.js'
 			mask :
 				js  : '/jQuery-Mask-Plugin/jquery.mask.js'
 			history :

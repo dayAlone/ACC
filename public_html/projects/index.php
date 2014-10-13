@@ -112,7 +112,8 @@ array(
   "DETAIL_URL"  => "/partners/",
   "CACHE_TYPE"  => "A",
   "SET_TITLE"   => "N",
-  "FIELD_CODE"  => array("GALLERY", "SORT","PREVIEW_PICTURE"),
+  "PROPERTIES_CODE" =>array('GEO'),
+  "FIELD_CODE"  => array("SORT","PREVIEW_PICTURE"),
   "PROPERTY_CODE"  => array("LINK"),
    ),
    false
