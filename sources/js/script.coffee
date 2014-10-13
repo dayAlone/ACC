@@ -68,6 +68,10 @@ blur = ()->
 
 $(document).ready ->
 
+	$('.search-trigger').click (e)->
+		if $('.toolbar .container').width() <= 750
+			$('#Search').modal()
+		e.preventDefault()
 
 	addTrigger()
 

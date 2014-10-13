@@ -2304,6 +2304,7 @@ article {
 .sidebar .logo {
   float: left;
   width: 100%;
+  margin-bottom: 20px;
 }
 @media (min-width: 992px) {
   .sidebar .logo {
@@ -2590,6 +2591,11 @@ article {
   .toolbar {
     position: relative;
     background: rgba(0,0,0,0.5);
+    margin-bottom: 15px;
+  }
+}
+@media (min-width: 992px) {
+  .toolbar {
     margin-bottom: 35px;
   }
 }

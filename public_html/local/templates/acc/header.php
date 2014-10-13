@@ -49,7 +49,7 @@
             <div class="col-xs-3 md-right lg-left"><a href="tel:88002005001" class="phone"><?=svg('phone')?></svg>8 800 200 500 1</a></div>
             <div class="col-xs-4 col-md-5 col-lg-4 right">
               <a href="#" class="filials visible-md-inline visible-lg-inline"><?=svg('pin')?>Филиальная сеть</a>
-              <a href="#" class="feedback visible-md-inline visible-lg-inline">Обратная связь</a>
+              <a data-toggle="modal" data-target="#Feedback" href="#Feedback" class="feedback visible-md-inline visible-lg-inline">Обратная связь</a>
               <a data-toggle="modal" data-target="#Nav" href="#Nav" class="nav-trigger"><span>Меню</span><?=svg('nav')?></a>
               <a href="#" class="search-trigger"><?=svg('seach')?></a></div>
           </div>

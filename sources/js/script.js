@@ -92,6 +92,12 @@
 
   $(document).ready(function() {
     var bgMapInit, closeDropdown, initType, mapInit, openDropdown, timer, x;
+    $('.search-trigger').click(function(e) {
+      if ($('.toolbar .container').width() <= 750) {
+        $('#Search').modal();
+      }
+      return e.preventDefault();
+    });
     addTrigger();
     $('a[onclick*=grain_TableAddRow]').click(function() {
       return addTrigger();
