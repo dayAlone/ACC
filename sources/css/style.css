@@ -1591,7 +1591,7 @@ article {
 }
 @media (min-width: 768px) {
   .page img.map {
-    display: block;
+    display: inline-block;
   }
 }
 .page img {
@@ -2089,12 +2089,12 @@ article {
 }
 @media (min-width: 768px) {
   .page article .news__item {
-    width: 50%;
+    width: 33.333333333333336%;
   }
 }
 @media (min-width: 992px) {
   .page article .news__item {
-    width: 33.333333333333336%;
+    width: 25%;
   }
 }
 .page article .news__picture {

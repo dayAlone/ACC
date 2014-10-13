@@ -1,5 +1,7 @@
 <div class="services">
+  <div class="row">
   <?foreach ($arResult['ITEMS'] as $item):?>
+  <div class="col-lg-6">
   <a data-toggle="modal" data-target="#servicesDetail" href="#servicesDetail" class="services__item" data-url="<?=$item['DETAIL_PAGE_URL']?>">
     <div class="row">
       <?if(isset($item['PREVIEW_PICTURE']['SRC'])):?>
@@ -14,7 +16,9 @@
       </div>
     </div>
   </a>
+  </div>
   <?endforeach;?>
+  </div>
 </div>
 <?$this->SetViewTarget('footer');?>
    <div id="servicesDetail" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade">

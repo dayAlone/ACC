@@ -564,7 +564,7 @@ article
 	img.map
 		display none
 		@media (min-width: scr_sm)
-			display block
+			display inline-block
 	img
 		max-width 100%
 	.index &
@@ -872,9 +872,9 @@ article
 				&:hover
 					color white
 				@media (min-width: scr_sm)
-					width (100/2)%
-				@media (min-width: scr_md)
 					width (100/3)%
+				@media (min-width: scr_md)
+					width (100/4)%
 			&__picture
 				full-width()
 				background-repeat no-repeat
