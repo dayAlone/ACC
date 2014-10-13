@@ -147,7 +147,8 @@ $(document).ready ->
 	
 
 	$('.dropdown').elem('item').click (e)->
-		if $(this).attr('href').length == "#"
+		console.log $(this).attr('href')[0]
+		if $(this).attr('href')[0] == "#"
 			$('.dropdown').elem('text').html($(this).text())
 			$('.dropdown').elem('frame').velocity
 					properties: "transition.slideUpOut"
@@ -203,6 +204,7 @@ $(document).ready ->
 		top: '50%'
 		left: '50%'
 
+	###
 	initType = ()->
 		$('.dropdown.type').elem('item').click (e)->
 			elm = $(this).attr 'href'
@@ -218,6 +220,7 @@ $(document).ready ->
 					properties: "transition.slideUpOut"
 					options:
 						duration: 300
+	###
 
 	$('.dropdown')
 		.hoverIntent
@@ -291,7 +294,7 @@ $(document).ready ->
 		x = delay 200, ()->
 			size()
    
-
+###
 	if $('#bg_map').length > 0
 		bgMapInit = ()->
 			mapOptions =
@@ -349,3 +352,4 @@ $(document).ready ->
 	     		map.setCenter mapOptions['center']
 		
 		google.maps.event.addDomListener(window, 'load', bgMapInit)
+###

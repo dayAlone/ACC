@@ -2160,6 +2160,7 @@ article {
 @media (min-width: 1200px) {
   .page .filter__item span {
     display: inline;
+    margin-left: 5px;
   }
 }
 .page .filter__item:after {
