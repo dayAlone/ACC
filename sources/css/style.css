@@ -1985,6 +1985,9 @@ article {
     padding-right: 15px;
   }
 }
+.map .page .services__item {
+  margin-left: 0;
+}
 @media (min-width: 768px) {
   .page .services__item {
     line-height: 105px;
