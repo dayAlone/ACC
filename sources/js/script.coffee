@@ -143,7 +143,6 @@ $(document).ready ->
 				properties: "transition.slideDownIn"
 				options:
 					duration: 300
-
 	
 
 	$('.dropdown').elem('item').click (e)->

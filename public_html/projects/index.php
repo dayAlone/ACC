@@ -3,13 +3,6 @@ require($_SERVER['DOCUMENT_ROOT'].'/bitrix/header.php');
 $APPLICATION->SetPageProperty('body_class', "map");
 ?> 
 <h1 data-more="Для получения подробной информации о проекте нажмите на соответствующий маркер на карте." class="inline-block page__title">наши проекты</h1>
-<div class="filter">
-  <div class="row">
-    <div class="col-xs-12 visible-xs"><span class="dropdown"><a href="#" class="dropdown__trigger"><span class="dropdown__text">Все проекты</span><svg width="7" height="6" viewBox="0 0 7 6" xmlns="http://www.w3.org/2000/svg"><title>arrow</title><desc>Created with Sketch.</desc><path d="M7.03 0L3.514 6.026 0 0h7.03z" id="Imported-Layers" fill="#0045D2" fill-rule="evenodd"/></svg></a><span class="dropdown__frame"><a href="#" style="display:none" class="dropdown__item">Все проекты</a><a href="#" class="dropdown__item">Текущие</a><a href="#" class="dropdown__item">Завершенные</a></span></span></div>
-    <div class="col-sm-9 no-mobile"><a href="#" class="filter__item filter__item--active">все проекты</a><a href="#" class="filter__item filter__item--yellow">текущие<span>проекты</span></a><a href="#" class="filter__item filter__item--blue">ЗАВЕРШЕННЫЕ<span>проекты</span></a></div>
-    <div class="col-sm-3 right no-mobile">Вид: <span class="dropdown type"><a href="#" class="dropdown__trigger"><span class="dropdown__text">Карта</span><svg width="7" height="6" viewBox="0 0 7 6" xmlns="http://www.w3.org/2000/svg"><title>arrow</title><desc>Created with Sketch.</desc><path d="M7.03 0L3.514 6.026 0 0h7.03z" id="Imported-Layers" fill="#0045D2" fill-rule="evenodd"/></svg></a><span class="dropdown__frame"><a href="#list" class="dropdown__item">Список</a><a href="#bg_map" class="dropdown__item">Карта</a></span></span></div>
-  </div>
-</div>
 <?/*
 <div id="list" class="services"><a data-toggle="modal" data-target="#markerDetail" href="#markerDetail" class="services__item">
     <div class="row">

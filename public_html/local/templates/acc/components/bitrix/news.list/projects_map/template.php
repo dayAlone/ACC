@@ -1,3 +1,10 @@
+<div class="filter">
+  <div class="row">
+    <div class="col-xs-12 visible-xs"><span class="dropdown"><a href="#all" class="dropdown__trigger"><span class="dropdown__text">Все проекты</span><?=svg('arrow')?></a><span class="dropdown__frame"><a href="#all" style="display:none" class="dropdown__item">Все проекты</a><a href="#current" class="dropdown__item">Текущие</a><a href="#finished" class="dropdown__item">Завершенные</a></span></span></div>
+    <div class="col-sm-9 no-mobile"><a href="#all" class="filter__item filter__item--active">все проекты</a><a href="#current" class="filter__item filter__item--yellow">текущие<span>проекты</span></a><a href="#finished" class="filter__item filter__item--blue">ЗАВЕРШЕННЫЕ<span>проекты</span></a></div>
+    <div class="col-sm-3 right no-mobile">Вид: <span class="dropdown type"><a href="#" class="dropdown__trigger"><span class="dropdown__text">Карта</span><?=svg('arrow')?></a><span class="dropdown__frame"><a href="#list" class="dropdown__item">Список</a><a href="#bg_map" class="dropdown__item">Карта</a></span></span></div>
+  </div>
+</div>
 <div id="list" class="services">
 	<div class="row">
 	<?foreach ($arResult['ITEMS'] as $item):?>
@@ -73,6 +80,15 @@
 		    }
 		  });
 		};
+		function show_elements(list) {
+			console.log(list)
+			$.each(list['lines'], function () {
+				this.setMap(map);
+			});
+			$.each(list['markers'], function () {
+				this.setVisible(true);
+			});
+		}
 		function hide_elements(list) {
 			console.log(list)
 			$.each(list['lines'], function () {
@@ -105,10 +121,37 @@
 		      fillOpacity: 1
 		    };
 		    initType()
+		    /*
 		    google.maps.event.addListener(map, 'dragend', function(e) { 
 		    	console.log(map.getCenter())
 		    });
-		    
+		    */
+		    $('.filter').elem('item').click(function(e) {
+		      if(!$(this).mod('active')) {
+			      var href;
+			      href = $(this).attr('href').split('#')[1];
+			      if(objects[href])
+			      {
+			      	$('.filter').elem('item').mod('active', false);
+			      	$(this).mod('active', true);
+			      	$.each(objects, function(elm, key){
+			      		if(elm==href)
+			      			show_elements(key)
+			      		else
+			      			hide_elements(key)
+			      	})
+			      }
+			      else
+			      {
+			      	$('.filter').elem('item').mod('active', false);
+			      	$(this).mod('active', true);
+			      	$.each(objects, function(elm, key){
+						show_elements(key)
+			      	})
+			      }
+		      }
+		      return e.preventDefault();
+		    });
 		    <?foreach ($arResult['ITEMS'] as $item):?>
 		    	cords = [
 			    	<? foreach($item['PROPS']['GEO'] as $geo): ?>
