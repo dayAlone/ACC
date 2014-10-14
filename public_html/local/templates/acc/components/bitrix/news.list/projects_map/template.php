@@ -8,7 +8,7 @@
 <div id="list" class="services">
 	<div class="row">
 	<?foreach ($arResult['ITEMS'] as $item):?>
-	<div class="col-lg-6" data-type="<?=$item['PROPS']['SECTION']?>">
+	<div class="col-lg-6 elm" data-type="<?=$item['PROPS']['SECTION']?>">
 	  <a data-toggle="modal" data-target="#servicesDetail" href="#servicesDetail" class="services__item" data-url="<?=$item['DETAIL_PAGE_URL']?>">
 	    <div class="row">
 	      <?if(isset($item['PREVIEW_PICTURE']['SRC'])):?>
@@ -135,16 +135,21 @@
 			      	$('.filter').elem('item').mod('active', false);
 			      	$(this).mod('active', true);
 			      	$.each(objects, function(elm, key){
-			      		if(elm==href)
+			      		if(elm==href) {
 			      			show_elements(key)
-			      		else
+			      			$('#list .elm[data-type="'+elm+'"]').show()
+			      		}
+			      		else {
 			      			hide_elements(key)
+			      			$('#list .elm[data-type="'+elm+'"]').hide()
+			      		}
 			      	})
 			      }
 			      else
 			      {
 			      	$('.filter').elem('item').mod('active', false);
 			      	$(this).mod('active', true);
+			      	$('#list .elm').show()
 			      	$.each(objects, function(elm, key){
 						show_elements(key)
 			      	})
