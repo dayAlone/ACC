@@ -192,7 +192,7 @@
 		        
 		        objects['<?=$item['PROPS']['SECTION']?>']['lines'].push(path);
 		        google.maps.event.addListener(path, 'click', function() {
-		            return $('#markerDetail').modal();
+		            $.openModal('/projects/<?=$item['CODE']?>/', '#markerDetail', true);
 		        });
 		        path.setMap(map);
 	        <?endforeach;?>
