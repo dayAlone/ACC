@@ -187,7 +187,8 @@
 		          geodesic: true,
 		          strokeColor: <?=($item['PROPS']['SECTION']=='finished'?'"#0089c0"':'"#fdb932"')?>,
 		          strokeOpacity: 1.0,
-		          strokeWeight: 4
+		          strokeWeight: 4,
+		          geodesic: false
 		        });
 		        
 		        objects['<?=$item['PROPS']['SECTION']?>']['lines'].push(path);
