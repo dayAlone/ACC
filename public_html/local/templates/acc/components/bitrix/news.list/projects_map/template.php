@@ -2,7 +2,19 @@
   <div class="row">
     <div class="col-xs-12 visible-xs"><span class="dropdown"><a href="#all" class="dropdown__trigger"><span class="dropdown__text">Все проекты</span><?=svg('arrow')?></a><span class="dropdown__frame"><a href="#all" style="display:none" class="dropdown__item">Все проекты</a><a href="#current" class="dropdown__item">Текущие</a><a href="#finished" class="dropdown__item">Завершенные</a></span></span></div>
     <div class="col-sm-9 no-mobile"><a href="#all" class="filter__item filter__item--active">все проекты</a><a href="#current" class="filter__item filter__item--yellow">текущие<span>проекты</span></a><a href="#finished" class="filter__item filter__item--blue">ЗАВЕРШЕННЫЕ<span>проекты</span></a></div>
-    <div class="col-sm-3 right no-mobile">Вид: <span class="dropdown type"><a href="#" class="dropdown__trigger"><span class="dropdown__text">Карта</span><?=svg('arrow')?></a><span class="dropdown__frame"><a href="#list" class="dropdown__item">Список</a><a href="#bg_map" class="dropdown__item">Карта</a></span></span></div>
+    <div class="col-sm-3 right no-mobile">Вид: 
+    	<span class="dropdown type">
+    		<a href="#" class="dropdown__trigger"><span class="dropdown__text">Карта</span><?=svg('arrow')?></a>
+    		<span class="dropdown__frame">
+    			<a href="#list" class="dropdown__item">Список</a>
+    			<a href="#bg_map" class="dropdown__item">Карта</a>
+    		</span>
+    		<select class="dropdown__select">
+    			<option value="#list">Список</a>
+    			<option value="#bg_map">Карта</a>
+    		</select>
+    	</span>
+    </div>
   </div>
 </div>
 <div id="list" class="services">

@@ -229,6 +229,16 @@ $(document).ready ->
 			out : ()->
 				closeDropdown($(this))
 
+	$('.toolbar a.phone').click (e)->
+		if $(window).width() <= 768
+			$('#Contacts').modal()
+			e.preventDefault()
+
+	$('.site-select .site-select__trigger').click ()->
+		p = $(this).parents('.site-select')
+		if !p.mod('open')
+			$('#Sites').modal()
+
 	$('.site-select .site-select__trigger').hoverIntent
 		over : ()->
 			if($(window).width()>768)

@@ -13,7 +13,7 @@
           "DETAIL_URL"  => "/news/#ELEMENT_CODE#/",
           "CACHE_TYPE"  => "A",
           "SET_TITLE"   => "N",
-          "CLASS"       => "visible-xs"
+          "CLASS"       => ""
            ),
            false
         );?>

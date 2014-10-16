@@ -287,6 +287,19 @@
         return closeDropdown($(this));
       }
     });
+    $('.toolbar a.phone').click(function(e) {
+      if ($(window).width() <= 768) {
+        $('#Contacts').modal();
+        return e.preventDefault();
+      }
+    });
+    $('.site-select .site-select__trigger').click(function() {
+      var p;
+      p = $(this).parents('.site-select');
+      if (!p.mod('open')) {
+        return $('#Sites').modal();
+      }
+    });
     $('.site-select .site-select__trigger').hoverIntent({
       over: function() {
         var p;

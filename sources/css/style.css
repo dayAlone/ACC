@@ -2239,6 +2239,9 @@ article {
     display: none;
   }
 }
+.page .dropdown__select {
+  display: none;
+}
 .page .dropdown__trigger {
   color: #9c9c9c;
   z-index: 2;
