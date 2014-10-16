@@ -24623,7 +24623,7 @@ if ('undefined' !== typeof window.ParsleyValidator)
     $('.dropdown').elem('select').on('change', function() {
       var val;
       val = $(this).val();
-      $(this).block().find("a[href=" + val + "]").trigger('click');
+      $(this).block().find("a[href='" + val + "']").trigger('click');
       return $(this).mod('open', true);
     });
     $('.dropdown').hoverIntent({

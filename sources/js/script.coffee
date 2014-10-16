@@ -220,7 +220,7 @@ $(document).ready ->
 	###
 	$('.dropdown').elem('select').on 'change', ()->
 		val = $(this).val()
-		$(this).block().find("a[href=#{val}]").trigger 'click'
+		$(this).block().find("a[href='#{val}']").trigger 'click'
 		$(this).mod('open', true)
 	
 	$('.dropdown')
