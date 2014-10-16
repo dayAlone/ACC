@@ -5,7 +5,7 @@ $APPLICATION->SetPageProperty('body_class', "index");
 $APPLICATION->SetPageProperty('article_class', "index-page");
 ?> 
 <div class="highlight">
-  <h1>Наш профессионализм <br> – ваш успех</h1>
+  <h1>Наш профессионализм<br> – ваш успех</h1>
   <p>«Аргус Свар Сервис» (АСС) – ведущая международная команда экспертов автоматической сварки трубопроводов мирового уровня</p>
 </div>
 <div class="bages">
