@@ -9,7 +9,7 @@
 	<div class="row">
 	<?foreach ($arResult['ITEMS'] as $item):?>
 	<div class="col-lg-6 elm" data-type="<?=$item['PROPS']['SECTION']?>">
-	  <a data-toggle="modal" data-target="#servicesDetail" href="#servicesDetail" class="services__item" data-url="<?=$item['DETAIL_PAGE_URL']?>">
+	  <a data-toggle="modal" data-target="#markerDetail" href="#markerDetail" class="services__item" data-url="<?=$item['DETAIL_PAGE_URL']?>">
 	    <div class="row">
 	      <?if(isset($item['PREVIEW_PICTURE']['SRC'])):?>
 	      <div class="col-xs-5 col-sm-4 col-md-3">
