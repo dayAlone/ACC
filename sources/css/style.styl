@@ -1009,7 +1009,9 @@ article
 					path
 						fill white
 
-.tooltip
+.tooltip, #tt
+	position: absolute
+	z-index: 20000
 	background-color: blue
 	border-radius 20px
 	margin-top -39px
@@ -1017,6 +1019,8 @@ article
 	padding: 8px 15px 4px
 	font-family 'Proxima', 'Helvetica Neue', 'Arial', sans-serif
 	font-weight bold
+#tt
+	margin-top -10px
 .sidebar
 	full-width()
 	z-index 10

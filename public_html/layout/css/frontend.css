@@ -4830,7 +4830,10 @@ article {
 .page .dropdown:hover .dropdown__trigger svg path {
   fill: #f4f4f4;
 }
-.tooltip {
+.tooltip,
+#tt {
+  position: absolute;
+  z-index: 20000;
   background-color: #0049d3;
   -webkit-border-radius: 20px;
   border-radius: 20px;
@@ -4843,6 +4846,9 @@ article {
   padding: 8px 15px 4px;
   font-family: 'Proxima', 'Helvetica Neue', 'Arial', sans-serif;
   font-weight: bold;
+}
+#tt {
+  margin-top: -10px;
 }
 .sidebar {
   float: left;

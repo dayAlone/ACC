@@ -104,10 +104,16 @@
 		    mapOptions = {
 		      zoom: 3,
 		      //draggable: false,
-		      zoomControl: false,
+		      //zoomControl: false,
 		      scrollwheel: false,
 		      disableDoubleClickZoom: true,
-		      disableDefaultUI: true,
+		      //disableDefaultUI: true,
+		      streetViewControl: false,
+		      panControl: false,
+		      zoomControlOptions: {
+		        style: google.maps.ZoomControlStyle.LARGE,
+		        position: google.maps.ControlPosition.LEFT_CENTER
+    		  },
 		      center: new google.maps.LatLng(66.69261210265907, 95.40570330969672),
 		      styles: [{"featureType":"water","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":0}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":17}]},{"featureType":"road.highway","elementType":"geometry.fill","stylers":[{"color":"#000000"},{"lightness":17}]},{"featureType":"road.highway","elementType":"geometry.stroke","stylers":[{"color":"#000000"},{"lightness":29},{"weight":0.2}]},{"featureType":"road.arterial","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":18}]},{"featureType":"road.local","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":16}]},{"featureType":"poi","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":21}]},{"elementType":"labels.text.stroke","stylers":[{"visibility":"on"},{"color":"#000000"},{"lightness":16}]},{"elementType":"labels.text.fill","stylers":[{"saturation":36},{"color":"#000000"},{"lightness":40}]},{"elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"transit","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":19}]},{"featureType":"administrative","elementType":"geometry.fill","stylers":[{"color":"#000000"},{"lightness":20}]},{"featureType":"administrative","elementType":"geometry.stroke","stylers":[{"color":"#000000"},{"lightness":17},{"weight":1.2}]}]
 		    };
@@ -117,7 +123,7 @@
 		      path: google.maps.SymbolPath.CIRCLE,
 		      strokeColor: 'transparent',
 		      fillColor: '#FFF',
-		      scale: 4.5,
+		      scale: 4,
 		      fillOpacity: 1
 		    };
 		    initType()
@@ -181,13 +187,16 @@
 		          };
 		          var tooltip = new Tooltip(tooltipOptions);
 		          objects['<?=$item['PROPS']['SECTION']?>']['markers'].push(marker);
+		          google.maps.event.addListener(marker, 'mouseover', function() {
+      				linetip.hide();
+    			  });
 		        });
 		        path = new google.maps.Polyline({
 		          path: line,
 		          geodesic: true,
 		          strokeColor: <?=($item['PROPS']['SECTION']=='finished'?'"#0089c0"':'"#fdb932"')?>,
 		          strokeOpacity: 1.0,
-		          strokeWeight: 4,
+		          strokeWeight: 5,
 		          geodesic: false
 		        });
 		        
@@ -195,6 +204,18 @@
 		        google.maps.event.addListener(path, 'click', function() {
 		            $.openModal('/projects/<?=$item['CODE']?>/', '#markerDetail', true);
 		        });
+		        google.maps.event.addListener(path, 'mousemove', function() {
+		        	var show = false
+		        	$('.tooltip').each(function(){
+		        		if($(this).css('visibility')!='hidden')
+		        			show = true
+		        	})
+		        	if(!show)
+      					linetip.show("<?=$item['NAME']?>");
+    			});
+    			google.maps.event.addListener(path, 'mouseout', function() {
+      				linetip.hide();
+    			});
 		        path.setMap(map);
 	        <?endforeach;?>
 
@@ -207,5 +228,80 @@
 		}
 		initialize_map()
 	});
+	var linetip=function(){
+		var id = 'tt';
+		var top = 3;
+		var left = 3;
+		var maxw = 200;
+		var speed = 10;
+		var timer = 20;
+		var endalpha = 95;
+		var alpha = 0;
+		var tt,t,c,b,h;
+		var ie = document.all ? true : false;
+		return{
+		    show:function(v,w){         
+		        if(tt == null){             
+		            tt = document.createElement('div');
+		            tt.setAttribute('id',id);
+		            t = document.createElement('div');
+		            t.setAttribute('id',id + 'top');
+		            c = document.createElement('div');
+		            c.setAttribute('id',id + 'cont');
+		            b = document.createElement('div');
+		            b.setAttribute('id',id + 'bot');
+		            tt.appendChild(t);
+		            tt.appendChild(c);
+		            tt.appendChild(b);
+		            document.body.appendChild(tt);              
+		            tt.style.opacity = 0;
+		            tt.style.filter = 'alpha(opacity=0)';
+		            document.onmousemove = this.pos;                
+		        }
+		        tt.style.visibility = 'visible';
+		        tt.style.display = 'block';
+		        c.innerHTML = v;
+		        tt.style.width = w ? w + 'px' : 'auto';
+		        if(!w && ie){
+		            t.style.display = 'none';
+		            b.style.display = 'none';
+		            tt.style.width = tt.offsetWidth;
+		            t.style.display = 'block';
+		            b.style.display = 'block';
+		        }
+		        if(tt.offsetWidth > maxw){tt.style.width = maxw + 'px'}
+		        h = parseInt(tt.offsetHeight) + top;
+		        clearInterval(tt.timer);
+		        tt.timer = setInterval(function(){linetip.fade(1)},timer);
+		    },
+		    pos:function(e){
+		        var u = ie ? event.clientY + document.documentElement.scrollTop : e.pageY;
+		        var l = ie ? event.clientX + document.documentElement.scrollLeft : e.pageX;
+		        tt.style.top = (u - h) + 'px';
+		        tt.style.left = (l + left) + 'px';
+		    },
+		    fade:function(d){
+		        var a = alpha;
+		        if((a != endalpha && d == 1) || (a != 0 && d == -1)){
+		            var i = speed;
+		            if(endalpha - a < speed && d == 1){
+		                i = endalpha - a;
+		            }else if(alpha < speed && d == -1){
+		                i = a;
+		            }
+		            alpha = a + (i * d);
+		            tt.style.opacity = alpha * .01;
+		            tt.style.filter = 'alpha(opacity=' + alpha + ')';
+		        }else{
+		            clearInterval(tt.timer);
+		            if(d == -1){tt.style.display = 'none'}
+		        }
+		    },
+		    hide:function(){
+		        clearInterval(tt.timer);
+		        tt.timer = setInterval(function(){linetip.fade(-1)},timer);
+		    }
+		};
+	}();
 </script>
 <?$this->EndViewTarget();?> 
