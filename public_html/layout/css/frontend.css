@@ -5153,7 +5153,6 @@ article {
   top: 0;
   left: 0;
   position: fixed;
-/* Выбор сайтов холдинга */
 /* Тригер мобильного меню */
 /* Тригеры попапов */
 }
@@ -5275,16 +5274,7 @@ article {
   font-size: 12px;
   text-transform: uppercase;
 }
-@media (min-width: 768px) {
-  .toolbar .lang-trigger {
-    margin-left: 0px;
-  }
-}
-@media (min-width: 1200px) {
-  .toolbar .lang-trigger {
-    margin-left: 28px;
-  }
-}
+.toolbar .lang-trigger,
 .toolbar .site-select {
   display: inline-block;
   vertical-align: middle;
@@ -5296,35 +5286,43 @@ article {
   z-index: 200;
 }
 @media (min-width: 992px) {
+  .toolbar .lang-trigger,
   .toolbar .site-select {
     width: 200px;
   }
 }
+.toolbar .lang-trigger--open .site-select__trigger svg path,
 .toolbar .site-select--open .site-select__trigger svg path {
   fill: #f4f4f4;
 }
+.toolbar .lang-trigger__trigger,
 .toolbar .site-select__trigger {
   color: #f4f4f4;
   position: relative;
   top: 1px;
   z-index: 3;
 }
+.toolbar .lang-trigger__trigger svg,
 .toolbar .site-select__trigger svg {
   margin-left: 5px;
 }
+.toolbar .lang-trigger__trigger span,
 .toolbar .site-select__trigger span {
   display: none;
 }
 @media (min-width: 992px) {
+  .toolbar .lang-trigger__trigger span,
   .toolbar .site-select__trigger span {
     display: none;
   }
 }
 @media (min-width: 1200px) {
+  .toolbar .lang-trigger__trigger span,
   .toolbar .site-select__trigger span {
     display: inline;
   }
 }
+.toolbar .lang-trigger__dropdown,
 .toolbar .site-select__dropdown {
   display: none;
   position: absolute;
@@ -5336,6 +5334,7 @@ article {
   -webkit-border-radius: 5px;
   border-radius: 5px;
 }
+.toolbar .lang-trigger__link,
 .toolbar .site-select__link {
   float: left;
   clear: both;
@@ -5343,6 +5342,7 @@ article {
   line-height: 20px;
   text-decoration: underline;
 }
+.toolbar .lang-trigger__link:hover,
 .toolbar .site-select__link:hover {
   color: #00aafa;
   text-decoration: none;
