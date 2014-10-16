@@ -232,7 +232,7 @@
 		var id = 'tt';
 		var top = 3;
 		var left = 3;
-		var maxw = 200;
+		var maxw = 250;
 		var speed = 10;
 		var timer = 20;
 		var endalpha = 95;
