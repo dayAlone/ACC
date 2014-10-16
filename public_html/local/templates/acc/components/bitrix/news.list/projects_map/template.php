@@ -123,7 +123,7 @@
 		      path: google.maps.SymbolPath.CIRCLE,
 		      strokeColor: 'transparent',
 		      fillColor: '#FFF',
-		      scale: 4,
+		      scale: 3,
 		      fillOpacity: 1
 		    };
 		    initType()
