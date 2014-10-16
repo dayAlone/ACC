@@ -60,6 +60,12 @@
 
 		    var alt, elm;
 		    elm = $(this).attr('href');
+		    console.log($('.page').elem('title'))
+		    if (elm == '#list') {
+		    	$('.page').elem('title').mod('no-description', true)
+		    }
+		    else
+		    	$('.page').elem('title').mod('no-description', false)
 		    alt = $(this).parents('.dropdown').elem('frame').find("a:not([href=" + elm + "])").attr('href');
 		    if (!$(elm).is(':visible')) {
 		      $(elm).velocity({
@@ -81,7 +87,6 @@
 		  });
 		};
 		function show_elements(list) {
-			console.log(list)
 			$.each(list['lines'], function () {
 				this.setMap(map);
 			});
@@ -90,7 +95,6 @@
 			});
 		}
 		function hide_elements(list) {
-			console.log(list)
 			$.each(list['lines'], function () {
 				this.setMap(null);
 			});
