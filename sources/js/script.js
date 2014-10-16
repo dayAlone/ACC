@@ -199,6 +199,8 @@
           }
         });
         return e.preventDefault();
+      } else {
+        return window.location.href = $(this).attr('href');
       }
     });
     closeDropdown = function(x) {

@@ -153,6 +153,8 @@ $(document).ready ->
 					options:
 						duration: 300
 			e.preventDefault()
+		else
+			window.location.href = $(this).attr('href')
 
 
 	closeDropdown = (x)->
