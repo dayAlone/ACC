@@ -14,6 +14,11 @@ if(count($arResult['SECTIONS'])>0):
 		<a href="/news/<?=$item['NAME']?>/" <?=($arParams["CACHE_NOTES"]==$item['ID']?'style="display:none"':'')?> class="dropdown__item"><?=$item['NAME']?></a>
 		<?endforeach;?>
 	</span>
+	<select class="dropdown__select">
+		<?foreach ($arResult['SECTIONS'] as $key => &$item):?>
+		<option value="/news/<?=$item['NAME']?>/"><?=$item['NAME']?></a>
+		<?endforeach;?>
+	</select>
 </span>
 <div class="years xl-margin-top">
       <?foreach ($arResult['SECTIONS'] as $key => &$item):?>

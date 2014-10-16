@@ -99,6 +99,7 @@
         <div class="map"><a href="#">карта сайта</a></div>
       </div>
       <div class="col-xs-4 col-sm-3 col-md-2 col-lg-2 social">
+        <nobr>
         <?php
             $APPLICATION->IncludeComponent("bitrix:menu", "social", 
             array(
@@ -109,6 +110,7 @@
                 ),
             false);
         ?>
+        </nobr>
       </div>
       <div class="col-md-3 col-lg-3 visible-md-block visible-lg-block"><a href="http://radia.ru" target="_blank" class="radia"><?=svg('radia')?>
           <div class="radia__content">разработка сайта <br>radia interactive</div></a></div>

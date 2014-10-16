@@ -146,7 +146,6 @@ $(document).ready ->
 	
 
 	$('.dropdown').elem('item').click (e)->
-		console.log $(this).attr('href')[0]
 		if $(this).attr('href')[0] == "#"
 			$('.dropdown').elem('text').html($(this).text())
 			$('.dropdown').elem('frame').velocity
@@ -222,6 +221,7 @@ $(document).ready ->
 	$('.dropdown').elem('select').on 'change', ()->
 		val = $(this).val()
 		$(this).block().find("a[href=#{val}]").trigger 'click'
+		$(this).mod('open', true)
 	
 	$('.dropdown')
 		.hoverIntent
@@ -230,6 +230,7 @@ $(document).ready ->
 					openDropdown($(this))
 				else
 					$(this).elem('select').focus()
+					$(this).mod('open', true)
 			out : ()->
 				if($(window).width()>970)
 					closeDropdown($(this))

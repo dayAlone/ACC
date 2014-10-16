@@ -190,7 +190,6 @@
       }
     });
     $('.dropdown').elem('item').click(function(e) {
-      console.log($(this).attr('href')[0]);
       if ($(this).attr('href')[0] === "#") {
         $('.dropdown').elem('text').html($(this).text());
         $('.dropdown').elem('frame').velocity({
@@ -278,14 +277,16 @@
     $('.dropdown').elem('select').on('change', function() {
       var val;
       val = $(this).val();
-      return $(this).block().find("a[href=" + val + "]").trigger('click');
+      $(this).block().find("a[href=" + val + "]").trigger('click');
+      return $(this).mod('open', true);
     });
     $('.dropdown').hoverIntent({
       over: function() {
         if ($(window).width() > 970) {
           return openDropdown($(this));
         } else {
-          return $(this).elem('select').focus();
+          $(this).elem('select').focus();
+          return $(this).mod('open', true);
         }
       },
       out: function() {

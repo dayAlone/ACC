@@ -4794,6 +4794,9 @@ article {
   text-decoration: none;
   color: #f4f4f4;
 }
+.page .dropdown--open .dropdown__trigger svg path {
+  fill: #f4f4f4;
+}
 .page .dropdown--open .dropdown__trigger .dropdown__text {
   color: #f4f4f4;
 }
@@ -4841,12 +4844,6 @@ article {
 .page .dropdown__item:hover {
   color: #18a5f7;
   text-decoration: none;
-}
-.page .dropdown:hover .dropdown__trigger {
-  color: #f4f4f4;
-}
-.page .dropdown:hover .dropdown__trigger svg path {
-  fill: #f4f4f4;
 }
 .tooltip,
 #tt {
