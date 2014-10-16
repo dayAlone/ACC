@@ -161,8 +161,12 @@ $(document).ready ->
 			properties: "transition.slideUpOut"
 			options:
 				duration: 300
+				complete: ()->
+					x.mod('open', false)
+
 	openDropdown = (x)->
 		clearTimeout timer
+		x.mod('open', true)
 		text = x.elem('text').text()
 		x.elem('item').show()
 		x.elem('frame').find("a:contains(#{text})").hide()
@@ -179,11 +183,6 @@ $(document).ready ->
 									duration: 300
 
 	timer = false
-	$('.dropdown').elem('trigger')
-		.click (e)->
-			if($(window).width()<768)
-				openDropdown($(this).parents('.dropdown'))
-			e.preventDefault()
 
 	$('.modal .text').spin
 		lines: 13
@@ -220,14 +219,20 @@ $(document).ready ->
 					options:
 						duration: 300
 	###
-
+	$('.dropdown').elem('select').on 'change', ()->
+		val = $(this).val()
+		$(this).block().find("a[href=#{val}]").trigger 'click'
+	
 	$('.dropdown')
 		.hoverIntent
 			over : ()->
-				if($(window).width()>768)
+				if($(window).width()>970)
 					openDropdown($(this))
+				else
+					$(this).elem('select').focus()
 			out : ()->
-				closeDropdown($(this))
+				if($(window).width()>970)
+					closeDropdown($(this))
 
 	$('.toolbar a.phone').click (e)->
 		if $(window).width() <= 768

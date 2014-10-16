@@ -958,13 +958,28 @@ article
 		font-size 12px
 		font-weight bold
 		text-transform: uppercase
+		position relative
 		.news &
 			display inline-block
 			margin-top 10px
 			@media (min-width: scr_sm)
 				display none
 		&__select
-			display none
+			position absolute
+			right 0
+			top 0
+			opacity 0
+			z-index 20
+			@media (min-width: scr_md)
+				display none
+		&--open
+			.dropdown__trigger
+				text-decoration none
+				color white
+				.dropdown__text
+					color white
+				&:after
+					border-bottom-color white
 		&__trigger
 			
 			color #9c9c9c
@@ -976,13 +991,7 @@ article
 				margin-left 5px
 				position relative
 				top -1px
-			&:hover
-				text-decoration none
-				color white
-				.dropdown__text
-					color white
-				&:after
-					border-bottom-color white
+				
 		&__text	
 			position relative
 			border-bottom 1px dotted #595959

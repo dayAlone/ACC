@@ -206,13 +206,17 @@
       return x.elem('frame').velocity({
         properties: "transition.slideUpOut",
         options: {
-          duration: 300
+          duration: 300,
+          complete: function() {
+            return x.mod('open', false);
+          }
         }
       });
     };
     openDropdown = function(x) {
       var text;
       clearTimeout(timer);
+      x.mod('open', true);
       text = x.elem('text').text();
       x.elem('item').show();
       x.elem('frame').find("a:contains(" + text + ")").hide();
@@ -235,12 +239,6 @@
       });
     };
     timer = false;
-    $('.dropdown').elem('trigger').click(function(e) {
-      if ($(window).width() < 768) {
-        openDropdown($(this).parents('.dropdown'));
-      }
-      return e.preventDefault();
-    });
     $('.modal .text').spin({
       lines: 13,
       length: 21,
@@ -277,14 +275,23 @@
     					options:
     						duration: 300
      */
+    $('.dropdown').elem('select').on('change', function() {
+      var val;
+      val = $(this).val();
+      return $(this).block().find("a[href=" + val + "]").trigger('click');
+    });
     $('.dropdown').hoverIntent({
       over: function() {
-        if ($(window).width() > 768) {
+        if ($(window).width() > 970) {
           return openDropdown($(this));
+        } else {
+          return $(this).elem('select').focus();
         }
       },
       out: function() {
-        return closeDropdown($(this));
+        if ($(window).width() > 970) {
+          return closeDropdown($(this));
+        }
       }
     });
     $('.toolbar a.phone').click(function(e) {
