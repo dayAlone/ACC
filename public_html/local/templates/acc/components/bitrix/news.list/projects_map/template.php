@@ -108,6 +108,7 @@
 		      scrollwheel: false,
 		      disableDoubleClickZoom: true,
 		      //disableDefaultUI: true,
+		      mapTypeControl: false,
 		      streetViewControl: false,
 		      panControl: false,
 		      zoomControlOptions: {

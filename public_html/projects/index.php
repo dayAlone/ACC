@@ -12,7 +12,7 @@ array(
   "NEWS_COUNT"  => "9999999",
   "SORT_BY1"    => "SORT",
   "SORT_ORDER1" => "ASC",
-  "DETAIL_URL"  => "/partners/",
+  "DETAIL_URL"  => "/projects/#ELEMENT_CODE#",
   "CACHE_TYPE"  => "A",
   "SET_TITLE"   => "N",
   "PROPERTIES_CODE" =>array('GEO'),
