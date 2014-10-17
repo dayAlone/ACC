@@ -198,9 +198,12 @@
 		    });
 		    <?foreach ($arResult['ITEMS'] as $item):?>
 		    	cords = [
-			    	<? foreach($item['PROPS']['GEO'] as $geo): ?>
+			    	<? foreach($item['PROPS']['GEO'] as $geo):
+			    		if(strlen($geo['cords'])>0):?>
 						{ cords : new google.maps.LatLng(<?=$geo['cords']?>), name: "<?=$geo['name']?>" },
-					<? endforeach; ?>
+					<? 
+						endif;
+					endforeach; ?>
 				]
 				line = []
 			    $.each(cords, function() {
