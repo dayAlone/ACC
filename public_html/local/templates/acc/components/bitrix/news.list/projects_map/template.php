@@ -69,43 +69,46 @@
 <script type="text/javascript" charset="utf-8">
 	$(function(){
 		initType = function() {
-		  $('.dropdown--type').elem('item').click(function(e) {
-		  	if ($(this).attr('href')[0] === "#") {
-		        $('.dropdown--type').elem('text').html($(this).text());
-		        $('.dropdown--type').elem('frame').velocity({
-		          properties: "transition.slideUpOut",
-		          options: {
-		            duration: 300
-		          }
-		        });
-	        }
-	        e.preventDefault();
+		  $('.dropdown').elem('item').click(function(e) {
+		  	
+		  	if($(this).block().hasMod('type')) {
+			  	if ($(this).attr('href')[0] === "#") {
+			        $('.dropdown--type').elem('text').html($(this).text());
+			        $('.dropdown--type').elem('frame').velocity({
+			          properties: "transition.slideUpOut",
+			          options: {
+			            duration: 300
+			          }
+			        });
+		        }
+		        e.preventDefault();
 
-		    var alt, elm;
-		    elm = $(this).attr('href');
-		    if (elm == '#list') {
-		    	$('.page').elem('title').mod('no-description', true)
-		    }
-		    else
-		    	$('.page').elem('title').mod('no-description', false)
-		    alt = $(this).parents('.dropdown--type').elem('frame').find("a:not([href=" + elm + "])").attr('href');
-		    if (!$(elm).is(':visible')) {
-		      $(elm).velocity({
-		        properties: "transition.slideDownIn",
-		        options: {
-		          duration: 300,
-		          complete: function() {
-		            return google.maps.event.trigger(map, "resize");
-		          }
-		        }
-		      });
-		      return $(alt).velocity({
-		        properties: "transition.slideUpOut",
-		        options: {
-		          duration: 300
-		        }
-		      });
-		    }
+			    var alt, elm;
+			    elm = $(this).attr('href');
+			    if (elm == '#list') {
+			    	$('.page').elem('title').mod('no-description', true)
+			    }
+			    else
+			    	$('.page').elem('title').mod('no-description', false)
+			    alt = $(this).parents('.dropdown--type').elem('frame').find("a:not([href=" + elm + "])").attr('href');
+			    if (!$(elm).is(':visible')) {
+			      $(elm).velocity({
+			        properties: "transition.slideDownIn",
+			        options: {
+			          duration: 300,
+			          complete: function() {
+			            return google.maps.event.trigger(map, "resize");
+			          }
+			        }
+			      });
+			      return $(alt).velocity({
+			        properties: "transition.slideUpOut",
+			        options: {
+			          duration: 300
+			        }
+			      });
+			    }
+			}
 		  });
 		};
 		function show_elements(list) {
