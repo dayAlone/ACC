@@ -166,6 +166,7 @@ $(document).ready ->
 					x.mod('open', false)
 
 	openDropdown = (x)->
+		console.log 'open'
 		clearTimeout timer
 		x.mod('open', true)
 		text = x.elem('text').text()

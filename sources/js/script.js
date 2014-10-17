@@ -216,6 +216,7 @@
     };
     openDropdown = function(x) {
       var text;
+      console.log('open');
       clearTimeout(timer);
       x.mod('open', true);
       text = x.elem('text').text();
