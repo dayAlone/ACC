@@ -158,17 +158,14 @@ $(document).ready ->
 
 
 	closeDropdown = (x)->
+		x.mod('open', false)
 		x.elem('frame').velocity
 			properties: "transition.slideUpOut"
 			options:
 				duration: 300
-				complete: ()->
-					x.mod('open', false)
 
 	openDropdown = (x)->
-		console.log 'open'
 		clearTimeout timer
-		x.mod('open', true)
 		text = x.elem('text').text()
 		x.elem('item').show()
 		x.elem('frame').find("a:contains(#{text})").hide()
@@ -177,6 +174,7 @@ $(document).ready ->
 			options:
 				duration: 300
 				complete: ()->
+					x.mod('open', true)
 					timer = delay 3000, ()->
 						$('.dropdown').elem('frame')
 							.velocity
@@ -226,8 +224,7 @@ $(document).ready ->
 		$(this).block().find("a[href='#{val}']").trigger 'click'
 		$(this).mod('open', true)
 	
-	$('.dropdown')
-		.hoverIntent
+	$('.dropdown').hoverIntent
 			over : ()->
 				if($(window).width()>970)
 					openDropdown($(this))
@@ -235,6 +232,7 @@ $(document).ready ->
 					$(this).elem('select').focus()
 					$(this).mod('open', true)
 			out : ()->
+				
 				if($(window).width()>970)
 					closeDropdown($(this))
 

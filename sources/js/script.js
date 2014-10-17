@@ -204,21 +204,17 @@
       }
     });
     closeDropdown = function(x) {
+      x.mod('open', false);
       return x.elem('frame').velocity({
         properties: "transition.slideUpOut",
         options: {
-          duration: 300,
-          complete: function() {
-            return x.mod('open', false);
-          }
+          duration: 300
         }
       });
     };
     openDropdown = function(x) {
       var text;
-      console.log('open');
       clearTimeout(timer);
-      x.mod('open', true);
       text = x.elem('text').text();
       x.elem('item').show();
       x.elem('frame').find("a:contains(" + text + ")").hide();
@@ -228,6 +224,7 @@
           duration: 300,
           complete: function() {
             var timer;
+            x.mod('open', true);
             return timer = delay(3000, function() {
               return $('.dropdown').elem('frame').velocity({
                 properties: "transition.slideUpOut",

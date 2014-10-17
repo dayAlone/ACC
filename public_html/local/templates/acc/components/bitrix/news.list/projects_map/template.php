@@ -1,7 +1,7 @@
 <div class="filter">
   <div class="row">
     <div class="col-xs-12 visible-xs">
-    	<span class="dropdown sort">
+    	<span class="dropdown dropdown--sort">
     		<a href="#" class="dropdown__trigger"><span class="dropdown__text">Все проекты</span><?=svg('arrow')?></a>
     		<select class="dropdown__select">
     			<option value="#all">Все проекты</a>
@@ -14,7 +14,7 @@
     	<a href="#all" class="filter__item filter__item--active">все проекты</a>
     	<a href="#current" class="filter__item filter__item--yellow">текущие<span>проекты</span></a><a href="#finished" class="filter__item filter__item--blue">ЗАВЕРШЕННЫЕ<span>проекты</span></a></div>
     <div class="col-sm-3 right no-mobile">Вид: 
-    	<span class="type dropdown">
+    	<span class="dropdown dropdown--type">
     		<a href="#" class="dropdown__trigger"><span class="dropdown__text">Карта</span><?=svg('arrow')?></a>
     		<span class="dropdown__frame">
     			<a href="#list" class="dropdown__item">Список</a>
@@ -69,10 +69,10 @@
 <script type="text/javascript" charset="utf-8">
 	$(function(){
 		initType = function() {
-		  $('.dropdown.type').elem('item').click(function(e) {
+		  $('.dropdown--type').elem('item').click(function(e) {
 		  	if ($(this).attr('href')[0] === "#") {
-		        $('.dropdown').elem('text').html($(this).text());
-		        $('.dropdown').elem('frame').velocity({
+		        $('.dropdown--type').elem('text').html($(this).text());
+		        $('.dropdown--type').elem('frame').velocity({
 		          properties: "transition.slideUpOut",
 		          options: {
 		            duration: 300
@@ -88,7 +88,7 @@
 		    }
 		    else
 		    	$('.page').elem('title').mod('no-description', false)
-		    alt = $(this).parents('.dropdown').elem('frame').find("a:not([href=" + elm + "])").attr('href');
+		    alt = $(this).parents('.dropdown--type').elem('frame').find("a:not([href=" + elm + "])").attr('href');
 		    if (!$(elm).is(':visible')) {
 		      $(elm).velocity({
 		        properties: "transition.slideDownIn",
@@ -187,7 +187,7 @@
 			      	})
 			      }
 		    }
-		    $('.dropdown.sort').elem('item').click(function(e) {
+		    $('.dropdown--sort').elem('item').click(function(e) {
 		    	sort($(this), objects)
 		    });
 		    $('.filter').elem('item').click(function(e) {
