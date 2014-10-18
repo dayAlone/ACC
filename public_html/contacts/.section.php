@@ -2,7 +2,7 @@
 $sSectionName = 'Контакты';
 $arDirProperties = array(
 	'title' => 'Контакты',
-	'description' => 'Description',
+	'description' => '',
 	'keywords' => 'Keywords',
 	'robots' => 'index, follow'
 );
