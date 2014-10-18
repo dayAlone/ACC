@@ -976,6 +976,7 @@ input:focus {
   float: left;
 }
 .footer .radia__content {
+  font-weight: normal;
   float: left;
   color: #fff;
   text-decoration: none;

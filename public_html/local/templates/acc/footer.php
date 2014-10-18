@@ -93,7 +93,7 @@
         <div class="copyright">© 2014 ООО «аргус свар сервис» </div>
       </div>
       <div class="col-sm-3 col-md-2">
-        <div class="contacts"><span>Москва,  ул. усачева, 35А <br></span><a href="mailto:info@argusweld.ru" class="contacts_link">info@argusweld.ru</a></div>
+        <div class="contacts"><span><?=COption::GetOptionString("grain.customsettings","footer_address")?> <br></span><a href="mailto:<?=COption::GetOptionString("grain.customsettings","footer_email")?>" class="contacts_link"><?=COption::GetOptionString("grain.customsettings","footer_email")?></a></div>
       </div>
       <div class="col-sm-2">
         <div class="map"><a href="#">карта сайта</a></div>
