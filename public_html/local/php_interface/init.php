@@ -36,7 +36,7 @@ function IBlockElementsMenu($IBLOCK_ID)
 		
 		$arNav    = array();
 		$arSort   = array("NAME" => "DESC");
-		$arFilter = array("IBLOCK_ID" => $IBLOCK_ID);
+		$arFilter = array("IBLOCK_ID" => $IBLOCK_ID, 'ACTIVE'=>'Y');
 		$rs       = CIBlockElement::GetList($arSort, $arFilter, false, false);
 		//$rs->SetUrlTemplates("/catalog/#SECTION_CODE#/#ELEMENT_CODE#.php");
 
