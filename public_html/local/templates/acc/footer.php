@@ -106,7 +106,7 @@ if($APPLICATION->GetPageProperty('popup')):?>
         <div class="contacts"><span><?=COption::GetOptionString("grain.customsettings","footer_address")?> <br></span><a href="mailto:<?=COption::GetOptionString("grain.customsettings","footer_email")?>" class="contacts_link"><?=COption::GetOptionString("grain.customsettings","footer_email")?></a></div>
       </div>
       <div class="col-sm-2">
-        <div class="map"><a href="#">карта сайта</a></div>
+        <div class="map"><a href="/map/">карта сайта</a></div>
       </div>
       <div class="col-xs-4 col-sm-3 col-md-2 col-lg-2 social">
         <nobr>

@@ -1571,6 +1571,27 @@ article {
   background: #00aafa;
   color: #f4f4f4;
 }
+.map-columns td {
+  width: 33.333333333333336%;
+}
+.map-columns ul {
+  font-size: 13px;
+}
+.map-columns ul.map-level-0 > li {
+  list-style: none;
+  margin-bottom: 20px;
+}
+.map-columns ul.map-level-0 > li > ul {
+  padding-left: 20px;
+  margin-top: 10px;
+}
+.map-columns ul.map-level-0 > li > ul li > a {
+  font-size: 14px;
+  font-weight: bold;
+}
+.map-columns ul.map-level-0 > li > a {
+  font-size: 18px;
+}
 .page {
   padding-bottom: 40px;
   color: #f4f4f4;

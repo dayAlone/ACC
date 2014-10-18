@@ -18,6 +18,44 @@ function article_class()
 		return $APPLICATION->GetPageProperty('article_class');
 	}
 }
+function IBlockElementsMenu($IBLOCK_ID)
+{
+	$obCache       = new CPHPCache();
+	$cacheLifetime = 86400; 
+	$cacheID       = 'IBlockElementsMenu_'.$IBLOCK_ID; 
+	$cachePath     = '/'.$cacheID;
+
+	if( $obCache->InitCache($cacheLifetime, $cacheID, $cachePath) )
+	{
+	   $vars = $obCache->GetVars();
+	   return $vars['NAV'];
+	}
+	elseif( $obCache->StartDataCache()  )
+	{
+		CModule::IncludeModule("iblock");
+		
+		$arNav    = array();
+		$arSort   = array("NAME" => "DESC");
+		$arFilter = array("IBLOCK_ID" => $IBLOCK_ID);
+		$rs       = CIBlockElement::GetList($arSort, $arFilter, false, false);
+		//$rs->SetUrlTemplates("/catalog/#SECTION_CODE#/#ELEMENT_CODE#.php");
+
+		while ($item = $rs->GetNext()):
+			$arNav[] = Array(
+				$item['NAME'], 
+				$item['DETAIL_PAGE_URL'], 
+				Array(), 
+				Array(), 
+				"" 
+			);
+		endwhile;
+
+		$obCache->EndDataCache(array('NAV' => $arNav));
+
+		return $arNav;
+	}
+}
+
 AddEventHandler("main", "OnAdminTabControlBegin", "MyOnAdminTabControlBegin");
 function MyOnAdminTabControlBegin(&$form)
 {
