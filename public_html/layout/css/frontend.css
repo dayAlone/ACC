@@ -5100,14 +5100,14 @@ article {
   display: inline-block;
   vertical-align: middle;
   background: #0049d3;
-  width: 41px;
-  height: 20px;
+  width: 36px;
+  height: 17px;
   -webkit-border-radius: 10px;
   border-radius: 10px;
   cursor: pointer;
-  margin: 0 3px;
+  margin: 0 4px;
   position: relative;
-  top: -1px;
+  top: -2px;
 }
 .lang-trigger__carriage:after {
   -webkit-transition-property: left;
@@ -5121,12 +5121,12 @@ article {
   -ms-transition-duration: 0.3s;
   transition-duration: 0.3s;
   content: "";
-  width: 12px;
+  width: 9px;
   -webkit-border-radius: 12px;
   border-radius: 12px;
   left: 4px;
   top: 4px;
-  height: 12px;
+  height: 9px;
   -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.3);
   box-shadow: 0 1px 3px rgba(0,0,0,0.3);
   background: #f4f4f4;
@@ -5145,10 +5145,10 @@ article {
   width: 100%;
   position: relative;
   height: 61px;
-  line-height: 63px;
+  line-height: 62px;
   z-index: 20;
   white-space: nowrap;
-  background: rgba(0,0,0,0.8);
+  background: rgba(28,28,28,0.8);
   margin-bottom: 20px;
   top: 0;
   left: 0;
@@ -5157,22 +5157,43 @@ article {
 /* Тригер мобильного меню */
 /* Тригеры попапов */
 }
+.toolbar:after {
+  position: absolute;
+  height: 33px;
+  width: 100%;
+  content: "";
+  background: #1f2131;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  display: none;
+}
 @media (min-width: 992px) {
-  .toolbar {
-    height: 120px;
-    line-height: 58px;
+  .toolbar:after {
+    display: block;
   }
+}
+.toolbar .container {
+  position: relative;
+  z-index: 2;
+}
+.toolbar .shield {
+  position: absolute;
+  left: -62px;
+  top: 32px;
 }
 @media (min-width: 768px) {
   .toolbar {
     position: relative;
-    background: rgba(0,0,0,0.5);
+    background: rgba(28,28,28,0.8);
     margin-bottom: 15px;
   }
 }
 @media (min-width: 992px) {
   .toolbar {
     margin-bottom: 35px;
+    height: 91px;
+    line-height: 38px;
   }
 }
 .toolbar .divider {
@@ -5217,8 +5238,8 @@ article {
   font-weight: bold;
   text-transform: uppercase;
   color: #f4f4f4;
-  line-height: 31px;
-  height: 32px;
+  line-height: 53px;
+  height: 53px;
   margin-bottom: 5px;
   white-space: nowrap;
 }
@@ -5246,12 +5267,13 @@ article {
 }
 .toolbar .search-form {
   position: absolute;
+  z-index: 30;
   top: 0px;
   display: none;
   right: 9px;
-  line-height: 55px;
-  height: 54px;
-  background: #000;
+  line-height: 35px;
+  height: 32px;
+  background: #1f2130;
 }
 .toolbar .search-form__button {
   background: transparent;
@@ -5264,7 +5286,7 @@ article {
   filter: alpha(opacity=0);
 }
 .toolbar .search-form__text {
-  background: #000;
+  background: transparent;
   border: 1px solid #0049d3;
   height: 20px;
   -webkit-border-radius: 20px;
@@ -5273,7 +5295,6 @@ article {
   min-width: 240px;
   padding: 0 15px;
   font-size: 12px;
-  text-transform: uppercase;
 }
 .toolbar .lang-trigger {
   position: relative;
@@ -5288,11 +5309,6 @@ article {
   text-transform: uppercase;
   position: relative;
   z-index: 300;
-}
-@media (min-width: 992px) {
-  .toolbar .site-select {
-    width: 200px;
-  }
 }
 .toolbar .site-select--open .site-select__trigger svg path {
   fill: #f4f4f4;
@@ -5404,15 +5420,19 @@ article {
   }
 }
 .toolbar .phone {
+  display: inline-block;
+  vertical-align: middle;
   color: #f4f4f4;
   font-size: 15px;
   font-weight: bold;
+  top: 1px;
+  position: relative;
 }
 .toolbar .phone svg {
   display: inline-block;
   vertical-align: middle;
   position: relative;
-  top: -1px;
+  top: -2px;
   margin-right: 10px;
 }
 .toolbar .feedback,

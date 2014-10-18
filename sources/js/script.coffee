@@ -72,18 +72,19 @@ $(document).ready ->
 		if $('.toolbar .container').width() <= 750
 			$('#Search').modal()
 		else
-			$('.toolbar .search-form').velocity
-				properties: "transition.slideDownIn"
-				options:
-					duration: 300
-					complete: ()->
-						$('.toolbar .search-form  .search-form__button').css 'opacity', 1
-						$('.toolbar').one 'mouseleave', ()->
-							$('.toolbar .search-form  .search-form__button').css 'opacity', 0
-							$('.toolbar .search-form').velocity
-								properties: "transition.slideUpOut"
-								options:
-									duration: 300
+			if $('.toolbar .search-form').is ':hidden'
+				$('.toolbar .search-form').velocity
+					properties: "transition.slideDownIn"
+					options:
+						duration: 300
+						complete: ()->
+							$('.toolbar .search-form  .search-form__button').css 'opacity', 1
+							$('.toolbar').one 'mouseleave', ()->
+								$('.toolbar .search-form  .search-form__button').css 'opacity', 0
+								$('.toolbar .search-form').velocity
+									properties: "transition.slideUpOut"
+									options:
+										duration: 300
 						
 		e.preventDefault()
 

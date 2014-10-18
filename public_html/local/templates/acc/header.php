@@ -26,6 +26,9 @@
   <div id="panel"><?$APPLICATION->ShowPanel();?></div>
   <header class="toolbar">
     <div class="container">
+      <div class="shield">
+        <?=svg('shield')?>
+      </div>
       <div class="row no-gutter-md">
         <div class="col-xs-3 visible-md visible-lg"><a href="/" class="logo"><?=svg('logo')?></a></div>
         <div class="col-xs-12 col-md-9 no-padding-right-md">
@@ -59,7 +62,6 @@
               </form>
               <a href="#" class="search-trigger"><?=svg('seach')?></a></div>
           </div>
-          <div class="divider visible-md visible-lg"></div>
           <div class="row visible-md visible-lg">
             <div class="col-xs-12">
               <?
