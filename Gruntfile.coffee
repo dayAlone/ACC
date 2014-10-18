@@ -147,6 +147,23 @@ module.exports = (grunt)->
 					dest: '<%= path.layout %>/images/svg/'
 				}]
 
+		'string-replace':
+			inline: 
+				files: [{
+					expand: true
+					cwd: '<%= path.layout %>/images/svg/'
+					src: ['**/*.svg']
+					dest: '<%= path.layout %>/images/svg/'
+				}]
+				options:
+					replacements: [{
+						pattern: '<desc>Created with Sketch.</desc>'
+						replacement: ''
+					},{
+						pattern: /<title>(.*)<\/title>/ig
+						replacement: ''
+					}]
+
 		# Копирование картинок из плагинов
 		copy:
 			main:
@@ -302,7 +319,7 @@ module.exports = (grunt)->
 			
 			svg:
 				files   : ['<%= path.sources %>/images/svg/*.svg']
-				tasks   : ['newer:svgmin', 'jade', 'notify:svg' ]
+				tasks   : ['newer:svgmin', 'jade', 'string-replace', 'notify:svg' ]
 				options :
 						livereload: true
 			
@@ -318,8 +335,8 @@ module.exports = (grunt)->
 	
 	grunt.registerTask 'default', ['watch']
 
-	grunt.registerTask 'svg', ['svgmin', 'jade']
+	grunt.registerTask 'svg', ['svgmin', 'string-replace', 'jade']
 	
-	grunt.registerTask 'compile', ['copy', 'imagemin', 'svgmin', 'less', 'concat:css_stylus', 'stylus', 'coffee', 'concat:js_plugins', 'concat:js_frontend', 'concat:css_frontend', 'csscomb', 'cssmin', 'uglify']#, 'jade']
+	grunt.registerTask 'compile', ['copy', 'imagemin', 'svgmin', 'string-replace', 'less', 'concat:css_stylus', 'stylus', 'coffee', 'concat:js_plugins', 'concat:js_frontend', 'concat:css_frontend', 'csscomb', 'cssmin', 'uglify']#, 'jade']
 
 	grunt.task.run 'notify_hooks'
