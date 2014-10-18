@@ -1572,7 +1572,7 @@ article {
   color: #f4f4f4;
 }
 .map-columns td {
-  width: 33.333333333333336%;
+  width: 50%;
 }
 .map-columns ul {
   font-size: 13px;
@@ -1586,7 +1586,7 @@ article {
   margin-top: 10px;
 }
 .map-columns ul.map-level-0 > li > ul li > a {
-  font-size: 14px;
+  font-size: 12px;
   font-weight: bold;
 }
 .map-columns ul.map-level-0 > li > a {

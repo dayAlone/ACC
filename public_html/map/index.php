@@ -11,7 +11,7 @@ $APPLICATION->IncludeComponent(
 	".default", 
 	array(
 		"LEVEL" => "4",
-		"COL_NUM" => "3",
+		"COL_NUM" => "2",
 		"SHOW_DESCRIPTION" => "Y",
 		"SET_TITLE" => "N",
 		"CACHE_TIME" => "36000",
