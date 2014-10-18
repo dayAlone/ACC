@@ -1,6 +1,8 @@
 <?
 require($_SERVER['DOCUMENT_ROOT'].'/bitrix/header.php');
 $APPLICATION->SetPageProperty('body_class', "services");
+$APPLICATION->SetPageProperty('popup', "auditProcess");
+$APPLICATION->SetPageProperty('popup_content', COption::GetOptionString("grain.customsettings","popup_audit"));
 ?> 
 <h1 class="page__title">Наши услуги</h1>
 <div class="page__divider"></div>
@@ -23,7 +25,7 @@ array(
 ?>
 <div class="page__divider"></div>
 <big class="l-line-height s-margin-bottom">Одновременно с предоставлением персонала мы имеем возможность и осуществляем аудит, имеющейся тех.вооруженности,  разработку технологий сварки с внедрением, сваркой КСС, предоставлением процедур, обучением персонала заказчика на оборудовании заказчика, что предпочтительнее для заказчика, т.к. обучение проходит непосредственно на оборудовании и объекте заказчика перед началом сварки.</big>
-<div class="center"><a href="#" class="button button--white">как проходит аудит?</a></div>
+<div class="center"><a data-toggle="modal" data-target="#auditProcess" href="#auditProcess" class="button button--white">как проходит аудит?</a></div>
 <?
 if(strlen($_REQUEST['ELEMENT_CODE'])>0)
 {?>

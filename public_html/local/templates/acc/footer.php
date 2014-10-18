@@ -21,6 +21,16 @@
     <?endif;?>
   </main>
 </div>
+<?
+if($APPLICATION->GetPageProperty('popup')):?>
+<div id="<?=$APPLICATION->GetPageProperty('popup')?>" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content"><a data-dismiss="modal" href="#" class="close"><?=svg('close')?></a>
+      <?=$APPLICATION->GetPageProperty('popup_content')?>
+    </div>
+  </div>
+</div>
+<?endif;?>
 <?$APPLICATION->ShowViewContent('footer');?>
 <div id="Nav" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade">
   <div class="modal-dialog">
