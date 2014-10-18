@@ -26,11 +26,14 @@
   <div id="panel"><?$APPLICATION->ShowPanel();?></div>
   <header class="toolbar">
     <div class="container">
-      <div class="shield">
-        <?=svg('shield')?>
-      </div>
       <div class="row no-gutter-md">
-        <div class="col-xs-3 visible-md visible-lg"><a href="/" class="logo"><?=svg('logo')?></a></div>
+        <div class="col-xs-3 visible-md visible-lg">
+          <a href="/" class="logo"><?=svg('logo')?></a>
+          <div class="shield">
+            <?=svg('shield-l')?>
+            <?=svg('shield-r')?>
+          </div>
+        </div>
         <div class="col-xs-12 col-md-9 no-padding-right-md">
           <div class="row">
             <div class="col-xs-3 col-md-2">

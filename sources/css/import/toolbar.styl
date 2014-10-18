@@ -103,8 +103,34 @@
 		z-index 2
 	.shield
 		position absolute
-		left -62px
+		width 100%
+		left 0px
 		top 32px
+		display none
+		@media (min-width: scr_md)
+			display block
+		&:after
+			position absolute
+			height 68px
+			background #1f2130
+			content ""
+			width 155px
+			left 30px
+			@media (min-width: scr_lg)
+				width 201px
+				left 15px
+		svg
+			position absolute
+			top 0
+			&:first-of-type
+				left -40px
+				@media (min-width: scr_lg)
+					left -55px
+			&:last-of-type
+				right -14px
+				@media (min-width: scr_lg)
+					right 0
+
 	@media (min-width: scr_sm)
 		position relative
 		background rgba(28,28,28,.8)
@@ -121,6 +147,8 @@
 		line-height 50px
 	.logo
 		full-width()
+		position relative
+		z-index 30
 		@media (min-width: scr_sm)
 			margin-left 20px
 		line-height 120px

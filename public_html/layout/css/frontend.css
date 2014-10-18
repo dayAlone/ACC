@@ -5179,8 +5179,49 @@ article {
 }
 .toolbar .shield {
   position: absolute;
-  left: -62px;
+  width: 100%;
+  left: 0px;
   top: 32px;
+  display: none;
+}
+@media (min-width: 992px) {
+  .toolbar .shield {
+    display: block;
+  }
+}
+.toolbar .shield:after {
+  position: absolute;
+  height: 68px;
+  background: #1f2130;
+  content: "";
+  width: 155px;
+  left: 30px;
+}
+@media (min-width: 1200px) {
+  .toolbar .shield:after {
+    width: 201px;
+    left: 15px;
+  }
+}
+.toolbar .shield svg {
+  position: absolute;
+  top: 0;
+}
+.toolbar .shield svg:first-of-type {
+  left: -40px;
+}
+@media (min-width: 1200px) {
+  .toolbar .shield svg:first-of-type {
+    left: -55px;
+  }
+}
+.toolbar .shield svg:last-of-type {
+  right: -14px;
+}
+@media (min-width: 1200px) {
+  .toolbar .shield svg:last-of-type {
+    right: 0;
+  }
 }
 @media (min-width: 768px) {
   .toolbar {
@@ -5207,6 +5248,8 @@ article {
 .toolbar .logo {
   float: left;
   width: 100%;
+  position: relative;
+  z-index: 30;
   line-height: 120px;
 }
 @media (min-width: 768px) {
