@@ -16,6 +16,7 @@ array(
   "NEWS_COUNT"  => "9999999",
   "SORT_BY1"    => "SORT",
   "SORT_ORDER1" => "ASC",
+  "FIELD_CODE"  => array('DETAIL_TEXT'),
   "DETAIL_URL"  => "/services/#ELEMENT_CODE#/",
   "CACHE_TYPE"  => "A",
   "SET_TITLE"   => "N",

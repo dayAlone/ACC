@@ -2,7 +2,11 @@
   <div class="row">
   <?foreach ($arResult['ITEMS'] as $item):?>
   <div class="col-lg-6">
-  <a data-toggle="modal" data-target="#servicesDetail" href="#servicesDetail" class="services__item" data-url="<?=$item['DETAIL_PAGE_URL']?>">
+  <? if(strlen($item['DETAIL_TEXT'])>0):?>
+    <a data-toggle="modal" data-target="#servicesDetail" href="#servicesDetail" class="services__item" data-url="<?=$item['DETAIL_PAGE_URL']?>">
+  <?else:?>
+    <div class="services__item">
+  <?endif;?>
     <div class="row">
       <?if(isset($item['PREVIEW_PICTURE']['SRC'])):?>
       <div class="col-xs-5 col-sm-4 col-md-3">
@@ -15,7 +19,12 @@
         <div class="services__title"><?=$item['NAME']?></div>
       </div>
     </div>
-  </a>
+  
+  <? if(strlen($item['DETAIL_TEXT'])>0):?>
+    </a>
+  <?else:?>
+    </div>
+  <?endif;?>
   </div>
   <?endforeach;?>
   </div>
