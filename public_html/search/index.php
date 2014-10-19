@@ -36,7 +36,7 @@ $APPLICATION->IncludeComponent("bitrix:search.page","",Array(
     "SHOW_WHEN" => "N",
     "PAGE_RESULT_COUNT" => "50",
     "CACHE_TYPE" => "A",
-    "CACHE_TIME" => "3600",
+    "CACHE_TIME" => "36000",
     "DISPLAY_TOP_PAGER" => "N",
     "DISPLAY_BOTTOM_PAGER" => "Y",
     "PAGER_TITLE" => "Результаты поиска",

@@ -16,6 +16,8 @@
 							font-weight normal
 				> a
 					font-size 18px
+
+	
 .page
 	padding-bottom 40px
 	color white
@@ -483,8 +485,37 @@
 			&:hover
 				color #18a5f7
 				text-decoration none
-
-
+	.search-page
+		full-width()
+		font-size 14px
+		&__text, &__sort
+			font-size 14px
+		&__title
+			font-weight bold
+			font-size 18px
+			margin-bottom 8px
+			display inline-block
+		small
+			width 100%
+			display inline-block
+		form
+			input[type=text]
+				background transparent
+				border 1px solid blue
+				height 35px
+				line-height 38px
+				border-radius 30px
+				padding 0 50px 0 20px
+			button[type=submit]
+				background transparent
+				border 0
+				margin-left -44px
+				display inline-block
+				svg
+					position relative
+					top 4px
+					min-height 20px
+					min-width 20px
 .tooltip, #tt
 	position: absolute
 	z-index: 20000
