@@ -4051,6 +4051,20 @@ article {
   padding: 5px 25px 0;
   font-weight: bold;
   text-transform: uppercase;
+  -webkit-transition-property: background;
+  -moz-transition-property: background;
+  -o-transition-property: background;
+  -ms-transition-property: background;
+  transition-property: background;
+  -webkit-transition-duration: color;
+  -moz-transition-duration: color;
+  -o-transition-duration: color;
+  -ms-transition-duration: color;
+  transition-duration: color;
+}
+.modal .form input[type="submit"]:hover {
+  background: #0049d3;
+  color: #000;
 }
 .modal-title {
   float: left;
@@ -4314,23 +4328,21 @@ article {
   color: #00aafa;
   text-transform: uppercase;
   font-weight: bold;
-  -webkit-transition-property: opacity;
-  -moz-transition-property: opacity;
-  -o-transition-property: opacity;
-  -ms-transition-property: opacity;
-  transition-property: opacity;
-  -webkit-transition-duration: 0.3s;
-  -moz-transition-duration: 0.3s;
-  -o-transition-duration: 0.3s;
-  -ms-transition-duration: 0.3s;
-  transition-duration: 0.3s;
+  -webkit-transition-property: background;
+  -moz-transition-property: background;
+  -o-transition-property: background;
+  -ms-transition-property: background;
+  transition-property: background;
+  -webkit-transition-duration: color;
+  -moz-transition-duration: color;
+  -o-transition-duration: color;
+  -ms-transition-duration: color;
+  transition-duration: color;
   text-align: center;
 }
 .page .button:hover {
-  opacity: 0.8;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
-  filter: alpha(opacity=80);
-  color: #00aafa;
+  background: #00aafa;
+  color: #000;
   text-decoration: none;
 }
 .page .button--big {
@@ -4349,7 +4361,8 @@ article {
   border-color: #f4f4f4;
 }
 .page .button--white:hover {
-  color: #f4f4f4;
+  color: #000;
+  background: #f4f4f4;
 }
 .page .partners-list {
   line-height: 110px;
