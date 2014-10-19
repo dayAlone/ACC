@@ -3497,8 +3497,10 @@ input:focus {
   filter: alpha(opacity=50);
   display: none;
 }
-.index .footer .radia {
-  display: block;
+@media (min-width: 768px) {
+  .index .footer .radia {
+    display: block;
+  }
 }
 .footer .radia:hover {
   opacity: 1;
@@ -3518,14 +3520,12 @@ input:focus {
   text-decoration: none;
 }
 .footer .contacts,
-.footer .radia,
 .footer .map,
 .footer .address {
   display: none;
 }
 @media (min-width: 768px) {
   .footer .contacts,
-  .footer .radia,
   .footer .map,
   .footer .address {
     display: block;
@@ -5116,7 +5116,7 @@ article {
   color: #f4f4f4;
 }
 .lang-trigger--lang_english .lang-trigger__carriage:after {
-  left: 25px;
+  left: 23px;
 }
 .lang-trigger__carriage {
   display: inline-block;
@@ -5403,11 +5403,11 @@ article {
 .toolbar .site-select__dropdown {
   display: none;
   position: absolute;
-  top: 13px;
+  top: 3px;
   left: -13px;
   background: #0049d3;
   width: 200px;
-  padding: 35px 13px 5px;
+  padding: 30px 13px 5px;
   -webkit-border-radius: 5px;
   border-radius: 5px;
 }

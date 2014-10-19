@@ -182,7 +182,8 @@ white = #f4f4f4
 		opacity .5
 		display none
 		.index &
-			display block
+			@media (min-width: scr_sm)
+				display block
 		&:hover
 			opacity 1
 		svg
@@ -195,7 +196,7 @@ white = #f4f4f4
 			float left
 			color #fff
 			text-decoration: none
-	.contacts, .radia, .map, .address
+	.contacts, .map, .address
 		display none
 		@media (min-width: scr_sm)
 			display block
@@ -1200,7 +1201,7 @@ article
 			.lang-trigger__label:last-of-type
 				color white
 			.lang-trigger__carriage:after
-				left 25px
+				left 23px
 	&__carriage
 		middle()
 		background blue
@@ -1394,11 +1395,11 @@ article
 		&__dropdown
 			display none
 			position absolute
-			top 13px
+			top 3px
 			left -13px
 			background blue
 			width 200px
-			padding 35px 13px 5px
+			padding 30px 13px 5px
 			border-radius 5px
 		&__link
 			float: left

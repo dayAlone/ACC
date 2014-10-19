@@ -62,7 +62,8 @@
 		opacity .5
 		display none
 		.index &
-			display block
+			@media (min-width: scr_sm)
+				display block
 		&:hover
 			opacity 1
 		svg
@@ -75,7 +76,7 @@
 			float left
 			color #fff
 			text-decoration: none
-	.contacts, .radia, .map, .address
+	.contacts, .map, .address
 		display none
 		@media (min-width: scr_sm)
 			display block

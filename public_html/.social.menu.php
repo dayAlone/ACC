@@ -1,5 +1,5 @@
 <?
-$aMenuLinks = Array(
+/*$aMenuLinks = Array(
 	Array(
 		"facebook", 
 		"#", 
@@ -28,5 +28,5 @@ $aMenuLinks = Array(
 		Array(), 
 		"" 
 	)
-);
+);*/
 ?>
