@@ -4123,7 +4123,7 @@ article {
 }
 .map-columns ul.map-level-0 > li > ul li > a {
   font-size: 12px;
-  font-weight: bold;
+  font-weight: normal;
 }
 .map-columns ul.map-level-0 > li > a {
   font-size: 18px;
