@@ -1891,8 +1891,8 @@ article {
   width: 100%;
   font-size: 14px;
   min-height: 55px;
-  line-height: 17px;
-  padding-bottom: 8px;
+  line-height: 15px;
+  padding-bottom: 12px;
   font-weight: 300;
 }
 .page .tech__title:hover {
@@ -1947,7 +1947,7 @@ article {
   }
 }
 .page .tech__photos {
-  left: -5px;
+  left: 0px;
 }
 .page .tech__photos svg {
   max-height: 20px;
