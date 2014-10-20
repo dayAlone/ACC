@@ -5,7 +5,7 @@ newsInit = false
 map = undefined
 
 size = ->
-	autoHeight($('.tech'), '.tech__item', false, true)
+	autoHeight($('.page .tech'), '.tech__item', false, true)
 	if !newsInit
 		newsInit = true
 		$('article:not(.index-page) .news').isotope
