@@ -24356,7 +24356,7 @@ if ('undefined' !== typeof window.ParsleyValidator)
   map = void 0;
 
   size = function() {
-    autoHeight($('.tech'), '.tech__item');
+    autoHeight($('.tech'), '.tech__item', true);
     if (!newsInit) {
       newsInit = true;
       return $('article:not(.index-page) .news').isotope({
@@ -24423,6 +24423,9 @@ if ('undefined' !== typeof window.ParsleyValidator)
         $.each(items, function() {
           return heights.push($(this).height());
         });
+        if (debug) {
+          console.log(heights);
+        }
         $.each(items, function() {
           return $(this).height(Math.max.apply(Math, heights));
         });

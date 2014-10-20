@@ -5,7 +5,7 @@ newsInit = false
 map = undefined
 
 size = ->
-	autoHeight($('.tech'), '.tech__item')
+	autoHeight($('.tech'), '.tech__item', true)
 	if !newsInit
 		newsInit = true
 		$('article:not(.index-page) .news').isotope
@@ -53,6 +53,9 @@ autoHeight = (el, sel='', debug=false)->
 			$.each items, ()->
 				heights.push($(this).height())
 			
+			if debug
+				console.log heights
+
 			$.each items, ()->
 				$(this).height Math.max.apply(Math,heights)
 
