@@ -10,7 +10,7 @@
   map = void 0;
 
   size = function() {
-    autoHeight($('.tech'), '.tech__item', true);
+    autoHeight($('.tech'), '.tech__item', false, true);
     if (!newsInit) {
       newsInit = true;
       return $('article:not(.index-page) .news').isotope({
@@ -45,10 +45,13 @@
     }
   };
 
-  autoHeight = function(el, sel, debug) {
+  autoHeight = function(el, sel, use_padding, debug) {
     var count, heights, i, item, item_padding, items, loops, padding, step, x, _i, _ref, _results;
     if (sel == null) {
       sel = '';
+    }
+    if (use_padding == null) {
+      use_padding = false;
     }
     if (debug == null) {
       debug = false;
@@ -58,7 +61,11 @@
       el.find(sel).removeAttr('style');
       item_padding = item.css('padding-left').split('px')[0] * 2;
       padding = el.css('padding-left').split('px')[0] * 2;
-      step = Math.ceil((el.width() - padding) / (item.width() + item_padding));
+      if (debug) {
+        step = Math.round((el.width() - padding) / (item.width() + item_padding));
+      } else {
+        step = Math.round(el.width() / item.width());
+      }
       count = item.length - 1;
       loops = Math.ceil(count / step);
       i = 0;

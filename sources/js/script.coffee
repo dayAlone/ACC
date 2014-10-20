@@ -5,7 +5,7 @@ newsInit = false
 map = undefined
 
 size = ->
-	autoHeight($('.tech'), '.tech__item', true)
+	autoHeight($('.tech'), '.tech__item', false, true)
 	if !newsInit
 		newsInit = true
 		$('article:not(.index-page) .news').isotope
@@ -28,7 +28,7 @@ $.openModal = (url, id, open)->
 				History.pushState {'url':url}, $(id).find('.text h1').text(), url
 				window.title = $(id).find('.text h1').text()
 
-autoHeight = (el, sel='', debug=false)->
+autoHeight = (el, sel='', use_padding=false, debug=false)->
 	if el.length > 0
 		
 		item = el.find(sel)
@@ -36,10 +36,14 @@ autoHeight = (el, sel='', debug=false)->
 		
 		item_padding = item.css('padding-left').split('px')[0]*2
 		padding      = el.css('padding-left').split('px')[0]*2
-		step         = Math.ceil((el.width()-padding)/(item.width()+item_padding))
-		count        = item.length-1
-		loops        = Math.ceil(count/step)
-		i            = 0
+		if debug
+			step = Math.round((el.width()-padding)/(item.width()+item_padding))
+		else
+			step = Math.round(el.width()/item.width())
+		
+		count = item.length-1
+		loops = Math.ceil(count/step)
+		i     = 0
 		
 		if debug
 			console.log count, step, item_padding, padding, el.width(), item.width()
