@@ -1871,16 +1871,6 @@ article {
     padding: 13px 13px 10px;
   }
 }
-.page .tech__icons--frame {
-  padding-bottom: 26px;
-}
-.page .tech__icons {
-  position: absolute;
-  bottom: 0px;
-  left: 0;
-  width: 100%;
-  padding: 0 15px;
-}
 .page .tech__image {
   float: left;
   width: 100%;

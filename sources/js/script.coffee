@@ -5,7 +5,7 @@ newsInit = false
 map = undefined
 
 size = ->
-	autoHeight($('.page .tech'), '.tech__item', false, true)
+	autoHeight($('.page .tech'), '.tech__item', '.tech__title', false, true)
 	if !newsInit
 		newsInit = true
 		$('article:not(.index-page) .news').isotope
@@ -28,11 +28,11 @@ $.openModal = (url, id, open)->
 				History.pushState {'url':url}, $(id).find('.text h1').text(), url
 				window.title = $(id).find('.text h1').text()
 
-autoHeight = (el, sel='', use_padding=false, debug=false)->
+autoHeight = (el, selector='', height_selector = false, use_padding=false, debug=false)->
 	if el.length > 0
 		
-		item = el.find(sel)
-		el.find(sel).removeAttr 'style'
+		item = el.find(selector)
+		el.find(selector).removeAttr 'style'
 		
 		item_padding = item.css('padding-left').split('px')[0]*2
 		padding      = el.css('padding-left').split('px')[0]*2
@@ -55,13 +55,19 @@ autoHeight = (el, sel='', use_padding=false, debug=false)->
 			
 			heights = []
 			$.each items, ()->
-				heights.push($(this).height())
+				if height_selector
+					heights.push($(this).find(height_selector).height())
+				else
+					heights.push($(this).height())
 			
 			if debug
 				console.log heights
 
 			$.each items, ()->
-				$(this).height Math.max.apply(Math,heights)
+				if height_selector
+					$(this).find(height_selector).height Math.max.apply(Math,heights)
+				else
+					$(this).height Math.max.apply(Math,heights)
 
 			i += step
 

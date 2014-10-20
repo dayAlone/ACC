@@ -10,7 +10,7 @@
   map = void 0;
 
   size = function() {
-    autoHeight($('.page .tech'), '.tech__item', false, true);
+    autoHeight($('.page .tech'), '.tech__item', '.tech__title', false, true);
     if (!newsInit) {
       newsInit = true;
       return $('article:not(.index-page) .news').isotope({
@@ -45,10 +45,13 @@
     }
   };
 
-  autoHeight = function(el, sel, use_padding, debug) {
+  autoHeight = function(el, selector, height_selector, use_padding, debug) {
     var count, heights, i, item, item_padding, items, loops, padding, step, x, _i, _ref, _results;
-    if (sel == null) {
-      sel = '';
+    if (selector == null) {
+      selector = '';
+    }
+    if (height_selector == null) {
+      height_selector = false;
     }
     if (use_padding == null) {
       use_padding = false;
@@ -57,8 +60,8 @@
       debug = false;
     }
     if (el.length > 0) {
-      item = el.find(sel);
-      el.find(sel).removeAttr('style');
+      item = el.find(selector);
+      el.find(selector).removeAttr('style');
       item_padding = item.css('padding-left').split('px')[0] * 2;
       padding = el.css('padding-left').split('px')[0] * 2;
       if (debug) {
@@ -82,13 +85,21 @@
         }
         heights = [];
         $.each(items, function() {
-          return heights.push($(this).height());
+          if (height_selector) {
+            return heights.push($(this).find(height_selector).height());
+          } else {
+            return heights.push($(this).height());
+          }
         });
         if (debug) {
           console.log(heights);
         }
         $.each(items, function() {
-          return $(this).height(Math.max.apply(Math, heights));
+          if (height_selector) {
+            return $(this).find(height_selector).height(Math.max.apply(Math, heights));
+          } else {
+            return $(this).height(Math.max.apply(Math, heights));
+          }
         });
         _results.push(i += step);
       }
