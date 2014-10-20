@@ -1,6 +1,7 @@
 <?
 require($_SERVER['DOCUMENT_ROOT'].'/bitrix/header.php');
 $APPLICATION->SetPageProperty('body_class', "news");
+$APPLICATION->SetTitle("Новости");
 require_once($_SERVER['DOCUMENT_ROOT'].'/include/news_list.php');
 ?>
 <div class="row">

@@ -1,5 +1,6 @@
 <?
 require($_SERVER['DOCUMENT_ROOT'].'/bitrix/header.php');
+$APPLICATION->SetTitle("О компании");
 $APPLICATION->SetPageProperty('body_class', "about");
 $APPLICATION->SetPageProperty('popup', "aboutVideo");
 $APPLICATION->SetPageProperty('popup_content', COption::GetOptionString("grain.customsettings","popup_about"));

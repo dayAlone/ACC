@@ -2,6 +2,7 @@
 require($_SERVER['DOCUMENT_ROOT'].'/bitrix/header.php');
 $APPLICATION->SetPageProperty('body_class', "services");
 $APPLICATION->SetPageProperty('popup', "auditProcess");
+$APPLICATION->SetTitle("Наши услуги'");
 $APPLICATION->SetPageProperty('popup_content', COption::GetOptionString("grain.customsettings","popup_audit"));
 ?> 
 <h1 class="page__title">Наши услуги</h1>
