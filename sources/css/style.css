@@ -1837,7 +1837,7 @@ article {
   float: left;
   width: 100%;
   background: rgba(0,0,0,0.45);
-  padding: 13px 13px 7px;
+  padding: 13px 13px 6px;
   -webkit-transition-property: background;
   -moz-transition-property: background;
   -o-transition-property: background;
@@ -1870,6 +1870,16 @@ article {
     margin-top: 30px;
     padding: 13px 13px 10px;
   }
+}
+.page .tech__icons--frame {
+  padding-bottom: 26px;
+}
+.page .tech__icons {
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+  width: 100%;
+  padding: 0 15px;
 }
 .page .tech__image {
   float: left;
@@ -1946,6 +1956,9 @@ article {
     max-width: 26px;
     max-height: 22px;
   }
+}
+.page .tech__video {
+  left: -3px;
 }
 .page .tech__photos {
   left: 0px;
