@@ -1,6 +1,7 @@
 <div class="tech">
-  <?foreach ($arResult['ITEMS'] as $item):?>
   <div class="row">
+  <?foreach ($arResult['ITEMS'] as $item):?>
+  
     <div class="col-xs-12 col-sm-4 col-lg-3">
       <div class="tech__item">
         <div class="row">
@@ -25,8 +26,9 @@
         </div>
       </div>
     </div>
-  </div>
+  
   <?endforeach;?>
+  </div>
 </div>
 <?$this->SetViewTarget('footer');?>
 <div id="techDetail" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade">
