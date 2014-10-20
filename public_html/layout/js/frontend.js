@@ -24356,7 +24356,7 @@ if ('undefined' !== typeof window.ParsleyValidator)
   map = void 0;
 
   size = function() {
-    autoHeight($('.tech'), '.tech__item', true);
+    autoHeight($('.tech'), '.tech > .row > .col-xs-12', true);
     if (!newsInit) {
       newsInit = true;
       return $('article:not(.index-page) .news').isotope({
