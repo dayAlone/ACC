@@ -36,7 +36,9 @@ $APPLICATION->SetPageProperty('popup_content', COption::GetOptionString("grain.c
   <div class="col-sm-6">
     <h4>Опыт работы в различных регионах и странах мира:</h4>
     <p>Россия, Казахстан, Узбекистан, Азербайджан, Туркменистан, Белоруссия, Украина, Алжир, Ирак, ОАЭ, Китай, Индия</p>
-    <div class="xs-center"><a data-toggle="modal" data-target="#aboutVideo" href="#aboutVideo" class="button">смотрите видео о компании</a></div>
+    <? if(strlen(COption::GetOptionString("grain.customsettings","popup_about"))>0):?>
+      <div class="xs-center"><a data-toggle="modal" data-target="#aboutVideo" href="#aboutVideo" class="button">смотрите видео о компании</a></div>
+    <?endif;?>
   </div>
   <div class="col-sm-6 center"><img src="/layout/images/map.png" class="map"></div>
 </div>
