@@ -1,5 +1,5 @@
 (function() {
-  var addTrigger, blur, delay, getCaptcha, map, newsInit, setCaptcha, size, urlInitial;
+  var addTrigger, autoHeight, blur, delay, getCaptcha, map, newsInit, setCaptcha, size, urlInitial;
 
   delay = function(ms, func) {
     return setTimeout(func, ms);
@@ -10,6 +10,7 @@
   map = void 0;
 
   size = function() {
+    autoHeight($('.tech'), '.tech__item');
     if (!newsInit) {
       newsInit = true;
       return $('article:not(.index-page) .news').isotope({
@@ -41,6 +42,47 @@
           return window.title = $(id).find('.text h1').text();
         }
       });
+    }
+  };
+
+  autoHeight = function(el, sel, debug) {
+    var count, heights, i, item, item_padding, items, loops, padding, step, x, _i, _ref, _results;
+    if (sel == null) {
+      sel = '';
+    }
+    if (debug == null) {
+      debug = false;
+    }
+    if (el.length > 0) {
+      item = el.find(sel);
+      el.find(sel).removeAttr('style');
+      item_padding = item.css('padding-left').split('px')[0] * 2;
+      padding = el.css('padding-left').split('px')[0] * 2;
+      step = Math.round((el.width() - padding) / (item.width() + item_padding));
+      count = item.length - 1;
+      loops = Math.ceil(count / step);
+      i = 0;
+      if (debug) {
+        console.log(count, step, item_padding, padding, el.width(), item.width());
+      }
+      _results = [];
+      while (i < count) {
+        items = {};
+        for (x = _i = 0, _ref = step - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; x = 0 <= _ref ? ++_i : --_i) {
+          if (item[i + x]) {
+            items[x] = item[i + x];
+          }
+        }
+        heights = [];
+        $.each(items, function() {
+          return heights.push($(this).height());
+        });
+        $.each(items, function() {
+          return $(this).height(Math.max.apply(Math, heights));
+        });
+        _results.push(i += step);
+      }
+      return _results;
     }
   };
 

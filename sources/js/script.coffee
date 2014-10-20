@@ -5,6 +5,7 @@ newsInit = false
 map = undefined
 
 size = ->
+	autoHeight($('.tech'), '.tech__item')
 	if !newsInit
 		newsInit = true
 		$('article:not(.index-page) .news').isotope
@@ -26,6 +27,37 @@ $.openModal = (url, id, open)->
 					title : document.title
 				History.pushState {'url':url}, $(id).find('.text h1').text(), url
 				window.title = $(id).find('.text h1').text()
+
+autoHeight = (el, sel='', debug=false)->
+	if el.length > 0
+		
+		item = el.find(sel)
+		el.find(sel).removeAttr 'style'
+		
+		item_padding = item.css('padding-left').split('px')[0]*2
+		padding      = el.css('padding-left').split('px')[0]*2
+		step         = Math.round((el.width()-padding)/(item.width()+item_padding))
+		count        = item.length-1
+		loops        = Math.ceil(count/step)
+		i            = 0
+		
+		if debug
+			console.log count, step, item_padding, padding, el.width(), item.width()
+
+		while i < count
+			items = {}
+			for x in [0..step-1]
+				items[x] = item[i+x] if item[i+x]
+			
+			heights = []
+			$.each items, ()->
+				heights.push($(this).height())
+			
+			$.each items, ()->
+				$(this).height Math.max.apply(Math,heights)
+
+			i += step
+
 
 getCaptcha = ()->
 	$.get '/include/captcha.php', (data)->
