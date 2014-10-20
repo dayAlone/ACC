@@ -32,7 +32,11 @@ autoHeight = (el, selector='', height_selector = false, use_padding=false, debug
 	if el.length > 0
 		
 		item = el.find(selector)
-		el.find(selector).removeAttr 'style'
+
+		if height_selector
+			el.find(height_selector).removeAttr 'style'
+		else
+			el.find(selector).removeAttr 'style'
 		
 		item_padding = item.css('padding-left').split('px')[0]*2
 		padding      = el.css('padding-left').split('px')[0]*2
