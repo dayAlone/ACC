@@ -5,7 +5,7 @@ newsInit = false
 map = undefined
 
 size = ->
-	autoHeight($('.tech'), '.tech > .row > .col-xs-12', true)
+	autoHeight($('.tech'), '.tech__item', true)
 	if !newsInit
 		newsInit = true
 		$('article:not(.index-page) .news').isotope
@@ -36,7 +36,7 @@ autoHeight = (el, sel='', debug=false)->
 		
 		item_padding = item.css('padding-left').split('px')[0]*2
 		padding      = el.css('padding-left').split('px')[0]*2
-		step         = Math.round((el.width()-padding)/(item.width()+item_padding))
+		step         = Math.ceil((el.width()-padding)/(item.width()+item_padding))
 		count        = item.length-1
 		loops        = Math.ceil(count/step)
 		i            = 0
