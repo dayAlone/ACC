@@ -228,6 +228,7 @@
     });
     $('.lang-trigger__carriage').click(function(e) {
       var el, variants;
+      window.location.href = 'http://argusweld.com';
       el = $(this).parents('.lang-trigger');
       variants = el.data('variant').split(',');
       $.each(variants, function(index, value) {

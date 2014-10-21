@@ -172,6 +172,7 @@ $(document).ready ->
 			$(this).find('iframe').remove()
 
 	$('.lang-trigger__carriage').click (e)->
+		window.location.href = 'http://argusweld.com'
 		el = $(this).parents('.lang-trigger')
 		variants = el.data('variant').split(',')
 		$.each variants, (index, value)->
