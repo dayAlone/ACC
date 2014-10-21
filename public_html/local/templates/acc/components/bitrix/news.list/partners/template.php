@@ -6,13 +6,13 @@
     	<a target="_blank" href="<?=$item['LINK']?>" class="partners-list__item">
     	<?else:?>
     	<span class="partners-list__item">
-    	<?endif:?>
+    	<?endif;?>
     		<img src="<?=$item['IMAGE']?>">
     	<?if(strlen($item['LINK'])>0):?>
     	</a>
     	<?else:?>
     	</span>
-    	<?endif:?>
+    	<?endif;?>
     </div>
     <?endforeach;?>
   </div>
