@@ -7,7 +7,7 @@ $APPLICATION->SetTitle("Контакты");
 <div class="page__divider"></div>
 <div class="row">
   <div class="col-sm-8">
-    <big><strong>Адрес: </strong>Россия, Москва, <nobr>ул. Усачева, 35А</nobr> <br><strong>Телефон: </strong><a href="tel:88002005001">8 800 200 500 1 <br></a><strong>E-mail: </strong><a href="mailto:info@argusweld.ru">info@argusweld.ru</a></big><br>
+    <big><strong>Адрес: </strong>Россия, Москва, <nobr>ул. Усачева, 35А</nobr> <br><strong>Телефон: </strong><a href="tel:88005553136">8 800 555 31 36 <br></a><strong>E-mail: </strong><a href="mailto:info@argusweld.ru">info@argusweld.ru</a></big><br>
     <div class="xs-center"><a data-toggle="modal" data-target="#contactsMap" href="#contactsMap" class="button button--big button--white">схема проезда</a></div>
   </div>
   <div class="col-sm-4 right">
