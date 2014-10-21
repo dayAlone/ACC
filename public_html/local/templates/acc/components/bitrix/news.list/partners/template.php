@@ -1,7 +1,7 @@
 <div class="partners-list">
   <div class="row">
   	<?foreach ($arResult['ITEMS'] as $item):?>
-    <div class="col-xs-3 col-sm-3 col-md-2">
+    <div class="col-xs-6 col-sm-3 col-md-2">
     	<?if(strlen($item['LINK'])>0):?>
     	<a target="_blank" href="<?=$item['LINK']?>" class="partners-list__item">
     	<?else:?>
