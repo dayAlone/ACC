@@ -21,7 +21,7 @@ if($result['status'] == 'ok') {
 			'phone'   => 'Номер телефона',
 			'email'   => 'Эл. почта',
 			'company' => 'Компания',
-			'message' => 'Вид услуги',
+			'message' => 'Сообщение',
 		);
 
 		$body = "<br />
@@ -32,7 +32,7 @@ if($result['status'] == 'ok') {
 
 		foreach ($_REQUEST as $key => $value)
 			if($text[$key]&&strlen($value)>0)
-				$body .= $text[$key].': '.$value."<br /><br />\r\n";
+				$body .= $text[$key].': '.nl2br($value)."<br /><br />\r\n";
 			
 
 		$boundary = "--".md5(uniqid(time()));

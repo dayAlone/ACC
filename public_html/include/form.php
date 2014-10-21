@@ -1,6 +1,6 @@
 <div class="success">
   <h1 class="center">Ваше сообщение успешно отправлено. </h1>
-  <p class="center">В ближайшее время представители нашей школы свяжутся с вами. Благодарим за обращение.</p>
+  <p class="center">В ближайшее время представители нашей компании свяжутся с вами. Благодарим за обращение.</p>
 </div>
 <form class="form visible" data-parsley-validate>
   <input type="hidden" name="group_id" value="5">

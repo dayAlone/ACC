@@ -165,6 +165,11 @@ $(document).ready ->
 		$.openModal(url, id)
 	
 	$('.modal').on 'hide.bs.modal', (a,b)->
+		
+		$(this).find('input[type="email"], input[type="text"], textarea').removeClass('parsley-error').removeAttr("value").val("")
+		$(this).find('form').trigger('reset').show()
+		$(this).find('.success').hide()
+
 		if urlInitial
 			History.pushState {'url':urlInitial.url}, urlInitial.title, urlInitial.url
 			window.title = urlInitial.title

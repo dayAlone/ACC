@@ -216,6 +216,9 @@
       return $.openModal(url, id);
     });
     $('.modal').on('hide.bs.modal', function(a, b) {
+      $(this).find('input[type="email"], input[type="text"], textarea').removeClass('parsley-error').removeAttr("value").val("");
+      $(this).find('form').trigger('reset').show();
+      $(this).find('.success').hide();
       if (urlInitial) {
         History.pushState({
           'url': urlInitial.url
