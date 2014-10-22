@@ -132,7 +132,7 @@
 			var circle, cords, mapElement, mapOptions, line, path, objects = {'finished': {'lines' : [], 'markers':[]}, 'current': {'lines':[], 'markers':[]}};
 		    mapOptions = {
 		      zoom: 3,
-		      mapTypeId: google.maps.MapTypeId.HYBRID,
+		      mapTypeId: google.maps.MapTypeId.SATELLITE,
 		      //draggable: false,
 		      //zoomControl: false,
 		      scrollwheel: false,
@@ -157,6 +157,10 @@
 		      scale: 3,
 		      fillOpacity: 1
 		    };
+		    var ctaLayer = new google.maps.KmlLayer({
+				url: '/include/doc.kml'
+			});
+			ctaLayer.setMap(map);
 		    initType()
 		    /*
 		    google.maps.event.addListener(map, 'dragend', function(e) { 
