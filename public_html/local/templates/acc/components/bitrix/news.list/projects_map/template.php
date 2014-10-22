@@ -132,7 +132,7 @@
 			var circle, cords, mapElement, mapOptions, line, path, objects = {'finished': {'lines' : [], 'markers':[]}, 'current': {'lines':[], 'markers':[]}};
 		    mapOptions = {
 		      zoom: 3,
-		      mapTypeId: MapTypeId.HYBRID,
+		      mapTypeId: google.maps.MapTypeId.HYBRID,
 		      //draggable: false,
 		      //zoomControl: false,
 		      scrollwheel: false,
