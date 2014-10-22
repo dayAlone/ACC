@@ -7,7 +7,7 @@ $APPLICATION->SetPageProperty('popup_content', COption::GetOptionString("grain.c
 ?> 
 <h1 class="page__title">Технологии</h1>
 <div class="page__divider"></div>
-<h2>В нашей работы мы используем:</h2>
+<?/*<h2>В нашей работы мы используем:</h2>*/?>
 <?
 $APPLICATION->IncludeComponent(
 "bitrix:news.list", 
