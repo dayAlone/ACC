@@ -1,0 +1,3 @@
+<?
+//$aMenuLinks = IBlockElementsMenu(4);
+?>
