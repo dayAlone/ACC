@@ -7,7 +7,7 @@ $APPLICATION->SetPageProperty('popup_content', COption::GetOptionString("grain.c
 ?> 
 <h1 class="page__title">Наши услуги</h1>
 <div class="page__divider"></div>
-<h2>Аргус СварСервис выполняет широкий спектр работ, связанных с обслуживанием трубопроводов:</h2>
+<h2>Аргус Свар Сервис выполняет широкий спектр работ, связанных с обслуживанием трубопроводов:</h2>
 <?
 $APPLICATION->IncludeComponent(
 "bitrix:news.list", 
@@ -25,12 +25,15 @@ array(
    false
 );
 ?>
+<?/*
 <div class="page__divider"></div>
+
 <big class="l-line-height s-margin-bottom">Одновременно с предоставлением персонала мы имеем возможность и осуществляем аудит, имеющейся тех.вооруженности,  разработку технологий сварки с внедрением, сваркой КСС, предоставлением процедур, обучением персонала заказчика на оборудовании заказчика, что предпочтительнее для заказчика, т.к. обучение проходит непосредственно на оборудовании и объекте заказчика перед началом сварки.</big>
 <? if(strlen(COption::GetOptionString("grain.customsettings","popup_audit"))>0):?>
   <div class="center"><a data-toggle="modal" data-target="#auditProcess" href="#auditProcess" class="button button--white">как проходит аудит?</a></div>
 <?endif;?>
 <?
+*/
 if(strlen($_REQUEST['ELEMENT_CODE'])>0)
 {?>
 <script type="text/javascript" charset="utf-8" async defer>
