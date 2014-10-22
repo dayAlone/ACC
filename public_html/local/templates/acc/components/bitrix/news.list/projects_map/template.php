@@ -168,7 +168,8 @@
 			    fillColor: 'transparent',
 			    strokeWeight: .8,
 			    zIndex: 1,
-			    strokeOpacity: .5
+			    strokeOpacity: .5,
+			    cursor: 'normal'
 			}
 		    map.data.setStyle(featureStyle);
 		    
