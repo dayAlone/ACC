@@ -167,7 +167,8 @@
 		    var featureStyle = {
 			    fillColor: 'transparent',
 			    strokeWeight: .8,
-			    zIndex: 1
+			    zIndex: 1,
+			    strokeOpacity: .5
 			}
 		    map.data.setStyle(featureStyle);
 		    
