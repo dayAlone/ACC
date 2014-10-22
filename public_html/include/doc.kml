@@ -4,7 +4,7 @@
 	<LineStyle> 
         <color>ffffffff</color>            <!-- kml:color -->
 		<colorMode>normal</colorMode>      <!-- colorModeEnum: normal or random -->
-		<width>1</width>                            <!-- float -->
+		<width>.5</width>                            <!-- float -->
 		<gx:outerColor>ffffffff</gx:outerColor>     <!-- kml:color -->
 		<gx:outerWidth>0.0</gx:outerWidth>          <!-- float -->
 		<gx:physicalWidth>0.0</gx:physicalWidth>    <!-- float -->
