@@ -158,7 +158,7 @@
 		      fillOpacity: 1
 		    };
 		    var ctaLayer = new google.maps.KmlLayer({
-				url: 'http://acc.radia.ru/include/doc.kml'
+				url: 'http://acc.radia.ru/include/doc2.kml'
 			});
 			ctaLayer.setMap(map);
 		    initType()
