@@ -155,12 +155,22 @@
 		      strokeColor: 'transparent',
 		      fillColor: '#FFF',
 		      scale: 3,
-		      fillOpacity: 1
+		      fillOpacity: 1,
+		      zIndex: 3
 		    };
-		    var ctaLayer = new google.maps.KmlLayer({
-				url: 'http://acc.radia.ru/include/doc2.kml'
+		    $.each(["/include/regions.json"], function(key,url){
+		    	console.log(url)
+			    $.getJSON( url, function( data ) {
+			    	map.data.addGeoJson(data)
+			    });
 			});
-			ctaLayer.setMap(map);
+		    var featureStyle = {
+			    fillColor: 'transparent',
+			    strokeWeight: .8,
+			    zIndex: 1
+			}
+		    map.data.setStyle(featureStyle);
+		    
 		    initType()
 		    /*
 		    google.maps.event.addListener(map, 'dragend', function(e) { 
@@ -238,10 +248,11 @@
 		        path = new google.maps.Polyline({
 		          path: line,
 		          geodesic: true,
-		          strokeColor: <?=($item['PROPS']['SECTION']=='finished'?'"#0089c0"':'"#fdb932"')?>,
+		          strokeColor: <?=($item['PROPS']['SECTION']=='finished'?'"#002a5c"':'"#c51230"')?>,
 		          strokeOpacity: 1.0,
 		          strokeWeight: 5,
-		          geodesic: false
+		          geodesic: false,
+		          zIndex: 3
 		        });
 		        
 		        objects['<?=$item['PROPS']['SECTION']?>']['lines'].push(path);
