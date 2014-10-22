@@ -41,14 +41,15 @@ $APPLICATION->SetPageProperty('popup_content', COption::GetOptionString("grain.c
 <h3>Доверяя нам, вы можете не беспокоиться за качество сварки.<br>«Аргус Свар Сервис». Наш профессионализм – ваш успех.</h3>
 <div class="page__divider"></div>
 <div class="row">
+  <div class="col-sm-6 center"><a href="/projects/"><img src="/layout/images/map.png" class="map"></a></div>
   <div class="col-sm-6">
     <h4>Опыт работы в различных регионах и странах мира:</h4>
-    <p>Россия, Казахстан, Узбекистан, Азербайджан, Туркменистан, Белоруссия, Украина, Алжир, Ирак, ОАЭ, Китай, Индия</p>
+    <p>Россия, Казахстан, Узбекистан, Азербайджан, Туркменистан, Белоруссия, Украина, Израиль, Франция, Алжир, Ирак, ОАЭ, Китай, Индия</p>
     <? if(strlen(COption::GetOptionString("grain.customsettings","popup_about"))>0):?>
       <div class="xs-center"><a data-toggle="modal" data-target="#aboutVideo" href="#aboutVideo" class="button">смотрите видео о компании</a></div>
     <?endif;?>
   </div>
-  <div class="col-sm-6 center"><img src="/layout/images/map.png" class="map"></div>
+  
 </div>
 <?
 require($_SERVER['DOCUMENT_ROOT'].'/bitrix/footer.php');
