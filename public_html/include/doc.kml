@@ -2,8 +2,13 @@
 <Document id="Russia"><name>Russia</name>
 <Style id="PolyStyle">
 	<LineStyle> 
-        <color>ffffffff</color> 
-        <width>2</width> 
+        <color>ffffffff</color>            <!-- kml:color -->
+		<colorMode>normal</colorMode>      <!-- colorModeEnum: normal or random -->
+		<width>1</width>                            <!-- float -->
+		<gx:outerColor>ffffffff</gx:outerColor>     <!-- kml:color -->
+		<gx:outerWidth>0.0</gx:outerWidth>          <!-- float -->
+		<gx:physicalWidth>0.0</gx:physicalWidth>    <!-- float -->
+		<gx:labelVisibility>0</gx:labelVisibility>  <!-- boolean -->
     </LineStyle>
 	<PolyStyle>
 		<color>transparent</color>
