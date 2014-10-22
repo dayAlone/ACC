@@ -38,7 +38,7 @@ $APPLICATION->SetPageProperty('popup_content', COption::GetOptionString("grain.c
     </div>
   </div>
 </div>
-<h3>Доверяя нам, вы можете не беспокоиться за качество сварки.<br>«Аргус СварСервис». Наш профессионализм – ваш успех.</h3>
+<h3>Доверяя нам, вы можете не беспокоиться за качество сварки.<br>«Аргус Свар Сервис». Наш профессионализм – ваш успех.</h3>
 <div class="page__divider"></div>
 <div class="row">
   <div class="col-sm-6">
