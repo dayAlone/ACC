@@ -292,7 +292,7 @@ module.exports = (grunt)->
 				files: [{
 					expand : true
 					cwd    : '<%= path.sources %>/fonts/'
-					src    : ['**/*.otf']
+					src    : ['**/*.ttf']
 					dest   : '<%= path.layout %>/fonts/'
 				}]
 

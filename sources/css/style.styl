@@ -1,3 +1,8 @@
+blue           = #0049d3
+blue2          = #00aafa
+white          = #f4f4f4
+toolbar_top    = #1f2130
+toolbar_bottom = rgba(28,28,28,.8)
 /*
  * Модификаторы оформления
  */
@@ -91,16 +96,6 @@ b(name=null, position=null, color=null, size=null)
 	background color url(../images/name) position
 	if size
 		background-size size
-/*
- * Модификаторы плагинов
- */
- .fotorama__arr,.fotorama__fullscreen-icon,.fotorama__video-close,.fotorama__video-play
-	background-image url(../images/plugins/fotorama.png)
-	@media (-webkit-min-device-pixel-ratio:1.5),(min-resolution:144dpi)
-		background-image url(../images/plugins/fotorama@2x.png)
-blue  = #0049d3
-blue2 = #00aafa
-white = #f4f4f4
 @font-face
 	font-family 'Proxima'
 	src url("../fonts/ProximaNova-Bold.ttf")
@@ -200,6 +195,354 @@ white = #f4f4f4
 		display none
 		@media (min-width: scr_sm)
 			display block
+/*
+ * Модификаторы плагинов
+ */
+ .fotorama__arr,.fotorama__fullscreen-icon,.fotorama__video-close,.fotorama__video-play
+	background-image url(../images/plugins/fotorama.png)
+	@media (-webkit-min-device-pixel-ratio:1.5),(min-resolution:144dpi)
+		background-image url(../images/plugins/fotorama@2x.png)
+.toolbar
+	full-width()
+	top           0
+	left          0
+	height        61px
+	z-index       20
+	position      fixed
+	background    toolbar_bottom
+	line-height   62px
+	white-space   nowrap
+	margin-bottom 20px
+	.container
+		position relative
+		z-index 2
+	.shield
+		position  absolute
+		width     100%
+		left      0px
+		top       32px
+		display   none
+		svg
+			position absolute
+			top 0
+			path
+				fill toolbar_top
+			&:first-of-type
+				left -40px
+				@media (min-width: scr_lg)
+					left -55px
+			&:last-of-type
+				right -14px
+				@media (min-width: scr_lg)
+					right 0
+		&:after
+			position    absolute
+			height      68px
+			background  toolbar_top
+			content     ""
+			width       155px
+			left        30px
+			@media (min-width: scr_lg)
+				width  201px
+				left   15px
+		@media (min-width: scr_md)
+			display block
+	.logo
+		full-width()
+		position     relative
+		z-index      30
+		line-height  104px
+		svg
+			middle()
+			max-width 43%
+			@media (min-width: scr_sm)
+				max-width 70%
+			@media (min-width: scr_lg)
+				max-width 188px
+		@media (min-width: scr_sm)
+			margin-left 20px
+	.nav
+		full-width()
+		text-align justify
+		&__item
+			font-weight bold
+			text-transform uppercase
+			color white
+			line-height 53px
+			height 53px
+			@media (min-width: scr_sm)
+				font-size 15px
+				padding 3px 8.8px 0
+			@media (min-width: scr_lg)
+				font-size 16px
+				padding 3px 16.4px 0
+			margin-bottom 5px
+			white-space nowrap
+			&--active
+				color blue
+			&:first-of-type
+				padding-left 0
+			&:hover
+				color blue
+				text-decoration: none
+	.search-form
+		position     absolute
+		z-index      30
+		top          0px
+		display      none
+		right        9px
+		line-height  35px
+		height       32px
+		background   toolbar_top
+		&__button
+			background   transparent
+			border       0
+			line-height  auto
+			position     relative
+			top          3px
+			opacity      0
+			svg
+				path
+					fill blue
+		&__text
+			background     transparent
+			border         1px solid blue
+			height         20px
+			border-radius  20px
+			line-height    24px
+			min-width      260px
+			padding        0 15px
+			font-size      12px
+	.lang-trigger
+		position relative
+		z-index 20
+	/* Выбор сайтов холдинга */
+	.site-select
+		middle()
+		width           100%
+		font-weight     bold
+		font-size       10px
+		text-transform  uppercase
+		position        relative
+		z-index         300
+		&--open
+			.site-select__trigger
+				svg
+					path
+						fill white
+		&__trigger
+			color     white
+			position  relative
+			top       1px
+			z-index   3
+			svg
+				margin-left 5px
+				path
+					fill blue
+			span
+				display none
+				@media (min-width: scr_md)
+					display none
+				@media (min-width: scr_lg)
+					display inline
+		&__dropdown
+			display        none
+			position       absolute
+			top            3px
+			left          -13px
+			background     blue
+			width          200px
+			padding        30px 13px 5px
+			border-radius  5px
+		&__link
+			float        left
+			clear        both
+			color        white
+			line-height  20px
+			text-decoration: underline
+			&:hover
+				color blue2
+				text-decoration none
+	.search-trigger
+		display none
+		@media (min-width: scr_sm)
+			display inline
+		svg
+			middle()
+			top -2px
+			position relative
+			path
+				fill blue
+	/* Тригер мобильного меню */
+	.nav-trigger
+		float        right
+		position     relative
+		z-index      220
+		margin-left  40px
+		span
+			color           white
+			font-size       10px
+			text-transform  uppercase
+			font-weight     bold
+		svg
+			middle()
+			max-width    23px
+			margin-left  7px
+		@media (min-width: scr_md)
+			display none
+	/* Тригеры попапов */
+	.popup-trigger
+		middle()
+		display inline
+		margin 0 7px
+		&:first-of-type
+			margin-left 40px
+			@media (min-width: scr_xs)
+				margin-left 10px
+		svg
+			middle()
+			position relative
+			top -2px
+			path
+				fill blue
+		@media (min-width: scr_sm)
+			display none
+	.phone
+		middle()
+		color white
+		font-size 15px
+		font-weight bold
+		top 1px
+		position relative
+		svg
+			middle()
+			position relative
+			top -2px
+			margin-right 10px
+			path
+				fill blue
+	.feedback, .filials
+		middle()
+		text-transform uppercase
+		font-size 10px
+		color white
+		font-weight bold
+		&:hover
+			color #084ed0
+	.filials
+		svg
+			middle()
+			position relative
+			top -1px
+			margin-right 9px
+			path
+				fill blue
+			margin-left -9px
+	.feedback
+		margin 0 25px
+	.search, .phone, .lang-trigger, .feedback, .filials
+		display none
+		@media (min-width: scr_sm)
+			display inline-block
+
+	&:after
+		position    absolute
+		height      33px
+		width       100%
+		content     ""
+		background  toolbar_top
+		top         0
+		left        0
+		z-index     1
+		display     none
+		@media (min-width: scr_md)
+			display block
+	@media (min-width: scr_sm)
+		position       relative
+		background     toolbar_bottom
+		margin-bottom  15px
+	@media (min-width: scr_md)
+		margin-bottom  35px
+		height         91px
+		line-height    38px
+
+.search
+	position relative
+	middle()
+	width 100%
+	&__input
+		width          100%
+		border         1px solid blue
+		border-radius  20px
+		height         20px
+		background     transparent
+		color          white
+		line-height    normal
+		padding-left   5px
+		font-size      11px
+		middle()
+		padding-right 22px
+	&__submit
+		position absolute
+		width 13px !important
+		height 13px
+		appearance none
+		background transparent
+		border 0
+		right 6px
+		top 23px
+		svg
+			position absolute
+			top 0
+			right 0
+			height 13px
+			width 13px
+
+.lang-trigger
+	middle()
+	color        #a4a4a4
+	font-size    11px
+	font-weight  bold
+	user-select  none
+	&__label
+		t(color)
+	&__carriage
+		middle()
+		top           -2px
+		width          36px
+		height         17px
+		cursor         pointer
+		margin         0 4px
+		position       relative
+		background     blue
+		border-radius  10px
+		&:after
+			t(left)
+			content        ""
+			width          9px
+			border-radius  12px
+			left           4px
+			top            4px
+			height         9px
+			box-shadow     0 1px 3px rgba(0,0,0,.3)
+			background     white
+			position       absolute
+	&--lang
+		&_russian
+			.lang-trigger__label:first-of-type
+				color white
+			.lang-trigger__carriage:after
+				left 4px
+		&_english
+			.lang-trigger__label:last-of-type
+				color white
+			.lang-trigger__carriage:after
+				left 23px
+				
+.wrap
+	padding-top 82px
+	@media (min-width: scr_sm)
+		padding-top 0
 body
 	font-family 'Proxima', 'Helvetica Neue', 'Arial', sans-serif
 	min-height 100%
@@ -1189,335 +1532,3 @@ article
 		&__more
 			full-width()
 			margin 15px 0 10px
-.search
-	position relative
-	middle()
-	width 100%
-	&__input
-		width 100%
-		border 1px solid blue
-		border-radius 20px
-		height 20px
-		background transparent
-		color white
-		line-height normal
-		padding-left 5px
-		font-size 11px
-		middle()
-		padding-right 22px
-	&__submit
-		position absolute
-		width 13px !important
-		height 13px
-		//b('svg/seach.svg', center center no-repeat, transparent, cover)
-		appearance none
-		background transparent
-		border 0
-		right 6px
-		top 23px
-		svg
-			position absolute
-			top 0
-			right 0
-			height 13px
-			width 13px
-.lang-trigger
-	font-size 11px
-	font-weight bold
-	user-select none
-	color #a4a4a4
-	middle()
-	&__label
-		t(color)
-	&--lang
-		&_russian
-			.lang-trigger__label:first-of-type
-				color white
-			.lang-trigger__carriage:after
-				left 4px
-		&_english
-			.lang-trigger__label:last-of-type
-				color white
-			.lang-trigger__carriage:after
-				left 23px
-	&__carriage
-		middle()
-		background blue
-		width 36px
-		height 17px
-		border-radius 10px
-		cursor pointer
-		margin 0 4px
-		position: relative
-		top -2px
-		&:after
-			t(left)
-			content ""
-			width 9px
-			border-radius 12px
-			left 4px
-			top 4px
-			height 9px
-			box-shadow 0 1px 3px rgba(0,0,0,.3)
-			background white
-			position absolute
-.wrap
-	padding-top 82px
-	@media (min-width: scr_sm)
-		padding-top 0
-.toolbar
-	full-width()
-	position relative
-	height 61px
-	line-height 62px
-	z-index 20
-	white-space nowrap
-	background rgba(28,28,28,.8)
-	margin-bottom 20px
-	top 0
-	left 0
-	position fixed
-	&:after
-		position absolute
-		height 33px
-		width 100%
-		content ""
-		background #1f2131
-		top 0
-		left 0
-		z-index 1
-		display none
-		@media (min-width: scr_md)
-			display block
-	.container
-		position relative
-		z-index 2
-	.shield
-		position absolute
-		width 100%
-		left 0px
-		top 32px
-		display none
-		@media (min-width: scr_md)
-			display block
-		&:after
-			position absolute
-			height 68px
-			background #1f2130
-			content ""
-			width 155px
-			left 30px
-			@media (min-width: scr_lg)
-				width 201px
-				left 15px
-		svg
-			position absolute
-			top 0
-			&:first-of-type
-				left -40px
-				@media (min-width: scr_lg)
-					left -55px
-			&:last-of-type
-				right -14px
-				@media (min-width: scr_lg)
-					right 0
-
-	@media (min-width: scr_sm)
-		position relative
-		background rgba(28,28,28,.8)
-		margin-bottom 15px
-	@media (min-width: scr_md)
-		margin-bottom 35px
-		height 91px
-		line-height 38px
-	.divider
-		full-width()
-		margin-top -5px
-		margin-bottom -5px
-		border-bottom 1px solid rgba(255,255,255,.2)
-		line-height 50px
-	.logo
-		full-width()
-		position relative
-		z-index 30
-		@media (min-width: scr_sm)
-			margin-left 20px
-		line-height 104px
-		svg
-			middle()
-			max-width 43%
-			@media (min-width: scr_sm)
-				max-width 70%
-			@media (min-width: scr_lg)
-				max-width 188px
-	.nav
-		full-width()
-		text-align justify
-		&__item
-			font-weight bold
-			text-transform uppercase
-			color white
-			line-height 53px
-			height 53px
-			@media (min-width: scr_sm)
-				font-size 15px
-				padding 3px 8.8px 0
-			@media (min-width: scr_lg)
-				font-size 16px
-				padding 3px 16.4px 0
-			margin-bottom 5px
-			white-space nowrap
-			&--active
-				color blue
-			&:first-of-type
-				padding-left 0
-			&:hover
-				color blue
-				text-decoration: none
-	.search-form
-		position absolute
-		z-index 30
-		top 0px
-		display none
-		right 9px
-		line-height 35px
-		height 32px
-		background #1f2130
-		&__button
-			background transparent
-			border 0
-			line-height: auto
-			position relative
-			top: 3px
-			opacity 0
-		&__text
-			background transparent
-			border 1px solid blue
-			height 20px
-			border-radius 20px
-			line-height 24px
-			min-width 240px
-			padding 0 15px
-			font-size 12px
-	.lang-trigger
-		position relative
-		z-index 20
-	/* Выбор сайтов холдинга */
-	.site-select
-		middle()
-		width 100%
-			
-		font-weight bold
-		font-size 10px
-		text-transform uppercase
-		position: relative
-		z-index 300
-		&--open
-			.site-select__trigger
-				svg
-					path
-						fill white
-		&__trigger
-			color white
-			position relative
-			top 1px
-			z-index 3
-			svg
-				margin-left 5px
-			span
-				display none
-				@media (min-width: scr_md)
-					display none
-				@media (min-width: scr_lg)
-					display inline
-		&__dropdown
-			display none
-			position absolute
-			top 3px
-			left -13px
-			background blue
-			width 200px
-			padding 30px 13px 5px
-			border-radius 5px
-		&__link
-			float: left
-			clear both
-			color white
-			line-height 20px
-			text-decoration: underline
-			&:hover
-				color blue2
-				text-decoration none
-	.search-trigger
-		display none
-		@media (min-width: scr_sm)
-			display inline
-		svg
-			middle()
-			top -2px
-			position relative
-	/* Тригер мобильного меню */
-	.nav-trigger
-		float right
-		position relative
-		z-index 220
-		margin-left 40px
-		@media (min-width: scr_md)
-			display none
-		span
-			color white
-			font-size 10px
-			text-transform: uppercase
-			font-weight bold
-		svg
-			middle()
-			max-width 23px
-			margin-left 7px
-	/* Тригеры попапов */
-	.popup-trigger
-		middle()
-		display inline
-		margin 0 7px
-		&:first-of-type
-			margin-left 40px
-			@media (min-width: scr_xs)
-				margin-left 10px
-		svg
-			middle()
-			position relative
-			top -2px
-		@media (min-width: scr_sm)
-			display none
-	.phone
-		middle()
-		color white
-		font-size 15px
-		font-weight bold
-		top 1px
-		position relative
-		svg
-			middle()
-			position relative
-			top -2px
-			margin-right 10px
-	.feedback, .filials
-		middle()
-		text-transform uppercase
-		font-size 10px
-		color white
-		font-weight bold
-		&:hover
-			color #084ed0
-	.filials
-		svg
-			middle()
-			position relative
-			top -1px
-			margin-right 9px
-			margin-left -9px
-	.feedback
-		margin 0 25px
-	.search, .phone, .lang-trigger, .feedback, .filials
-		display none
-		@media (min-width: scr_sm)
-			display inline-block

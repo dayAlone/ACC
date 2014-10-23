@@ -1,3 +1,3 @@
 <?
-$aMenuLinks = IBlockElementsMenu(3);
+//$aMenuLinks = IBlockElementsMenu(3);
 ?>
