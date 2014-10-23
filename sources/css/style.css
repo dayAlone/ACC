@@ -2750,10 +2750,10 @@ article {
   content: "";
 }
 .page .filter__item--yellow:before {
-  background: #ffba14;
+  background: #c31735;
 }
 .page .filter__item--blue:before {
-  background: #0089c0;
+  background: #032c5a;
 }
 .page .filter__item:hover,
 .page .filter__item--active {
