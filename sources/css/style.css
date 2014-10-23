@@ -1094,7 +1094,9 @@ input:focus {
 .toolbar .nav {
   float: left;
   width: 100%;
+  position: relative;
   text-align: justify;
+  z-index: 40;
 }
 .toolbar .nav__item {
   font-weight: bold;
