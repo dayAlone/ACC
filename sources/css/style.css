@@ -1868,7 +1868,8 @@ article {
 .modal-content .close svg {
   max-width: 30px;
 }
-.modal-content .close svg path {
+.modal-content .close svg path,
+.modal-content .close svg g {
   fill: #0049d3;
 }
 @media (min-width: 992px) {
@@ -1878,7 +1879,8 @@ article {
   .modal-content .close svg {
     max-width: none;
   }
-  .modal-content .close svg path {
+  .modal-content .close svg path,
+  .modal-content .close svg g {
     fill: #f4f4f4;
   }
 }
