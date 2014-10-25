@@ -1878,6 +1878,9 @@ article {
   .modal-content .close svg {
     max-width: none;
   }
+  .modal-content .close svg path {
+    fill: #f4f4f4;
+  }
 }
 .modal-content img {
   max-width: 100%;
@@ -3068,14 +3071,14 @@ article {
     position: absolute;
     right: 50%;
     bottom: 170px;
-    margin-right: 145px;
-    max-width: 324px;
+    margin-right: 215px;
+    max-width: 254px;
   }
 }
 @media (min-width: 1200px) {
   .sidebar .news {
-    max-width: 354px;
-    margin-right: 205px;
+    max-width: 284px;
+    margin-right: 275px;
   }
 }
 .index-news {
