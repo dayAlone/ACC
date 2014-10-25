@@ -170,7 +170,7 @@
   };
 
   $(document).ready(function() {
-    var closeDropdown, mapInit, openDropdown, timer, x;
+    var closeDropdown, mapInit, openDropdown, spin, timer, x;
     $('.search-trigger').click(function(e) {
       if ($('.toolbar .container').width() <= 750) {
         $('#Search').modal();
@@ -240,6 +240,7 @@
           'url': urlInitial.url
         }, urlInitial.title, urlInitial.url);
         window.title = urlInitial.title;
+        $(this).find('.text').html('').spin(spin);
       }
       if ($(this).find('iframe').length > 0) {
         return $(this).find('iframe').remove();
@@ -327,7 +328,7 @@
       });
     };
     timer = false;
-    $('.modal .text').spin({
+    spin = {
       lines: 13,
       length: 21,
       width: 2,
@@ -344,7 +345,8 @@
       zIndex: 2e9,
       top: '50%',
       left: '50%'
-    });
+    };
+    $('.modal .text').spin(spin);
 
     /*
     	initType = ()->

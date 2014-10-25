@@ -187,6 +187,7 @@ $(document).ready ->
 		if urlInitial
 			History.pushState {'url':urlInitial.url}, urlInitial.title, urlInitial.url
 			window.title = urlInitial.title
+			$(this).find('.text').html('').spin spin
 		if $(this).find('iframe').length > 0
 			$(this).find('iframe').remove()
 
@@ -253,8 +254,7 @@ $(document).ready ->
 									duration: 300
 
 	timer = false
-
-	$('.modal .text').spin
+	spin  =
 		lines: 13
 		length: 21
 		width: 2
@@ -271,6 +271,9 @@ $(document).ready ->
 		zIndex: 2e9
 		top: '50%'
 		left: '50%'
+
+	$('.modal .text').spin spin
+		
 
 	###
 	initType = ()->
