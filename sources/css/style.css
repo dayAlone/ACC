@@ -2704,7 +2704,8 @@ article {
 .page article .news__frame:hover .news__date {
   color: #f4f4f4;
 }
-.page .filter {
+.page .filter,
+.page .select {
   float: left;
   width: 100%;
   position: relative;
@@ -2718,21 +2719,25 @@ article {
   text-transform: uppercase;
   font-weight: bold;
 }
-.page .filter__item {
+.page .filter__item,
+.page .select__item {
   margin-right: 20px;
   color: #9c9c9c;
   position: relative;
 }
-.page .filter__item span {
+.page .filter__item span,
+.page .select__item span {
   display: none;
 }
 @media (min-width: 1200px) {
-  .page .filter__item span {
+  .page .filter__item span,
+  .page .select__item span {
     display: inline;
     margin-left: 5px;
   }
 }
-.page .filter__item:after {
+.page .filter__item:after,
+.page .select__item:after {
   border-bottom: 1px dotted #595959;
   width: 100%;
   content: "";
@@ -2751,11 +2756,15 @@ article {
   transition-duration: 0.3s;
 }
 .page .filter__item--yellow,
-.page .filter__item--blue {
+.page .select__item--yellow,
+.page .filter__item--blue,
+.page .select__item--blue {
   margin-left: 15px;
 }
 .page .filter__item--yellow:before,
-.page .filter__item--blue:before {
+.page .select__item--yellow:before,
+.page .filter__item--blue:before,
+.page .select__item--blue:before {
   position: absolute;
   left: -14px;
   top: 2px;
@@ -2765,25 +2774,40 @@ article {
   border-radius: 5px;
   content: "";
 }
-.page .filter__item--yellow:before {
+.page .filter__item--yellow:before,
+.page .select__item--yellow:before {
   background: #c31735;
 }
-.page .filter__item--blue:before {
+.page .filter__item--blue:before,
+.page .select__item--blue:before {
   background: #032c5a;
 }
 .page .filter__item:hover,
-.page .filter__item--active {
+.page .select__item:hover,
+.page .filter__item--active,
+.page .select__item--active {
   text-decoration: none;
   color: #f4f4f4;
 }
 .page .filter__item:hover:after,
-.page .filter__item--active:after {
+.page .select__item:hover:after,
+.page .filter__item--active:after,
+.page .select__item--active:after {
   border-bottom-color: #f4f4f4;
 }
-.page .filter__item--active:after {
+.page .filter__item--active:after,
+.page .select__item--active:after {
   opacity: 0;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
   filter: alpha(opacity=0);
+}
+.page .select {
+  padding: 0;
+  margin: 0;
+}
+.page .select__item {
+  margin-right: 0px;
+  margin-left: 10px;
 }
 .page .dropdown {
   margin-left: 5px;

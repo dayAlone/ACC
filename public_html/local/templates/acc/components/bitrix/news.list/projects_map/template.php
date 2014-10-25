@@ -10,21 +10,16 @@
     		</select>
     		<span class="dropdown__frame">
     			<a href="#all" style="display:none" class="dropdown__item">Все проекты</a><a href="#current" class="dropdown__item">Текущие</a><a href="#finished" class="dropdown__item">Завершенные</a></span></span></div>
-    <div class="col-sm-9 no-mobile">
+    <div class="col-sm-7 no-mobile">
     	<a href="#all" class="filter__item filter__item--active">все проекты</a>
     	<a href="#current" class="filter__item filter__item--yellow">текущие<span>проекты</span></a><a href="#finished" class="filter__item filter__item--blue">ЗАВЕРШЕННЫЕ<span>проекты</span></a></div>
-    <div class="col-sm-3 right no-mobile">Вид: 
-    	<span class="dropdown dropdown--type">
-    		<a href="#" class="dropdown__trigger"><span class="dropdown__text">Карта</span><?=svg('arrow')?></a>
-    		<span class="dropdown__frame">
-    			<a href="#list" class="dropdown__item">Список</a>
-    			<a href="#bg_map" class="dropdown__item">Карта</a>
-    		</span>
-    		<select class="dropdown__select">
-    			<option value="#list">Список</a>
-    			<option value="#bg_map">Карта</a>
-    		</select>
-    	</span>
+    <div class="col-sm-5 right no-mobile">
+    	<div class="select">
+    		<span class="select__title">Показывать: </span>
+    		<a href="#bg_map" class="select__item select__item--active">Карту</a>	
+    		<a href="#list" class="select__item">Список</a>	
+    	</div>
+    	
     </div>
   </div>
 </div>
@@ -50,8 +45,7 @@
    	<?endforeach;?>
    	</div>
 </div>
-<?$this->EndViewTarget();?> 
-<?$this->SetViewTarget('header');?>
+<?$this->SetViewTarget('footer');?>
 <div id="markerDetail" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade">
   <div class="modal-dialog modal-lg">
     <div class="modal-content modal-content--white">
@@ -63,53 +57,47 @@
   </div>
 </div>
 <div id="bg_map"></div>
-<?$this->SetViewTarget('footer');?>
 <script src="http://maps.googleapis.com/maps/api/js?sensor=true" type="text/javascript" charset="utf-8"></script>
 <script src="/layout/js/tooltip.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript" charset="utf-8">
 	$(function(){
 		initType = function() {
-		  $('.dropdown').elem('item').click(function(e) {
-		  	
-		  	if($(this).block().hasMod('type')) {
-			  	if ($(this).attr('href')[0] === "#") {
-			        $('.dropdown--type').elem('text').html($(this).text());
-			        $('.dropdown--type').elem('frame').velocity({
-			          properties: "transition.slideUpOut",
-			          options: {
-			            duration: 300
-			          }
-			        });
-		        }
-		        e.preventDefault();
+			$('.select').elem('item').click(function(e) {
+				if(!$(this).hasMod('active')) {
+				    var alt, elm;
+				    elm = $(this).attr('href');
 
-			    var alt, elm;
-			    elm = $(this).attr('href');
-			    if (elm == '#list') {
-			    	$('.page').elem('title').mod('no-description', true)
-			    }
-			    else
-			    	$('.page').elem('title').mod('no-description', false)
-			    alt = $(this).parents('.dropdown--type').elem('frame').find("a:not([href=" + elm + "])").attr('href');
-			    if (!$(elm).is(':visible')) {
-			      $(elm).velocity({
-			        properties: "transition.slideDownIn",
-			        options: {
-			          duration: 300,
-			          complete: function() {
-			            return google.maps.event.trigger(map, "resize");
-			          }
-			        }
-			      });
-			      return $(alt).velocity({
-			        properties: "transition.slideUpOut",
-			        options: {
-			          duration: 300
-			        }
-			      });
-			    }
-			}
-		  });
+				    if (elm == '#list') 
+			    		$('.page').elem('title').mod('no-description', true)
+				    else
+				    	$('.page').elem('title').mod('no-description', false)
+					
+					alt = $(this).parents('.select').find("a.select__item--active").attr('href');
+					
+
+					$(elm).velocity({
+						properties: "transition.slideDownIn",
+						options: {
+						  duration: 300,
+						  complete: function() {
+						    return google.maps.event.trigger(map, "resize");
+						  }
+						}
+					});
+
+					$(alt).velocity({
+						properties: "transition.slideUpOut",
+						options: {
+						  duration: 300
+						}
+					});
+
+					$(this).block().elem('item').mod('active',false)
+					$(this).mod('active',true)
+				}
+				e.preventDefault();
+			});
+
 		};
 		function show_elements(list) {
 			$.each(list['lines'], function () {
