@@ -14,7 +14,7 @@ $APPLICATION->IncludeComponent(
     "SORT_BY1"        => "SORT",
     "SORT_ORDER1"     => "ASC",
     "DETAIL_URL"      => "/projects/#ELEMENT_CODE#/",
-    "CACHE_TYPE"      => "Y",
+    "CACHE_TYPE"      => "A",
     "SET_TITLE"       => "N",
     "PROPERTIES_CODE" =>array('GEO'),
     "FIELD_CODE"      => array("SORT","PREVIEW_PICTURE"),
