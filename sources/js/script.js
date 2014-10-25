@@ -1,5 +1,5 @@
 (function() {
-  var addTrigger, autoHeight, blur, delay, getCaptcha, map, newsInit, setCaptcha, size, urlInitial;
+  var addTrigger, autoHeight, blur, delay, getCaptcha, map, newsInit, setCaptcha, setHash, size, urlInitial;
 
   delay = function(ms, func) {
     return setTimeout(func, ms);
@@ -21,6 +21,15 @@
 
   urlInitial = void 0;
 
+  setHash = function(hash) {
+    window.location.hash = hash;
+    return window.onhashchange = function() {
+      if (!location.hash) {
+        return $("#" + hash).modal('hide');
+      }
+    };
+  };
+
   $.openModal = function(url, id, open) {
     if (url) {
       if (open) {
@@ -31,7 +40,6 @@
         $('.modal .fotorama').fotorama();
         if (History.enabled) {
           info = History.getState();
-          console.log(info);
           urlInitial = {
             url: info.cleanUrl,
             title: document.title
@@ -39,6 +47,10 @@
           History.pushState({
             'url': url
           }, $(id).find('.text h1').text(), url);
+          History.Adapter.bind(window, 'statechange.namespace', function() {
+            $("" + id).modal('hide');
+            return $(window).unbind('statechange.namespace');
+          });
           return window.title = $(id).find('.text h1').text();
         }
       });
@@ -213,7 +225,11 @@
       var id, url;
       url = $(a.relatedTarget).data('url');
       id = $(a.relatedTarget).attr('href');
-      return $.openModal(url, id);
+      if (url && id) {
+        return $.openModal(url, id);
+      } else {
+        return setHash($(this).attr('id'));
+      }
     });
     $('.modal').on('hide.bs.modal', function(a, b) {
       $(this).find('input[type="email"], input[type="text"], textarea').removeClass('parsley-error').removeAttr("value").val("");

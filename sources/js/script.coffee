@@ -13,6 +13,12 @@ size = ->
 
 urlInitial = undefined
 
+setHash = (hash) ->
+	window.location.hash = hash;
+	window.onhashchange = ()->
+		if (!location.hash)
+			$("##{hash}").modal('hide');
+
 $.openModal = (url, id, open)->
 	if url
 		if(open)
@@ -21,12 +27,17 @@ $.openModal = (url, id, open)->
 			$('.modal .fotorama').fotorama()
 			if History.enabled
 				info = History.getState()
-				console.log info
 				urlInitial =
 					url : info.cleanUrl
 					title : document.title
 				History.pushState {'url':url}, $(id).find('.text h1').text(), url
+				
+				History.Adapter.bind window,'statechange.namespace', ()->
+					$("#{id}").modal 'hide'
+					$(window).unbind 'statechange.namespace'
+				
 				window.title = $(id).find('.text h1').text()
+
 
 autoHeight = (el, selector='', height_selector = false, use_padding=false, debug=false)->
 	if el.length > 0
@@ -162,7 +173,10 @@ $(document).ready ->
 	$('.modal').on 'show.bs.modal', (a,b)->
 		url = $(a.relatedTarget).data 'url'
 		id  = $(a.relatedTarget).attr 'href'
-		$.openModal(url, id)
+		if url && id
+			$.openModal(url, id)
+		else
+			setHash($(this).attr('id'))
 	
 	$('.modal').on 'hide.bs.modal', (a,b)->
 		
