@@ -86,7 +86,7 @@
   <main class="page">
     <div class="container">
       <div class="row">
-        <div class="col-sm-12 <?=($APPLICATION->GetCurDir()=='/'?'col-md-4':'')?>">
+        <div class="col-sm-12 <?=($APPLICATION->GetCurDir()=='/'?'col-md-4':'')?> no-position">
           <aside class="sidebar">
           <a href="/" class="logo"><?=svg('logo')?></a>
             
@@ -121,6 +121,6 @@
               endif;?>
           </aside>
         </div>
-        <div class="col-sm-12 <?=($APPLICATION->GetCurDir()=='/'?'col-md-8':'')?>">
+        <div class="col-sm-12 <?=($APPLICATION->GetCurDir()=='/'?'col-md-8':'')?> no-position">
           <article class="<?=$APPLICATION->AddBufferContent("article_class");?>">
             

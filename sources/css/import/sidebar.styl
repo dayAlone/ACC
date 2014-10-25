@@ -2,7 +2,8 @@
 	full-width()
 	z-index 10
 	position relative
-	
+	.index &
+		position initial
 	@media (min-width: scr_md)
 		.index &
 			padding-bottom 80px
@@ -85,6 +86,14 @@
 		display none
 		@media (min-width: scr_md)
 			display block
+			position absolute
+			right 50%
+			bottom 170px
+			margin-right 145px
+			max-width 324px
+		@media (min-width: scr_lg)
+			max-width 354px
+			margin-right 205px
 .index-news
 	full-width()
 	.news
