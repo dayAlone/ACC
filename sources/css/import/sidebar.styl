@@ -17,7 +17,7 @@
 	.bages
 		display none
 		margin-bottom 95px
-		margin-top 90px
+		margin-top 50px
 		&__item
 			max-width 200px
 			margin-bottom 13px
@@ -86,12 +86,14 @@
 		display none
 		@media (min-width: scr_md)
 			display block
+		@media (min-width: scr_md) and (min-height: 700px)
+			display block
 			position absolute
 			right 50%
-			bottom 170px
+			bottom 140px
 			margin-right 215px
 			max-width 254px
-		@media (min-width: scr_lg)
+		@media (min-width: scr_lg) and (min-height: 700px)
 			max-width 284px
 			margin-right 275px
 .index-news

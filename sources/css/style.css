@@ -1,9 +1,27 @@
 /*
+ * Примеси
+ */
+/*
  * Модификаторы оформления
  */
 a:focus,
 input:focus {
   outline: 0;
+  text-decoration: none;
+}
+a {
+  -webkit-transition-property: color;
+  -moz-transition-property: color;
+  -o-transition-property: color;
+  -ms-transition-property: color;
+  transition-property: color;
+  -webkit-transition-duration: 0.3s;
+  -moz-transition-duration: 0.3s;
+  -o-transition-duration: 0.3s;
+  -ms-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+}
+a:hover {
   text-decoration: none;
 }
 .no-position {
@@ -814,9 +832,6 @@ input:focus {
     padding-left: 0;
   }
 }
-/*
- * Примеси
- */
 @font-face {
   font-family: 'Proxima';
   src: url("../fonts/ProximaNova-Bold.ttf");
@@ -1025,28 +1040,28 @@ input:focus {
   top: 32px;
   display: none;
 }
+.toolbar .shield__left svg {
+  left: -40px;
+}
+@media (min-width: 1200px) {
+  .toolbar .shield__left svg {
+    left: -55px;
+  }
+}
+.toolbar .shield__right svg {
+  right: -14px;
+}
+@media (min-width: 1200px) {
+  .toolbar .shield__right svg {
+    right: 0;
+  }
+}
 .toolbar .shield svg {
   position: absolute;
   top: 0;
 }
 .toolbar .shield svg path {
   fill: #1f2130;
-}
-.toolbar .shield svg:first-of-type {
-  left: -40px;
-}
-@media (min-width: 1200px) {
-  .toolbar .shield svg:first-of-type {
-    left: -55px;
-  }
-}
-.toolbar .shield svg:last-of-type {
-  right: -14px;
-}
-@media (min-width: 1200px) {
-  .toolbar .shield svg:last-of-type {
-    right: 0;
-  }
 }
 .toolbar .shield:after {
   position: absolute;
@@ -1060,6 +1075,16 @@ input:focus {
   .toolbar .shield:after {
     width: 201px;
     left: 15px;
+  }
+}
+.toolbar .shield--big-left:after {
+  width: 400%;
+  left: auto;
+  right: 58px;
+}
+@media (min-width: 1200px) {
+  .toolbar .shield--big-left:after {
+    right: 72px;
   }
 }
 @media (min-width: 992px) {
@@ -1225,9 +1250,19 @@ input:focus {
   color: #f4f4f4;
   line-height: 20px;
   text-decoration: underline;
+  -webkit-transition-property: color;
+  -moz-transition-property: color;
+  -o-transition-property: color;
+  -ms-transition-property: color;
+  transition-property: color;
+  -webkit-transition-duration: 0.3s;
+  -moz-transition-duration: 0.3s;
+  -o-transition-duration: 0.3s;
+  -ms-transition-duration: 0.3s;
+  transition-duration: 0.3s;
 }
 .toolbar .site-select__link:hover {
-  color: #00aafa;
+  color: #1f2130;
   text-decoration: none;
 }
 .toolbar .search-trigger {
@@ -1328,7 +1363,7 @@ input:focus {
 }
 .toolbar .feedback:hover,
 .toolbar .filials:hover {
-  color: #084ed0;
+  color: #0049d3;
 }
 .toolbar .filials svg {
   display: inline-block;
@@ -1360,7 +1395,8 @@ input:focus {
     display: inline-block;
   }
 }
-.toolbar:after {
+.toolbar:after,
+.toolbar:before {
   position: absolute;
   height: 33px;
   width: 100%;
@@ -1372,21 +1408,26 @@ input:focus {
   display: none;
 }
 @media (min-width: 992px) {
-  .toolbar:after {
+  .toolbar:after,
+  .toolbar:before {
     display: block;
   }
 }
+.toolbar:before {
+  background: rgba(28,28,28,0.8);
+  height: 91px;
+}
 @media (min-width: 768px) {
   .toolbar {
-    position: relative;
-    background: rgba(28,28,28,0.8);
     margin-bottom: 15px;
   }
 }
 @media (min-width: 992px) {
   .toolbar {
+    position: relative;
+    background: transparent;
     margin-bottom: 35px;
-    height: 91px;
+    height: 100px;
     line-height: 38px;
   }
 }
@@ -1635,13 +1676,17 @@ article {
   .index-page {
     margin-top: 295px;
     max-width: 509px;
+  }
+}
+@media (min-width: 992px) and (min-height: 700px) {
+  .index-page {
     position: absolute;
     left: 50%;
     bottom: 100px;
     margin-left: -40px;
   }
 }
-@media (min-width: 1200px) {
+@media (min-width: 1200px) and (min-height: 700px) {
   .index-page {
     margin-left: 50px;
   }
@@ -2987,7 +3032,7 @@ article {
 .sidebar .bages {
   display: none;
   margin-bottom: 95px;
-  margin-top: 90px;
+  margin-top: 50px;
 }
 .sidebar .bages__item {
   max-width: 200px;
@@ -3094,14 +3139,19 @@ article {
 @media (min-width: 992px) {
   .sidebar .news {
     display: block;
+  }
+}
+@media (min-width: 992px) and (min-height: 700px) {
+  .sidebar .news {
+    display: block;
     position: absolute;
     right: 50%;
-    bottom: 170px;
+    bottom: 140px;
     margin-right: 215px;
     max-width: 254px;
   }
 }
-@media (min-width: 1200px) {
+@media (min-width: 1200px) and (min-height: 700px) {
   .sidebar .news {
     max-width: 284px;
     margin-right: 275px;

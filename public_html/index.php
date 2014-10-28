@@ -9,20 +9,19 @@ $APPLICATION->SetPageProperty('article_class', "index-page");
   <p>«Аргус Свар Сервис» (АСС) – ведущая международная команда экспертов автоматической сварки трубопроводов мирового уровня</p>
 </div>
 <div class="bages">
-  <div class="row">
-    <div class="col-xs-4">
-      <div class="bages__item"><img src="./layout/images/icon-1.png" class="bages__image">
-        <div class="bages__title">Ассоциированный член росснгс</div>
-      </div>
-    </div>
     <div class="col-xs-4">
       <div class="bages__item"><img src="./layout/images/icon-2.png" class="bages__image">
-        <div class="bages__title">Ассоциированный член iploca</div>
+        <div class="bages__title">Ассоциированный член росснгс</div>
       </div>
     </div>
     <div class="col-xs-4">
       <div class="bages__item"><img src="./layout/images/icon-3.png" class="bages__image">
         <div class="bages__title">Сертификация по стандарту ISO</div>
+      </div>
+    </div>
+    <div class="col-xs-4">
+      <div class="bages__item"><img src="./layout/images/icon-4.png" class="bages__image">
+        <div class="bages__title">Сертификация в системе ГАЗСЕРТ</div>
       </div>
     </div>
   </div>

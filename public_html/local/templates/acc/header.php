@@ -30,8 +30,8 @@
         <div class="col-xs-3 visible-md visible-lg">
           <a href="/" class="logo"><?=svg('logo')?></a>
           <div class="shield">
-            <?=svg('shield-l')?>
-            <?=svg('shield-r')?>
+            <div class="shield__left"><?=svg('shield-l')?></div>
+            <div class="shield__right"><?=svg('shield-r')?></div>
           </div>
         </div>
         <div class="col-xs-12 col-md-9 no-padding-right-md">
@@ -94,14 +94,14 @@
               if($APPLICATION->GetCurDir()=='/'):
                 ?>
                 <div class="bages">
-                  <div class="bages__item"><img src="./layout/images/icon-1.png" class="bages__image">
-                    <div class="bages__title">Ассоциированный член росснгс</div>
-                  </div>
                   <div class="bages__item"><img src="./layout/images/icon-2.png" class="bages__image">
-                    <div class="bages__title">Ассоциированный член iploca</div>
+                    <div class="bages__title">Ассоциированный член росснгс</div>
                   </div>
                   <div class="bages__item"><img src="./layout/images/icon-3.png" class="bages__image">
                     <div class="bages__title">Сертификация по стандарту ISO</div>
+                  </div>
+                  <div class="bages__item"><img src="./layout/images/icon-4.png" class="bages__image">
+                    <div class="bages__title">Сертификация в системе ГАЗСЕРТ</div>
                   </div>
                 </div>
                 <?
