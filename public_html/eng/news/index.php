@@ -2,6 +2,7 @@
 require($_SERVER['DOCUMENT_ROOT'].'/bitrix/header.php');
 $APPLICATION->SetPageProperty('body_class', "news");
 $APPLICATION->SetTitle("News");
+$APPLICATION->SetPageProperty('section', array('IBLOCK'=>6, 'CODE'=>'news'));
 require_once($_SERVER['DOCUMENT_ROOT'].'/include/news_list.php');
 ?>
 <div class="row">
