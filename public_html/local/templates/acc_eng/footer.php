@@ -6,7 +6,7 @@
     <div class="index-news">
         <?$APPLICATION->IncludeComponent("bitrix:news.list", "news_index", 
         array(
-          "IBLOCK_ID"   => 1,
+          "IBLOCK_ID"   => 6,
           "NEWS_COUNT"  => "1",
           "SORT_BY1"    => "ACTIVE_FROM",
           "SORT_ORDER1" => "DESC",
