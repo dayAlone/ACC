@@ -1,18 +1,18 @@
 <?
 require($_SERVER['DOCUMENT_ROOT'].'/bitrix/header.php');
 $APPLICATION->SetPageProperty('body_class', "news");
-$APPLICATION->SetTitle("Новости");
+$APPLICATION->SetTitle("News");
 require_once($_SERVER['DOCUMENT_ROOT'].'/include/news_list.php');
 ?>
 <div class="row">
   <div class="col-xs-7">
-    <h1 class="page__title">Новости</h1>
+    <h1 class="page__title">News</h1>
   </div>
   <div class="col-xs-5 right">
   	<?
     $APPLICATION->IncludeComponent("bitrix:catalog.section.list", "years_list", array(
         "IBLOCK_TYPE"  => "news",
-        "IBLOCK_ID"    => "1",
+        "IBLOCK_ID"    => "6",
         "TOP_DEPTH"    => "1",
         "CACHE_TYPE"   => "A",
         "CACHE_NOTES"  => $_GLOBALS['currentNewsSection']
@@ -26,7 +26,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/include/news_list.php');
 <?
 $APPLICATION->IncludeComponent("bitrix:news.list", "news", 
 array(
-		"IBLOCK_ID"      => 1,
+		"IBLOCK_ID"      => 6,
 		"NEWS_COUNT"     => "10",
 		"PARENT_SECTION" => $_GLOBALS['currentNewsSection'],
 		"SORT_BY1"       => "ACTIVE_FROM",

@@ -13,7 +13,7 @@ $APPLICATION->IncludeComponent(
 "bitrix:news.list", 
 "tech", 
 array(
-  "IBLOCK_ID"   => 4,
+  "IBLOCK_ID"   => 9,
   "NEWS_COUNT"  => "9999999",
   "SORT_BY1"    => "SORT",
   "SORT_ORDER1" => "ASC",

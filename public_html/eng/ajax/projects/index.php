@@ -1,10 +1,10 @@
 <?
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.php");
 $APPLICATION->IncludeComponent("bitrix:news.detail","detail",Array(
-	"IBLOCK_ID"     => "5",
+	"IBLOCK_ID"     => "10",
 	"ELEMENT_CODE"  => $_REQUEST['ELEMENT_CODE'],
 	"CHECK_DATES"   => "N",
-	"IBLOCK_TYPE"   => "content_russian",
+	"IBLOCK_TYPE"   => "content_eng",
 	"SET_TITLE"     => "N",
 	"PROPERTY_CODE" => Array("GALLERY", "DATE"),
 	"CACHE_TYPE"    => "A",

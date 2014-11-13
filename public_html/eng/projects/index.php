@@ -1,15 +1,15 @@
 <?
 require($_SERVER['DOCUMENT_ROOT'].'/bitrix/header.php');
 $APPLICATION->SetPageProperty('body_class', "map");
-$APPLICATION->SetTitle("Наши проекты");
+$APPLICATION->SetTitle("Our projects");
 ?> 
-<h1 data-more="Для получения подробной информации о проекте нажмите на соответствующий маркер на карте." class="inline-block page__title">наши проекты</h1>
+<h1 data-more="Для получения подробной информации о проекте нажмите на соответствующий маркер на карте." class="inline-block page__title">Our projects</h1>
 <?
 $APPLICATION->IncludeComponent(
   "bitrix:news.list", 
   "projects_map", 
   array(
-    "IBLOCK_ID"       => 5,
+    "IBLOCK_ID"       => 10,
     "NEWS_COUNT"      => "9999999",
     "SORT_BY1"        => "SORT",
     "SORT_ORDER1"     => "ASC",
