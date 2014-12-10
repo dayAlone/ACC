@@ -2,10 +2,10 @@
 require($_SERVER['DOCUMENT_ROOT'].'/bitrix/header.php');
 $APPLICATION->SetPageProperty('body_class', "tech");
 $APPLICATION->SetPageProperty('popup', "workProcess");
-$APPLICATION->SetTitle("Технологии'");
+$APPLICATION->SetTitle("Technologies'");
 $APPLICATION->SetPageProperty('popup_content', COption::GetOptionString("grain.customsettings","popup_work"));
 ?> 
-<h1 class="page__title">Технологии</h1>
+<h1 class="page__title">Technologies</h1>
 <div class="page__divider"></div>
 <?/*<h2>В нашей работы мы используем:</h2>*/?>
 <?
