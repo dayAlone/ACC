@@ -5,5 +5,5 @@
 	    <a href="<?=$item['DETAIL_PAGE_URL']?>" class="news__title"><?=$item['NAME']?></a>
 	  </div>
 	<?endforeach;?>
-  <a href="/news/" class="news__more">еще новости</a>
+  <a href="/news/" class="news__more"><?=GetMessage('MORE')?></a>
 </div>
