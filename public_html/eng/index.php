@@ -1,6 +1,6 @@
 <?
 require($_SERVER['DOCUMENT_ROOT'].'/bitrix/header.php');
-$APPLICATION->SetTitle('Аргус Свар Сервис');
+$APPLICATION->SetTitle('Argus Welding Service');
 $APPLICATION->SetPageProperty('body_class', "index");
 $APPLICATION->SetPageProperty('article_class', "index-page");
 ?> 
