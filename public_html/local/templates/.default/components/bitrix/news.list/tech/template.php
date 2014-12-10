@@ -18,7 +18,7 @@
             
             <div class="row">
               <?if(strlen($item['VIDEO'])>0):?>
-                <div class="col-xs-6 col-sm-5"><a data-toggle="modal" data-target="#techMedia" href="#techMedia" class="tech__link tech__video"  data-url="<?=$item['DETAIL_PAGE_URL']?>?a=video"><?=svg('video')?>Видео</a></div>
+                <div class="col-xs-6 col-sm-5"><a data-toggle="modal" data-target="#techMedia" href="#techMedia" class="tech__link tech__video"  data-url="<?=$item['DETAIL_PAGE_URL']?>?a=video"><?=svg('video')?><?=GetMessage('VIDEO')?></a></div>
               <?endif;?>
               <?if(count($item['IMAGES'])>0):?>
                 <div class="col-xs-6 col-sm-7"><a data-toggle="modal" data-target="#techMedia" href="#techMedia" class="tech__link tech__photos"  data-url="<?=$item['DETAIL_PAGE_URL']?>?a=photo"><?=svg('photos')?><?=GetMessage('PHOTO')?></a></div>
