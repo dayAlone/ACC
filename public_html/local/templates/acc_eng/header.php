@@ -51,7 +51,7 @@
             <div class="col-xs-2 col-lg-3">
               <a data-toggle="modal" data-target="#Contacts" href="#Contacts" class="popup-trigger"><?=svg('phone')?></a>
               <a data-toggle="modal" data-target="#Search" href="#Search" class="popup-trigger"><?=svg('seach')?></a>
-              <div data-variant="russian,english" class="lang-trigger lang-trigger--lang_russian"><span class="lang-trigger__label">RU</span><span class="lang-trigger__carriage"></span><span class="lang-trigger__label">EN</span></div>
+              <div data-variant="russian,english" class="lang-trigger lang-trigger--lang_english"><span class="lang-trigger__label">RU</span><span class="lang-trigger__carriage"></span><span class="lang-trigger__label">EN</span></div>
             </div>
             <div class="col-xs-3 md-right"><a href="tel:<?=str_replace(' ', '', COption::GetOptionString("grain.customsettings","toolbar_phone"))?>" class="phone"><?=svg('phone')?></svg><?=COption::GetOptionString("grain.customsettings","toolbar_phone")?></a></div>
             <div class="col-xs-4 col-md-5 col-lg-4 right">
