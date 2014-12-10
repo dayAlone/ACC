@@ -100,7 +100,7 @@ if($APPLICATION->GetPageProperty('popup')):?>
   <div class="container">
     <div class="row">
       <div class="col-xs-8 col-sm-3 col-sm-4 col-md-3">
-        <div class="copyright">© <?=date('Y')?> ARGUS WELDING SERVICE </div>
+        <div class="copyright">© <?=date('Y')?> ARGUS WELDING SERVICES </div>
       </div>
       <div class="col-sm-3 col-md-2">
         <div class="contacts"><span><?=COption::GetOptionString("grain.customsettings","footer_address_en")?> <br></span><a href="mailto:<?=COption::GetOptionString("grain.customsettings","footer_email_en")?>" class="contacts_link"><?=COption::GetOptionString("grain.customsettings","footer_email_en")?></a></div>

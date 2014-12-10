@@ -9,14 +9,14 @@ $aMenuLinks = Array(
 	),
 	Array(
 		"Argus Pipeline Service", 
-		"http://oooaps.сщь", 
+		"http://oooaps.com", 
 		Array(), 
 		Array(), 
 		"" 
 	),
 	Array(
 		"Pipeline Control Service", 
-		"http://tkc-ndt.сщь", 
+		"http://tkc-ndt.com", 
 		Array(), 
 		Array(), 
 		"" 

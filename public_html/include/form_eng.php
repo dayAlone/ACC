@@ -10,7 +10,7 @@
   <input name="company" type="text">
   <label>Your E-mail</label>
   <input name="email" type="email" required>
-  <label>Your mobile number</label>
+  <label>Your phone number</label>
   <input name="phone" type="text" data-parsley-pattern="/^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}/" data-parsley-trigger="change">
   <label>Your message</label>
   <textarea required name="message"></textarea>
