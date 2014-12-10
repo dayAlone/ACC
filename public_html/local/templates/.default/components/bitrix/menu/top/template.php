@@ -1,1 +1,1 @@
-<nav class="nav nav-<?=LANGUAGE_ID?>"><?foreach ($arResult as $key=>$item):?><a href="<?=$item['LINK']?>" class="nav__item <?=($item['SELECTED']?'nav__item--active':'')?>"><?=$item['TEXT']?></a><?endforeach;?></nav>
+<nav class="nav nav--<?=LANGUAGE_ID?>"><?foreach ($arResult as $key=>$item):?><a href="<?=$item['LINK']?>" class="nav__item <?=($item['SELECTED']?'nav__item--active':'')?>"><?=$item['TEXT']?></a><?endforeach;?></nav>

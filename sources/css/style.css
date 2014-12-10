@@ -2017,12 +2017,12 @@ article {
   }
 }
 @media (min-width: 768px) {
-  .toolbar .nav-en__item {
+  .toolbar .nav--en .nav__item {
     padding: 3px 15.5px 0;
   }
 }
 @media (min-width: 1200px) {
-  .toolbar .nav-en__item {
+  .toolbar .nav--en .nav__item {
     padding: 3px 22.3px 0;
     letter-spacing: 0.3px;
   }
