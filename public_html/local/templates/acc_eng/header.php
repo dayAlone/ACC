@@ -94,13 +94,13 @@
                 ?>
                 <div class="bages">
                   <div class="bages__item"><img src="./layout/images/icon-2.png" class="bages__image">
-                    <div class="bages__title">Ассоциированный член росснгс</div>
+                    <div class="bages__title">ASSOCIATE MEMBER OF ROSNGS</div>
                   </div>
                   <div class="bages__item"><img src="./layout/images/icon-3.png" class="bages__image">
-                    <div class="bages__title">Сертификация по стандарту ISO</div>
+                    <div class="bages__title">ISO CERTIFICATION</div>
                   </div>
                   <div class="bages__item"><img src="./layout/images/icon-4.png" class="bages__image">
-                    <div class="bages__title">Сертификация в системе ГАЗСЕРТ</div>
+                    <div class="bages__title">GAZSERT CERTIFICATION</div>
                   </div>
                 </div>
                 <?

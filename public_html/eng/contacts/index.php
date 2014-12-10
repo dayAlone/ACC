@@ -1,17 +1,17 @@
 <?
 require($_SERVER['DOCUMENT_ROOT'].'/bitrix/header.php');
 $APPLICATION->SetPageProperty('body_class', "contacts");
-$APPLICATION->SetTitle("Контакты");
+$APPLICATION->SetTitle("COntacts");
 ?> 
-<h1 class="page__title">Контакты</h1>
+<h1 class="page__title">Contacts</h1>
 <div class="page__divider"></div>
 <div class="row">
   <div class="col-sm-8">
-    <big><strong>Адрес: </strong>Россия, Москва, <nobr>ул. Усачева, 35А</nobr> <br><strong>Телефон: </strong><a href="tel:88005553136">8 800 555 31 36 <br></a><strong>E-mail: </strong><a href="mailto:info@argusweld.ru">info@argusweld.ru</a></big><br>
-    <div class="xs-center"><a data-toggle="modal" data-target="#contactsMap" href="#contactsMap" class="button button--big button--white">схема проезда</a></div>
+    <big><strong>Address: </strong>Moscow, Russia, <nobr>Usacheva Street, 35A</nobr> <br><strong>Phone: </strong><a href="tel:88005553136">8 800 555 31 36 <br></a><strong>E-mail: </strong><a href="mailto:info@argusweld.ru">info@argusweld.ru</a></big><br>
+    <div class="xs-center"><a data-toggle="modal" data-target="#contactsMap" href="#contactsMap" class="button button--big button--white">map</a></div>
   </div>
   <div class="col-sm-4 right">
-    <div class="xs-center"><a data-toggle="modal" data-target="#Feedback" href="#Feedback" class="no-margin-top button button--big button--white">напишите нам</a></div>
+    <div class="xs-center"><a data-toggle="modal" data-target="#Feedback" href="#Feedback" class="no-margin-top button button--big button--white">Write to us</a></div>
   </div>
 </div>
 <?$APPLICATION->AddViewContent('footer', '

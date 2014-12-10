@@ -3,7 +3,7 @@ require($_SERVER['DOCUMENT_ROOT'].'/bitrix/header.php');
 $APPLICATION->SetPageProperty('body_class', "map");
 $APPLICATION->SetTitle("Our projects");
 ?> 
-<h1 data-more="Для получения подробной информации о проекте нажмите на соответствующий маркер на карте." class="inline-block page__title">Our projects</h1>
+<h1 data-more="For more information, click on the appropriate marker on the map" class="inline-block page__title">Our projects</h1>
 <?
 $APPLICATION->IncludeComponent(
   "bitrix:news.list", 

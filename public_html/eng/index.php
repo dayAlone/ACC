@@ -5,23 +5,23 @@ $APPLICATION->SetPageProperty('body_class', "index");
 $APPLICATION->SetPageProperty('article_class', "index-page");
 ?> 
 <div class="highlight">
-  <h1>Наш профессионализм<br> – ваш успех</h1>
-  <p>«Аргус Свар Сервис» (АСС) – ведущая международная команда экспертов автоматической сварки трубопроводов мирового уровня</p>
+  <h1>OUR PROFESSIONAL COMPETENCE IS YOUR SUCCESS</h1>
+  <p>Argus Welding Service (AWS) - a leading international team of experts in automatic welding of global pipelines</p>
 </div>
 <div class="bages">
     <div class="col-xs-4">
       <div class="bages__item"><img src="./layout/images/icon-2.png" class="bages__image">
-        <div class="bages__title">Ассоциированный член росснгс</div>
+        <div class="bages__title">ASSOCIATE MEMBER OF ROSNGS</div>
       </div>
     </div>
     <div class="col-xs-4">
       <div class="bages__item"><img src="./layout/images/icon-3.png" class="bages__image">
-        <div class="bages__title">Сертификация по стандарту ISO</div>
+        <div class="bages__title">ISO CERTIFICATION</div>
       </div>
     </div>
     <div class="col-xs-4">
       <div class="bages__item"><img src="./layout/images/icon-4.png" class="bages__image">
-        <div class="bages__title">Сертификация в системе ГАЗСЕРТ</div>
+        <div class="bages__title">GAZSERT CERTIFICATION</div>
       </div>
     </div>
   </div>
