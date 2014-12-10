@@ -28,7 +28,7 @@
     <div class="container">
       <div class="row no-gutter-md">
         <div class="col-xs-3 visible-md visible-lg">
-          <a href="/" class="logo"><?=svg('logo')?></a>
+          <a href="/" class="logo"><?=svg('logo_eng')?></a>
           <div class="shield shield--big-left">
             <div class="shield__right"><?=svg('shield-r')?></div>
           </div>
@@ -87,7 +87,7 @@
       <div class="row">
         <div class="col-sm-12 <?=($APPLICATION->GetCurDir()=='/'?'col-md-4':'')?> no-position">
           <aside class="sidebar">
-          <a href="/" class="logo"><?=svg('logo')?></a>
+          <a href="/" class="logo"><?=svg('logo_eng')?></a>
             
             <?php
               if($APPLICATION->GetCurDir()=='/'):
