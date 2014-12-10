@@ -1,64 +1,57 @@
 <?
 $aMenuLinks = Array(
 	Array(
-		"ТКС-холдинг", 
-		"#", 
+		"TKC-holding", 
+		"http://tkc-group.com", 
 		Array(), 
 		Array(), 
 		"" 
 	),
 	Array(
-		"аргус пайплайн сервис", 
-		"#", 
+		"Argus Pipeline Service", 
+		"http://oooaps.сщь", 
 		Array(), 
 		Array(), 
 		"" 
 	),
 	Array(
-		"трубопровод контроль сервис", 
-		"#", 
+		"Pipeline Control Service", 
+		"http://tkc-ndt.сщь", 
 		Array(), 
 		Array(), 
 		"" 
 	),
 	Array(
-		"спецнефтегаз-т", 
-		"#", 
+		"UIC RONKTD Spektr", 
+		"http://uic-spektr.com", 
 		Array(), 
 		Array(), 
 		"" 
 	),
 	Array(
-		"уиц ронктд “спектр”", 
-		"#", 
+		"Intera", 
+		"http://www.interaeco.com", 
 		Array(), 
 		Array(), 
 		"" 
 	),
 	Array(
-		"интера", 
-		"#", 
+		"MNPO “Spektr”", 
+		"http://mnpo-spektr.com", 
 		Array(), 
 		Array(), 
 		"" 
 	),
 	Array(
-		"мнпо “спектр”", 
-		"#", 
+		"ASC Svarka StroyTEK", 
+		"http://www.svarkastroytek.ru", 
 		Array(), 
 		Array(), 
 		"" 
 	),
 	Array(
-		"асц сварка стройтэк", 
-		"#", 
-		Array(), 
-		Array(), 
-		"" 
-	),
-	Array(
-		"зто", 
-		"#", 
+		"LEASINGSTROYMASH", 
+		"http://www.lsmgroup.ru", 
 		Array(), 
 		Array(), 
 		"" 

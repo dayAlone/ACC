@@ -4,20 +4,21 @@
     	<span class="dropdown dropdown--sort">
     		<a href="#" class="dropdown__trigger"><span class="dropdown__text">Все проекты</span><?=svg('arrow')?></a>
     		<select class="dropdown__select">
-    			<option value="#all">Все проекты</a>
-    			<option value="#current">Текущие</a>
-    			<option value="#finished">Завершенные</a>
+    			<option value="#all"><?=ShowMessage("ALL")?></a>
+    			<option value="#current"><?=strip_tags(ShowMessage("CURENT"))?></a>
+    			<option value="#finished"><?=strip_tags(ShowMessage("FINISHED"))?></a>
     		</select>
     		<span class="dropdown__frame">
-    			<a href="#all" style="display:none" class="dropdown__item">Все проекты</a><a href="#current" class="dropdown__item">Текущие</a><a href="#finished" class="dropdown__item">Завершенные</a></span></span></div>
+    			<a href="#all" style="display:none" class="dropdown__item"><?=ShowMessage("ALL")?></a><a href="#current" class="dropdown__item"><?=strip_tags(ShowMessage("FINISHED"))?></a><a href="#finished" class="dropdown__item"><?=strip_tags(ShowMessage("FINISHED"))?></a></span></span></div>
     <div class="col-sm-7 no-mobile">
-    	<a href="#all" class="filter__item filter__item--active">все проекты</a>
-    	<a href="#current" class="filter__item filter__item--yellow">текущие<span>проекты</span></a><a href="#finished" class="filter__item filter__item--blue">ЗАВЕРШЕННЫЕ<span>проекты</span></a></div>
+    	<a href="#all" class="filter__item filter__item--active"><?=ShowMessage("ALL")?></a>
+    	<a href="#current" class="filter__item filter__item--yellow"><?=ShowMessage("CURRENT")?></a>
+    	<a href="#finished" class="filter__item filter__item--blue"><?=ShowMessage("FINISHED")?></a></div>
     <div class="col-sm-5 right no-mobile">
     	<div class="select">
-    		<span class="select__title">Показывать: </span>
-    		<a href="#bg_map" class="select__item select__item--active">Карту</a>	
-    		<a href="#list" class="select__item">Список</a>	
+    		<span class="select__title"><?=ShowMessage("SHOW")?>: </span>
+    		<a href="#bg_map" class="select__item select__item--active"><?=ShowMessage("MAP")?></a>	
+    		<a href="#list" class="select__item"><?=ShowMessage("LIST")?></a>	
     	</div>
     	
     </div>
