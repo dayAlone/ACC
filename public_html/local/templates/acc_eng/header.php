@@ -56,8 +56,8 @@
             <div class="col-xs-3 md-right"><a href="tel:<?=str_replace(' ', '', COption::GetOptionString("grain.customsettings","toolbar_phone"))?>" class="phone"><?=svg('phone')?></svg><?=COption::GetOptionString("grain.customsettings","toolbar_phone")?></a></div>
             <div class="col-xs-4 col-md-5 col-lg-4 right">
               <?/*<a href="#" class="filials visible-md-inline visible-lg-inline"><?=svg('pin')?>Филиальная сеть</a>*/?>
-              <a data-toggle="modal" data-target="#Feedback" href="#Feedback" class="feedback visible-md-inline visible-lg-inline">Обратная связь</a>
-              <a data-toggle="modal" data-target="#Nav" href="#Nav" class="nav-trigger"><span>Меню</span><?=svg('nav')?></a>
+              <a data-toggle="modal" data-target="#Feedback" href="#Feedback" class="feedback visible-md-inline visible-lg-inline">Feedback</a>
+              <a data-toggle="modal" data-target="#Nav" href="#Nav" class="nav-trigger"><span>Menu</span><?=svg('nav')?></a>
               <form action="/search/" class="search-form">
                 <input type="text" name="q" class="search-form__text" placeholder="">
                 <button type="submit" class="search-form__button"><?=svg('seach')?></button>
