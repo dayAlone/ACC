@@ -2016,6 +2016,9 @@ article {
     display: block;
   }
 }
+.toolbar .nav--en .nav__item:first-of-type {
+  padding-left: 0 !important;
+}
 @media (min-width: 768px) {
   .toolbar .nav--en .nav__item {
     padding: 3px 15.5px 0;
