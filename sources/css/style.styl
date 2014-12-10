@@ -25,17 +25,21 @@ b(name=null, position=null, color=null, size=null)
 	if size
 		background-size size
 
-border-dashed(color=rgba(0,0,0,1), top=20px, size=12px)
+border-dashed(color=rgba(0,0,0,1), top=calc(100% - 2px), size=12px)
 	background-image: linear-gradient(left, color 70%, transparent 70%)
 	background-repeat: repeat-x;
 	background-size: size 1px;
 	background-position: 0 top;
+	&:hover
+		text-decoration: none
 
-border-line(color=rgba(0,0,0,1), top=20px, size=12px)
+border-line(color=rgba(0,0,0,1), top=calc(100% - 2px), size=12px)
 	background-image: linear-gradient(to bottom, rgba(0,0,0,0) 50%, color 50%);
 	background-repeat: repeat-x;
 	background-size: 2px 2px;
 	background-position: 0 top;
+	&:hover
+		text-decoration: none
 /*
  * Модификаторы оформления
  */
@@ -218,10 +222,32 @@ for vz, key in xs sm md lg
 /*
  * Модификаторы плагинов
  */
- .fotorama__arr,.fotorama__fullscreen-icon,.fotorama__video-close,.fotorama__video-play
+.fotorama__arr,.fotorama__fullscreen-icon,.fotorama__video-close,.fotorama__video-play
 	background-image url(../images/plugins/fotorama.png)
 	@media (-webkit-min-device-pixel-ratio:1.5),(min-resolution:144dpi)
 		background-image url(../images/plugins/fotorama@2x.png)
+
+.pp_bottom div, .pp_top div, .pp_left, .pp_right
+	background: #fff !important;
+	background-image: none !important;
+
+div.pp_pic_holder.pp_default
+	padding-right 5px
+
+div.pp_default .pp_top .pp_left, div.pp_default .pp_top .pp_right, div.pp_default .pp_expand, div.pp_default .pp_expand:hover, div.pp_default .pp_contract, div.pp_default .pp_contract:hover, div.pp_default .pp_close, div.pp_default .pp_nav .pp_pause, div.pp_default a.pp_arrow_next, div.pp_default .pp_bottom .pp_left, div.pp_default .pp_bottom .pp_right, div.pp_default a.pp_arrow_previous, div.pp_default a.pp_arrow_next, div.pp_default .pp_nav .pp_play, div.pp_default .pp_nav .pp_pause
+	background-image url(../images/plugins/sprite.png)
+
+div.pp_default .pp_top .pp_middle, div.pp_default .pp_bottom .pp_middle
+	background-image url(../images/plugins/sprite-x.png)
+
+div.pp_default .pp_content_container .pp_left, div.pp_default .pp_content_container .pp_right
+	background-image url(../images/plugins/sprite-y.png)
+div.pp_default .pp_previous:hover
+	background-image url(../images/plugins/sprite_prev.png)
+div.pp_default .pp_next:hover
+	background-image url(../images/plugins/sprite_next.png)
+div.pp_default .pp_loaderIcon
+	background-image url(../images/plugins/loader.gif)
 .toolbar
 	full-width()
 	top           0
@@ -231,6 +257,7 @@ for vz, key in xs sm md lg
 	position      fixed
 	background    toolbar_bottom
 	line-height   62px
+	z-index 300
 	white-space   nowrap
 	margin-bottom 20px
 	.container
@@ -344,6 +371,7 @@ for vz, key in xs sm md lg
 			min-width      260px
 			padding        0 15px
 			font-size      12px
+			color white
 	.lang-trigger
 		position relative
 		z-index 20
@@ -820,6 +848,15 @@ article
 	display none
 	@media (min-width: scr_sm)
 		display block
+
+.toolbar
+	.nav-en
+		&__item
+			@media (min-width: scr_sm)
+				padding: 3px 15.5px 0
+			@media (min-width: scr_lg)
+				padding: 3px 22.3px 0
+				letter-spacing: .3px
 #Feedback .form
 	display block
 	margin-bottom 0

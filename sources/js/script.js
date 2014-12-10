@@ -248,7 +248,11 @@
     });
     $('.lang-trigger__carriage').click(function(e) {
       var el, variants;
-      window.location.href = 'http://argusweld.com';
+      if ($(this).hasClass('lang-trigger--lang_english')) {
+        window.location.href = 'http://argusweld.ru';
+      } else {
+        window.location.href = 'http://argusweld.com';
+      }
       el = $(this).parents('.lang-trigger');
       variants = el.data('variant').split(',');
       $.each(variants, function(index, value) {
