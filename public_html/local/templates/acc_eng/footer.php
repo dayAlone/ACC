@@ -67,7 +67,7 @@ if($APPLICATION->GetPageProperty('popup')):?>
 <div id="Search" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade">
   <div class="modal-dialog">
     <div class="modal-content"><a data-dismiss="modal" href="#" class="close"><?=svg('close')?></a>
-      <div class="modal-title">Поиск</div>
+      <div class="modal-title">Search</div>
       <form class="search">
         <input type="text" name="q" class="search__input">
         <button type="submit" value="" class="search__submit"><?=svg('seach')?>
@@ -100,13 +100,13 @@ if($APPLICATION->GetPageProperty('popup')):?>
   <div class="container">
     <div class="row">
       <div class="col-xs-8 col-sm-3 col-sm-4 col-md-3">
-        <div class="copyright">© 2014 ООО «аргус сварсервис» </div>
+        <div class="copyright">© <?=date('Y')?> ARGUS WELDING SERVICE </div>
       </div>
       <div class="col-sm-3 col-md-2">
-        <div class="contacts"><span><?=COption::GetOptionString("grain.customsettings","footer_address")?> <br></span><a href="mailto:<?=COption::GetOptionString("grain.customsettings","footer_email")?>" class="contacts_link"><?=COption::GetOptionString("grain.customsettings","footer_email")?></a></div>
+        <div class="contacts"><span><?=COption::GetOptionString("grain.customsettings","footer_address_en")?> <br></span><a href="mailto:<?=COption::GetOptionString("grain.customsettings","footer_email_en")?>" class="contacts_link"><?=COption::GetOptionString("grain.customsettings","footer_email_en")?></a></div>
       </div>
       <div class="col-sm-2">
-        <div class="map"><a href="/map/">карта сайта</a></div>
+        <div class="map"><a href="/map/">sitemap</a></div>
       </div>
       <div class="col-xs-4 col-sm-3 col-md-2 col-lg-2 social">
         <nobr>
@@ -123,7 +123,7 @@ if($APPLICATION->GetPageProperty('popup')):?>
         </nobr>
       </div>
       <div class="col-md-3 col-lg-3 visible-md-block visible-lg-block"><a href="http://radia.ru" target="_blank" class="radia"><?=svg('radia')?>
-          <div class="radia__content">разработка сайта <br>radia interactive</div></a></div>
+          <div class="radia__content">Developed by <br>radia interactive</div></a></div>
     </div>
   </div>
 </footer>
