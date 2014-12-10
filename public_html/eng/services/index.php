@@ -2,10 +2,10 @@
 require($_SERVER['DOCUMENT_ROOT'].'/bitrix/header.php');
 $APPLICATION->SetPageProperty('body_class', "services");
 $APPLICATION->SetPageProperty('popup', "auditProcess");
-$APPLICATION->SetTitle("Наши услуги'");
+$APPLICATION->SetTitle("Services");
 $APPLICATION->SetPageProperty('popup_content', COption::GetOptionString("grain.customsettings","popup_audit"));
 ?> 
-<h1 class="page__title">Наши услуги</h1>
+<h1 class="page__title">Services</h1>
 <div class="page__divider"></div>
 <h2>Аргус Свар Сервис выполняет широкий спектр работ, связанных с обслуживанием трубопроводов:</h2>
 <?
