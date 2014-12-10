@@ -79,10 +79,10 @@ if($APPLICATION->GetPageProperty('popup')):?>
 <div id="Contacts" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade">
   <div class="modal-dialog">
     <div class="modal-content"><a data-dismiss="modal" href="#" class="close"><?=svg('close')?></a>
-      <div class="modal-title">связаться с нами</div><a href="tel:+78002005001" class="phone">8 800 200 500 1</a>
-      <div class="full-width center"><a href="#" class="form-trigger">напишите нам</a></div>
+      <div class="modal-title">contact</div><a href="tel:+78002005001" class="phone">8 800 200 500 1</a>
+      <div class="full-width center"><a href="#" class="form-trigger">email us</a></div>
       <?
-        require($_SERVER['DOCUMENT_ROOT'].'/include/form.php');
+        require($_SERVER['DOCUMENT_ROOT'].'/include/form_eng.php');
       ?>
     </div>
   </div>
