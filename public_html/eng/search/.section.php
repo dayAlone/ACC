@@ -1,7 +1,7 @@
 <?
-$sSectionName = 'Поиск';
+$sSectionName = 'Search';
 $arDirProperties = array(
-	'title' => 'Поиск',
+	'title' => 'Search',
 	'description' => 'Description',
 	'keywords' => 'Keywords',
 	'robots' => 'index, follow'
