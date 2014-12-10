@@ -22,7 +22,7 @@ $APPLICATION->SetTitle("COntacts");
     </div>
   </div>
 </div>
-<script src="http://api-maps.yandex.ru/2.1/?lang=ru-RU&amp;load=package.full" type="text/javascript"></script>
+<script src="http://api-maps.yandex.ru/2.1/?lang=en-EN&amp;load=package.full" type="text/javascript"></script>
 ');
 require($_SERVER['DOCUMENT_ROOT'].'/bitrix/footer.php');
 ?>
