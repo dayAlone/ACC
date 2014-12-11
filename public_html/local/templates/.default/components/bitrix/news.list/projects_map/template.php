@@ -58,7 +58,7 @@
   </div>
 </div>
 <div id="bg_map"></div>
-<script src="http://maps.googleapis.com/maps/api/js?sensor=true" type="text/javascript" charset="utf-8"></script>
+<script src="http://maps.googleapis.com/maps/api/js?sensor=true&language=<?=LANGUAGE_ID?>" type="text/javascript" charset="utf-8"></script>
 <script src="/layout/js/tooltip.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript" charset="utf-8">
 	$(function(){
