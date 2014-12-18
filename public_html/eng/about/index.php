@@ -1,50 +1,50 @@
 <?
 require($_SERVER['DOCUMENT_ROOT'].'/bitrix/header.php');
-$APPLICATION->SetTitle("О компании");
+$APPLICATION->SetTitle("About the Company");
 $APPLICATION->SetPageProperty('body_class', "about");
 $APPLICATION->SetPageProperty('popup', "aboutVideo");
 $APPLICATION->SetPageProperty('popup_content', COption::GetOptionString("grain.customsettings","popup_about"));
 ?> 
-<h1 class="page__title">О компании</h1>
+<h1 class="page__title">About the Company</h1>
 <div class="page__divider"></div>
-<h2 class="page__blue-title">«Аргус Свар Сервис» (АСС) – ведущая международная команда экспертов автоматической сварки трубопроводов.</h2>
+<h2 class="page__blue-title">Argus Welding Services (AWS) - a leading international team of experts in automatic welding of pipelines.</h2>
 
 <div class="row">
   <div class="col-md-4 col-sm-12">
-    <h3>Что мы делаем</h3>
+    <h3>Our expertise</h3>
     <ul class="list">
-      <li>Предоставляем комплексы автоматической сварки и персонал в аренду.</li>
-      <li>Разрабатываем решения по повышению производительности и качества сварочных работ.</li>
-      <li>Адаптируем новые сварочные технологии и продукты к существующим на конкретном объекте условиям.</li>
+      <li>We provide Automatic Welding Systems and Stuff on lease.</li>
+      <li>We develop solutions on improvement of productivity and welding works quality.</li>
+      <li>We develop new welding technologies and products to match existing conditions and requirements at the production site.</li>
     </ul>
   </div>
   <div class="col-md-8 col-sm-12">
-    <h3>Почему мы</h3>
-    <p>Мы прошли долгий путь от небольшой группы техников до одного из ведущих предприятий отрасли. Сегодня «Аргус Свар Сервис» – это:</p>
+    <h3>Why AWS?</h3>
+    <p>We started our business from a small group of technicians and now we are one of the leading companies in the industry. Today, Argus Welding Services Argus Welding Servicehas got:</p>
     <div class="row">
       <div class="col-sm-6">
         <ul class="list">
-          <li>собственные технологии автоматической сварки;</li>
-          <li>опыт работы по всему миру;</li>
-          <li>большое портфолио успешно реализованных крупных проектов;</li>
+          <li>its own automatic welding technologies;</li>
+          <li>world-wide experience;</li>
+          <li>a big portfolio of successfully implemented projects;</li>
         </ul>
       </div>
       <div class="col-sm-6">
         <ul class="list">
-          <li>высококвалифицированный технический персонал, специализирующийся на автоматической сварке не один десяток лет;</li>
-          <li>взаимодействие с заказчиком в поиске оптимальных решений проблем.</li>
+          <li>highly-skilled technicians with a long standing experience for decades;</li>
+          <li>an approach of cooperation with a Client for optimal solution of the problem;</li>
         </ul>
       </div>
     </div>
   </div>
 </div>
-<h3>Доверяя нам, вы можете не беспокоиться за качество сварки.<br>«Аргус Свар Сервис». Наш профессионализм – ваш успех.</h3>
+<h3>Putting trust in us, you may not worry about the quality of welding.<br>Argus Welding Service (AWS). Our competence is your success.</h3>
 <div class="page__divider"></div>
 <div class="row">
   <div class="col-sm-6 center"><a href="/projects/"><img src="/layout/images/map.png" class="map"></a></div>
   <div class="col-sm-6">
-    <h4>Опыт работы в различных регионах и странах мира:</h4>
-    <p>Россия, Казахстан, Узбекистан, Азербайджан, Туркменистан, Белоруссия, Украина, Израиль, Франция, Алжир, Ирак, ОАЭ, Китай, Индия</p>
+    <h4>Global expertise:</h4>
+    <p>Russia, Kazakhstan, Uzbekistan, Azerbaijan, Turkmenistan, Belarus, Ukraine, Israel, France, Algeria, Iraq, UAE, China, India</p>
     <? if(strlen(COption::GetOptionString("grain.customsettings","popup_about"))>0):?>
       <div class="xs-center"><a data-toggle="modal" data-target="#aboutVideo" href="#aboutVideo" class="button">смотрите видео о компании</a></div>
     <?endif;?>
