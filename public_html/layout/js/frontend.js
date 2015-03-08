@@ -26739,7 +26739,7 @@ if ('undefined' !== typeof window.ParsleyValidator)
         });
       }
     });
-    $(window).on('scroll mousewheel touchstart touchmove DOMMouseScroll MozMousePixelScroll', debounce(50, function() {
+    $(window).on('scroll mousewheel touchstart touchmove DOMMouseScroll MozMousePixelScroll', debounce(300, function() {
       if ($(window).width() <= 992) {
         if ($('body').scrollTop() > 40) {
           return $('.logo__frame').velocity({

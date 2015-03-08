@@ -226,7 +226,7 @@ $(document).ready ->
 				options:
 					duration: 300
 
-	$(window).on 'scroll mousewheel touchstart touchmove DOMMouseScroll MozMousePixelScroll', debounce 50, ->
+	$(window).on 'scroll mousewheel touchstart touchmove DOMMouseScroll MozMousePixelScroll', debounce 300, ->
 		if $(window).width() <= 992
 			if $('body').scrollTop() > 40
 				$('.logo__frame').velocity
