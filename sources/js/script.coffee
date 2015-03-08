@@ -230,7 +230,7 @@ $(document).ready ->
 	$(window).on 'scroll mousewheel touchstart touchmove DOMMouseScroll MozMousePixelScroll', ->
 		if logoTimer
 			clearTimeout logoTimer
-		logoTimer = delay 100, ->
+		logoTimer = delay 50, ->
 			if $(window).width() <= 992
 				if $('body').scrollTop() > 0
 					$('.logo__frame').mod 'disable', true
