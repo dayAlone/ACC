@@ -232,7 +232,7 @@ $(document).ready ->
 			clearTimeout logoTimer
 		logoTimer = delay 50, ->
 			if $(window).width() <= 992
-				if $('body').scrollTop() > 0
+				if $('body').scrollTop() > 20
 					$('.logo__frame').mod 'disable', true
 				else
 					$('.logo__frame').mod 'disable', false

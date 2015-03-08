@@ -26746,7 +26746,7 @@ if ('undefined' !== typeof window.ParsleyValidator)
       }
       return logoTimer = delay(50, function() {
         if ($(window).width() <= 992) {
-          if ($('body').scrollTop() > 0) {
+          if ($('body').scrollTop() > 20) {
             return $('.logo__frame').mod('disable', true);
           } else {
             return $('.logo__frame').mod('disable', false);
