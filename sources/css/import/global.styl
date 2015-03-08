@@ -27,11 +27,8 @@ a
 	for x in index about contacts partners tech news
 		.{x} &
 			b('bg_'+x+'.jpg', top center no-repeat, black, cover)
-			
 	.index &
-		
 		b('bg_index_xs.jpg', top center no-repeat, black)
-
 		@media (min-width: scr_sm)
 			b('bg_index.sm.jpg', top center no-repeat, black)
 		@media (min-width: scr_md)

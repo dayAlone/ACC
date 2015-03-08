@@ -603,7 +603,7 @@ div.pp_default .pp_loaderIcon
 				
 .wrap
 	padding-top 82px
-	@media (min-width: scr_sm)
+	@media (min-width: scr_md)
 		padding-top 0
 body
 	font-family 'Proxima', 'Helvetica Neue', 'Arial', sans-serif
@@ -634,11 +634,8 @@ a
 	for x in index about contacts partners tech news
 		.{x} &
 			b('bg_'+x+'.jpg', top center no-repeat, black, cover)
-			
 	.index &
-		
 		b('bg_index_xs.jpg', top center no-repeat, black)
-
 		@media (min-width: scr_sm)
 			b('bg_index.sm.jpg', top center no-repeat, black)
 		@media (min-width: scr_md)
