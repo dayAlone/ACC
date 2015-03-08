@@ -296,7 +296,7 @@
     });
     $(window).on('scroll mousewheel touchstart touchmove DOMMouseScroll MozMousePixelScroll', debounce(300, function() {
       if ($(window).width() <= 992) {
-        if ($('body').scrollTop() > 10) {
+        if ($('body').scrollTop() > 0) {
           return $('.logo__frame').velocity({
             properties: "transition.slideUpOut",
             options: {
