@@ -4,6 +4,7 @@ $APPLICATION->SetPageProperty('body_class', "news");
 $APPLICATION->SetTitle("Новости");
 $APPLICATION->SetPageProperty('section', array('IBLOCK'=>1, 'CODE'=>'news'));
 require_once($_SERVER['DOCUMENT_ROOT'].'/include/news_list.php');
+
 ?>
 <div class="row">
   <div class="col-xs-7">
@@ -16,7 +17,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/include/news_list.php');
         "IBLOCK_ID"    => "1",
         "TOP_DEPTH"    => "1",
         "CACHE_TYPE"   => "A",
-        "CACHE_NOTES"  => $_GLOBALS['currentNewsSection']
+        "CACHE_NOTES"  => $_GLOBALS['currentCatalogSection']
     ),
     false
 		);?>
@@ -29,7 +30,7 @@ $APPLICATION->IncludeComponent("bitrix:news.list", "news",
 array(
 		"IBLOCK_ID"      => 1,
 		"NEWS_COUNT"     => "10",
-		"PARENT_SECTION" => $_GLOBALS['currentNewsSection'],
+		"PARENT_SECTION" => $_GLOBALS['currentCatalogSection'],
 		"SORT_BY1"       => "ACTIVE_FROM",
 		"SORT_ORDER1"    => "DESC",
 		"DETAIL_URL"     => "/news/#ELEMENT_CODE#/",
@@ -38,7 +39,7 @@ array(
    ),
    false
 );
-if(strlen($_REQUEST['ELEMENT_CODE'])>0 && !isset($_GLOBALS['currentNewsSection']))
+if(strlen($_REQUEST['ELEMENT_CODE'])>0 && !isset($_GLOBALS['currentCatalogSection']))
 {?>
 <script type="text/javascript" charset="utf-8" async defer>
   $(function(){

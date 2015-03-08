@@ -44,7 +44,6 @@
 					}	
 				endif;
 			}
-
 			if(strlen($_REQUEST['ELEMENT_CODE'])==0)
 				$Current = $Sections[0];
 

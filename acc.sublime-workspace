@@ -519,6 +519,111 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "public_html/eng/projects/.section.php",
+			"settings":
+			{
+				"buffer_size": 37,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "public_html/eng/contacts/index.php",
+			"settings":
+			{
+				"buffer_size": 1400,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "public_html/eng/contacts/.section.php",
+			"settings":
+			{
+				"buffer_size": 33,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "public_html/local/templates/.default/components/bitrix/news.list/projects_map/template.php",
+			"settings":
+			{
+				"buffer_size": 12151,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "sources/html/includes/footer.jade",
+			"settings":
+			{
+				"buffer_size": 3838,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "public_html/eng/about/.section.php",
+			"settings":
+			{
+				"buffer_size": 30,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "public_html/eng/about/index.php",
+			"settings":
+			{
+				"buffer_size": 2620,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/Users/slider/Downloads/vk.svg",
+			"settings":
+			{
+				"buffer_size": 519,
+				"line_ending": "Unix",
+				"name": "<svg width=\"23\" height=\"28\" viewBox=\"0 0 23 28\" xm"
+			}
+		},
+		{
+			"file": "sources/js/script.coffee",
+			"settings":
+			{
+				"buffer_size": 12648,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "public_html/projects.html",
+			"settings":
+			{
+				"buffer_size": 41861,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "public_html/eng/partners/.section.php",
+			"settings":
+			{
+				"buffer_size": 34,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "public_html/eng/partners/index.php",
+			"settings":
+			{
+				"buffer_size": 664,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "public_html/eng/services/.section.php",
+			"settings":
+			{
+				"buffer_size": 36,
+				"line_ending": "Unix"
+			}
+		}
 	],
 	"build_system": "",
 	"command_palette":
@@ -567,35 +672,61 @@
 	},
 	"expanded_folders":
 	[
-		"/Users/slider/Documents/Projects/ACC/HTML/public_html/local/templates/acc",
-		"/Users/slider/Documents/Projects/ACC/HTML/public_html/local/templates/acc/components/bitrix/menu/sites",
-		"/Users/slider/Documents/Projects/ACC/HTML/public_html/local/templates/acc/components/bitrix/news.list",
-		"/Users/slider/Documents/Projects/ACC/HTML/public_html/local/templates/acc/components/bitrix/news.list/projects_map",
-		"/Users/slider/Documents/Projects/ACC/HTML",
-		"/Users/slider/Documents/Projects/ACC/HTML/node_modules/grunt-svgmin",
-		"/Users/slider/Documents/Projects/ACC/HTML/node_modules/grunt-svgmin/node_modules",
-		"/Users/slider/Documents/Projects/ACC/HTML/node_modules/grunt-svgmin/node_modules/svgo",
-		"/Users/slider/Documents/Projects/ACC/HTML/node_modules/grunt-svgmin/node_modules/svgo/plugins",
-		"/Users/slider/Documents/Projects/ACC/HTML/public_html",
-		"/Users/slider/Documents/Projects/ACC/HTML/public_html/bitrix/components/bitrix",
-		"/Users/slider/Documents/Projects/ACC/HTML/public_html/bitrix/components/bitrix/news.list/templates",
-		"/Users/slider/Documents/Projects/ACC/HTML/public_html/bitrix/components/bitrix/news.list/templates/.default",
-		"/Users/slider/Documents/Projects/ACC/HTML/public_html/layout",
-		"/Users/slider/Documents/Projects/ACC/HTML/public_html/layout/images",
-		"/Users/slider/Documents/Projects/ACC/HTML/public_html/layout/images/svg",
-		"/Users/slider/Documents/Projects/ACC/HTML/public_html/local/php_interface",
-		"/Users/slider/Documents/Projects/ACC/HTML/public_html/projects",
-		"/Users/slider/Documents/Projects/ACC/HTML/public_html/search",
-		"/Users/slider/Documents/Projects/ACC/HTML/public_html/services",
-		"/Users/slider/Documents/Projects/ACC/HTML/public_html/tech",
-		"/Users/slider/Documents/Projects/ACC/HTML/sources",
-		"/Users/slider/Documents/Projects/ACC/HTML/sources/css",
-		"/Users/slider/Documents/Projects/ACC/HTML/sources/css/import",
-		"/Users/slider/Documents/Projects/ACC/HTML/sources/html/includes",
-		"/Users/slider/Documents/Projects/ACC/HTML/sources/js"
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/public_html/local/templates/acc",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/public_html/about",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/public_html/eng/about",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/public_html/eng/partners",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/public_html/include",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/public_html/local",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/public_html/local/php_interface",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/public_html/local/templates",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/public_html/local/templates/.default",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/public_html/local/templates/.default/components",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/public_html/local/templates/.default/components/bitrix",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/public_html/local/templates/.default/components/bitrix/news.list",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/public_html/local/templates/.default/components/bitrix/news.list/projects_map",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/public_html/projects",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/sources",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/sources/css",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/sources/css/import/_system",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/sources/html",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/sources/html/includes",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/sources/js"
 	],
 	"file_history":
 	[
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/public_html/eng/services/index.php",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/public_html/eng/tech/.section.php",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/public_html/eng/tech/index.php",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/public_html/local/templates/acc_eng/header.php",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/public_html/eng/.sites.menu.php",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/public_html/local/templates/.default/components/bitrix/menu/top/template.php",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/sources/css/import/global.styl",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/public_html/eng/projects/.top.menu.php",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/public_html/layout/images/svg/logo_eng.svg",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/public_html/local/templates/.default/components/bitrix/news.list/projects_map/lang/en/template.php",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/sources/js/script.coffee",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/public_html/local/templates/acc_eng/footer.php",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/public_html/eng/index.php",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/public_html/include/form_eng.php",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/public_html/eng/contacts/index.php",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/public_html/local/templates/.default/components/bitrix/news.list/news_index/template.php",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/public_html/local/templates/.default/components/bitrix/news.list/tech/lang/en/template.php",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/public_html/.sites.menu.php",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/public_html/local/templates/.default/components/bitrix/menu/sites/lang/ru/template.php",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/public_html/local/templates/.default/components/bitrix/news.list/projects_map/template.php",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/public_html/local/templates/.default/components/bitrix/news.list/projects_map/lang/ru/template.php",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/public_html/local/templates/.default/components/bitrix/menu/sites/template.php",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/public_html/local/templates/.default/components/bitrix/menu/sites/lang/en/template.php",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/public_html/local/templates/.default/components/bitrix/news.list/news_index/lang/en/template.php",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/public_html/local/templates/.default/components/bitrix/news.list/tech/template.php",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/public_html/eng/search/.section.php",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/public_html/index.php",
+		"/Users/slider/Library/Caches/Cleanup At Startup/Transmit/A34DB582-3818-4E60-8358-CEAE083612CF/form.php",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/public_html/eng/projects/index.php",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/public_html/local/templates/.default/components/bitrix/news.list/news_index/lang/ru/template.php",
+		"/Users/slider/Documents/Projects/TKS/ACC/HTML/public_html/local/templates/.default/components/bitrix/news.list/tech/lang/ru/template.php",
 		"/Users/slider/Documents/Projects/ACC/HTML/public_html/services/index.php",
 		"/Users/slider/Documents/Projects/ACC/HTML/public_html/search/index.php",
 		"/Users/slider/Documents/Projects/ACC/HTML/sources/css/import/toolbar.styl",
@@ -692,38 +823,7 @@
 		"/Users/slider/Documents/Projects/ACC/HTML/public_html/local/templates/acc/components/bitrix/catalog.section.list/years/template.php",
 		"/Users/slider/Documents/Projects/ACC/HTML/public_html/local/templates/acc/components/bitrix/system.pagenavigation/.default/template.php",
 		"/Users/slider/Documents/Projects/ACC/HTML/public_html/include.php",
-		"/Users/slider/Documents/Projects/ACC/HTML/public_html/local/templates/acc/components/bitrix/news.list/news/component_epilog.php",
-		"/Users/slider/Documents/Projects/ACC/HTML/public_html/local/templates/acc/components/bitrix/news/news/detail.php",
-		"/Users/slider/Documents/Projects/ACC/HTML/public_html/local/templates/acc/components/bitrix/news/news/news.php",
-		"/Users/slider/Documents/Projects/ACC/HTML/public_html/local/templates/acc/components/bitrix/news/news/section.php",
-		"/Users/slider/Documents/Projects/ACC/HTML/public_html/local/templates/acc/components/bitrix/news/news/template.php",
-		"/Users/slider/Documents/Projects/ACC/HTML/public_html/local/templates/acc/components/bitrix/news.list/partners/result_modifier.php",
-		"/Users/slider/Documents/Projects/ACC/HTML/public_html/partners/index.php",
-		"/Users/slider/Documents/Projects/ACC/HTML/acc.sublime-project",
-		"/Users/slider/Documents/Projects/ACC/HTML/public_html/local/templates/acc/components/bitrix/menu/left/template.php",
-		"/Users/slider/Documents/Projects/ACC/HTML/public_html/bitrix/.settings.php",
-		"/Users/slider/Documents/Projects/ACC/HTML/sources/html/projects.jade",
-		"/Users/slider/Documents/Projects/ACC/HTML/public_html/.left.menu.php",
-		"/Users/slider/Documents/Projects/ACC/HTML/public_html/local/templates/acc/components/bitrix/menu/social/template.php",
-		"/Users/slider/Documents/Projects/ACC/HTML/public_html/.sites.menu.php",
-		"/Users/slider/Library/Caches/Cleanup At Startup/Transmit/1CDE0CAD-2656-48B2-BAD6-D5C1D50A630C/config.yml",
-		"/Users/slider/Documents/Projects/ACC/HTML/sources/html/services.jade",
-		"/Users/slider/Documents/Projects/ACC/HTML/sources/html/partners.jade",
-		"/Users/slider/Documents/Projects/ACC/HTML/sources/html/contacts.jade",
-		"/Users/slider/Documents/Projects/ACC/HTML/sources/html/includes/footer.jade",
-		"/Users/slider/Documents/Projects/ACC/HTML/sources/html/news.jade",
-		"/Users/slider/Documents/Projects/ACC/HTML/sources/html/about.jade",
-		"/Users/slider/Documents/Projects/ACC/HTML/sources/css/import/_system/plugins.styl",
-		"/Users/slider/Documents/Projects/ACC/HTML/sources/css/import/fonts.styl",
-		"/Users/slider/Documents/Projects/K-Marketing/tmp/wp-config.php",
-		"/Users/slider/Documents/Projects/ACC/HTML/sources/css/bootstrap/bootstrap.less",
-		"/Users/slider/Downloads/Oval 1.svg",
-		"/Users/slider/Downloads/snazzy-maps-example-shades-of-grey-style.html",
-		"/Users/slider/Documents/Projects/ACC/HTML/public_html/projects.html",
-		"/Users/slider/Documents/Projects/ACC/HTML/sources/html/includes/header.jade",
-		"/Users/slider/Documents/Projects/ACC/HTML/sources/js/plugins.js",
-		"/Users/slider/Documents/Projects/ACC/HTML/sources/css/import/projects.styl",
-		"/Users/slider/Documents/Projects/ACC/HTML/public_html/layout/css/frontend.css"
+		"/Users/slider/Documents/Projects/ACC/HTML/public_html/local/templates/acc/components/bitrix/news.list/news/component_epilog.php"
 	],
 	"find":
 	{
@@ -746,6 +846,11 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"getSc",
+			"logo",
+			"nav",
+			"showmessage",
+			"обра",
 			"DETAIL_PAGE_URL",
 			"8 800",
 			"shiel",
@@ -868,12 +973,7 @@
 			"enter2",
 			".land",
 			".landi",
-			"&.no",
-			"star",
-			"big",
-			".events",
-			".event",
-			"&.month"
+			"&.no"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -881,6 +981,7 @@
 		"regex": false,
 		"replace_history":
 		[
+			"GetMessage",
 			"linetip",
 			"$2",
 			"<?=svg('close')?>",
@@ -957,8 +1058,415 @@
 	"groups":
 	[
 		{
+			"selected": 4,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "public_html/eng/projects/.section.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 37,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								32,
+								32
+							]
+						],
+						"settings":
+						{
+							"bs_sintax": "php",
+							"buffer_scroll_name": "647b88a3",
+							"syntax": "Packages/PHP/PHP.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 11,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "public_html/eng/contacts/index.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1400,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								143,
+								143
+							]
+						],
+						"settings":
+						{
+							"bs_sintax": "php",
+							"buffer_scroll_name": "a9c4dca7",
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 10,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "public_html/eng/contacts/.section.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 33,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								28,
+								28
+							]
+						],
+						"settings":
+						{
+							"bs_sintax": "php",
+							"buffer_scroll_name": "7946a1e2",
+							"syntax": "Packages/PHP/PHP.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 9,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "public_html/local/templates/.default/components/bitrix/news.list/projects_map/template.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 12151,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2758,
+								2708
+							]
+						],
+						"settings":
+						{
+							"bs_sintax": "php",
+							"buffer_scroll_name": "1ad9b4ea",
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 851.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "sources/html/includes/footer.jade",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 3838,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2769,
+								1852
+							]
+						],
+						"settings":
+						{
+							"bs_sintax": "jade",
+							"buffer_scroll_name": "e2422458",
+							"syntax": "Packages/Jade/Syntaxes/Jade.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 790.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "public_html/eng/about/.section.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 30,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								20,
+								25
+							]
+						],
+						"settings":
+						{
+							"bs_sintax": "php",
+							"buffer_scroll_name": "574ac30d",
+							"syntax": "Packages/PHP/PHP.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "public_html/eng/about/index.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2620,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								89,
+								89
+							]
+						],
+						"settings":
+						{
+							"bs_sintax": "php",
+							"buffer_scroll_name": "ef54efea",
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "/Users/slider/Downloads/vk.svg",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 519,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								138,
+								138
+							]
+						],
+						"settings":
+						{
+							"auto_name": "<svg width=\"23\" height=\"28\" viewBox=\"0 0 23 28\" xm",
+							"bs_sintax": "plain text",
+							"buffer_scroll_name": "0fcee7ae",
+							"syntax": "Packages/XML/XML.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "sources/js/script.coffee",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 12648,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2149,
+								2149
+							]
+						],
+						"settings":
+						{
+							"bs_sintax": "coffeescript",
+							"buffer_scroll_name": "ad6c14e8",
+							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": -0.0,
+						"translation.y": 1335.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "public_html/projects.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 41861,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								15928,
+								15928
+							]
+						],
+						"settings":
+						{
+							"bs_sintax": "html",
+							"buffer_scroll_name": "c7c39027",
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2698.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "public_html/eng/partners/.section.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 34,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								20,
+								28
+							]
+						],
+						"settings":
+						{
+							"bs_sintax": "php",
+							"buffer_scroll_name": "214d8bca",
+							"syntax": "Packages/PHP/PHP.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "public_html/eng/partners/index.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 664,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								149,
+								149
+							],
+							[
+								189,
+								189
+							]
+						],
+						"settings":
+						{
+							"bs_sintax": "php",
+							"buffer_scroll_name": "d1d0d19d",
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 12,
+					"file": "public_html/eng/services/.section.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 36,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								33,
+								33
+							]
+						],
+						"settings":
+						{
+							"bs_sintax": "php",
+							"buffer_scroll_name": "8f2a4583",
+							"syntax": "Packages/PHP/PHP.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 12,
+					"type": "text"
+				}
 			]
 		}
 	],
