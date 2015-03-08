@@ -26,6 +26,12 @@
   <div id="panel"><?$APPLICATION->ShowPanel();?></div>
   <header class="toolbar">
     <div class="container">
+      <div class="logo__frame">
+        <a href="/" class="logo"><?=svg('logo')?></a>
+        <div class="shield shield--big-left">
+          <div class="shield__right"><?=svg('shield-r')?></div>
+        </div>
+      </div>
       <div class="row no-gutter-md">
         <div class="col-xs-3 visible-md visible-lg">
           <a href="/" class="logo"><?=svg('logo')?></a>
@@ -87,8 +93,6 @@
       <div class="row">
         <div class="col-sm-12 <?=($APPLICATION->GetCurDir()=='/'?'col-md-4':'')?> no-position">
           <aside class="sidebar">
-          <a href="/" class="logo"><?=svg('logo')?></a>
-            
             <?php
               if($APPLICATION->GetCurDir()=='/'):
                 ?>

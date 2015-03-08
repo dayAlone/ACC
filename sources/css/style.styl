@@ -268,7 +268,6 @@ div.pp_default .pp_loaderIcon
 		width     100%
 		left      0px
 		top       32px
-		display   none
 		&__left	
 			svg
 				left -40px
@@ -308,6 +307,26 @@ div.pp_default .pp_loaderIcon
 		position     relative
 		z-index      30
 		line-height  104px
+		&__frame
+			max-width 240px
+			position absolute
+			top 61px
+			@media (min-width: scr_md)
+				display none
+			.logo
+				margin-left 0
+				line-height 82px
+				
+				svg
+					max-height 52px
+					max-width 75%
+			.shield
+				top 0
+				& svg
+					width 112px
+					right -35px
+				&, &:after, & svg
+					height 82px
 		svg
 			middle()
 			max-width 43%
@@ -602,7 +621,7 @@ div.pp_default .pp_loaderIcon
 				left 23px
 				
 .wrap
-	padding-top 82px
+	padding-top 180px
 	@media (min-width: scr_md)
 		padding-top 0
 body

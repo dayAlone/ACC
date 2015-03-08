@@ -1,5 +1,5 @@
 (function() {
-  var addTrigger, autoHeight, blur, delay, getCaptcha, map, newsInit, setCaptcha, setHash, size, urlInitial;
+  var addTrigger, autoHeight, blur, debounce, delay, getCaptcha, map, newsInit, setCaptcha, setHash, size, urlInitial;
 
   delay = function(ms, func) {
     return setTimeout(func, ms);
@@ -20,6 +20,17 @@
   };
 
   urlInitial = void 0;
+
+  debounce = function(ms, cb) {
+    var timeout;
+    timeout = null;
+    return function() {
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+      timeout = delay(ms, cb);
+    };
+  };
 
   setHash = function(hash) {
     window.location.hash = hash;
@@ -283,6 +294,27 @@
         });
       }
     });
+    $(window).on('scroll mousewheel touchstart touchmove DOMMouseScroll MozMousePixelScroll', debounce(50, function() {
+      if ($(window).width() <= 992) {
+        if ($('body').scrollTop() > 40) {
+          return $('.logo__frame').velocity({
+            properties: "transition.slideUpOut",
+            options: {
+              duration: 300
+            }
+          });
+        } else {
+          if ($('.logo__frame').is(':hidden')) {
+            return $('.logo__frame').velocity({
+              properties: "transition.slideDownIn",
+              options: {
+                duration: 300
+              }
+            });
+          }
+        }
+      }
+    }));
     $('.dropdown').elem('item').click(function(e) {
       if ($(this).attr('href')[0] === "#") {
         $('.dropdown').elem('text').html($(this).text());

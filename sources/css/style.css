@@ -1081,7 +1081,6 @@ div.pp_default .pp_loaderIcon {
   width: 100%;
   left: 0px;
   top: 32px;
-  display: none;
 }
 .toolbar .shield__left svg {
   left: -40px;
@@ -1141,6 +1140,36 @@ div.pp_default .pp_loaderIcon {
   position: relative;
   z-index: 30;
   line-height: 104px;
+}
+.toolbar .logo__frame {
+  max-width: 240px;
+  position: absolute;
+  top: 61px;
+}
+@media (min-width: 992px) {
+  .toolbar .logo__frame {
+    display: none;
+  }
+}
+.toolbar .logo__frame .logo {
+  margin-left: 0;
+  line-height: 82px;
+}
+.toolbar .logo__frame .logo svg {
+  max-height: 52px;
+  max-width: 75%;
+}
+.toolbar .logo__frame .shield {
+  top: 0;
+}
+.toolbar .logo__frame .shield svg {
+  width: 112px;
+  right: -35px;
+}
+.toolbar .logo__frame .shield,
+.toolbar .logo__frame .shield:after,
+.toolbar .logo__frame .shield svg {
+  height: 82px;
 }
 .toolbar .logo svg {
   display: inline-block;
@@ -1587,7 +1616,7 @@ div.pp_default .pp_loaderIcon {
   left: 23px;
 }
 .wrap {
-  padding-top: 82px;
+  padding-top: 180px;
 }
 @media (min-width: 992px) {
   .wrap {

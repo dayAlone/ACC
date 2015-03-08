@@ -13,6 +13,14 @@ size = ->
 
 urlInitial = undefined
 
+debounce = (ms, cb) ->
+	timeout = null
+	->
+		if timeout
+			clearTimeout timeout
+		timeout = delay ms, cb
+		return
+
 setHash = (hash) ->
 	window.location.hash = hash;
 	window.onhashchange = ()->
@@ -217,7 +225,20 @@ $(document).ready ->
 				properties: "transition.slideDownIn"
 				options:
 					duration: 300
-	
+
+	$(window).on 'scroll mousewheel touchstart touchmove DOMMouseScroll MozMousePixelScroll', debounce 50, ->
+		if $(window).width() <= 992
+			if $('body').scrollTop() > 40
+				$('.logo__frame').velocity
+					properties: "transition.slideUpOut"
+					options:
+						duration: 300
+			else
+				if $('.logo__frame').is ':hidden'
+					$('.logo__frame').velocity
+						properties: "transition.slideDownIn"
+						options:
+							duration: 300
 
 	$('.dropdown').elem('item').click (e)->
 		if $(this).attr('href')[0] == "#"
