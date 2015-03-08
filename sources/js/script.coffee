@@ -226,19 +226,16 @@ $(document).ready ->
 				options:
 					duration: 300
 
-	$(window).on 'scroll mousewheel touchstart touchmove DOMMouseScroll MozMousePixelScroll', debounce 300, ->
-		if $(window).width() <= 992
-			if $('body').scrollTop() > 0
-				$('.logo__frame').velocity
-					properties: "transition.slideUpOut"
-					options:
-						duration: 300
-			else
-				if $('.logo__frame').is ':hidden'
-					$('.logo__frame').velocity
-						properties: "transition.slideDownIn"
-						options:
-							duration: 300
+	logoTimer = false
+	$(window).on 'scroll mousewheel touchstart touchmove DOMMouseScroll MozMousePixelScroll', ->
+		if logoTimer
+			clearTimeout logoTimer
+		logoTimer = delay 100, ->
+			if $(window).width() <= 992
+				if $('body').scrollTop() > 0
+					$('.logo__frame').mod 'disable', true
+				else
+					$('.logo__frame').mod 'disable', false
 
 	$('.dropdown').elem('item').click (e)->
 		if $(this).attr('href')[0] == "#"

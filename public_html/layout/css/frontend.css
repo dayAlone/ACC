@@ -3755,6 +3755,23 @@ div.pp_default .pp_loaderIcon {
   max-width: 240px;
   position: absolute;
   top: 61px;
+  -webkit-transition-property: all;
+  -moz-transition-property: all;
+  -o-transition-property: all;
+  -ms-transition-property: all;
+  transition-property: all;
+  -webkit-transition-duration: 0.3s;
+  -moz-transition-duration: 0.3s;
+  -o-transition-duration: 0.3s;
+  -ms-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+}
+.toolbar .logo__frame--disable {
+  pointer-events: none;
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+  top: 40px;
 }
 @media (min-width: 992px) {
   .toolbar .logo__frame {

@@ -19143,7 +19143,7 @@ function makeArray( obj ) {
   $.BEM = new BEM({
     namePattern: '[a-zA-Z0-9-]+',
     elemPrefix: '__',
-    modPrefix: '_',
+    modPrefix: '--',
     modDlmtr: '_'
   });
 
@@ -26626,7 +26626,7 @@ if ('undefined' !== typeof window.ParsleyValidator)
   };
 
   $(document).ready(function() {
-    var closeDropdown, mapInit, openDropdown, spin, timer, x;
+    var closeDropdown, logoTimer, mapInit, openDropdown, spin, timer, x;
     $('.search-trigger').click(function(e) {
       if ($('.toolbar .container').width() <= 750) {
         $('#Search').modal();
@@ -26739,27 +26739,21 @@ if ('undefined' !== typeof window.ParsleyValidator)
         });
       }
     });
-    $(window).on('scroll mousewheel touchstart touchmove DOMMouseScroll MozMousePixelScroll', debounce(300, function() {
-      if ($(window).width() <= 992) {
-        if ($('body').scrollTop() > 0) {
-          return $('.logo__frame').velocity({
-            properties: "transition.slideUpOut",
-            options: {
-              duration: 300
-            }
-          });
-        } else {
-          if ($('.logo__frame').is(':hidden')) {
-            return $('.logo__frame').velocity({
-              properties: "transition.slideDownIn",
-              options: {
-                duration: 300
-              }
-            });
+    logoTimer = false;
+    $(window).on('scroll mousewheel touchstart touchmove DOMMouseScroll MozMousePixelScroll', function() {
+      if (logoTimer) {
+        clearTimeout(logoTimer);
+      }
+      return logoTimer = delay(100, function() {
+        if ($(window).width() <= 992) {
+          if ($('body').scrollTop() > 0) {
+            return $('.logo__frame').mod('disable', true);
+          } else {
+            return $('.logo__frame').mod('disable', false);
           }
         }
-      }
-    }));
+      });
+    });
     $('.dropdown').elem('item').click(function(e) {
       if ($(this).attr('href')[0] === "#") {
         $('.dropdown').elem('text').html($(this).text());
