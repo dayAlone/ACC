@@ -26,22 +26,16 @@
   <div id="panel"><?$APPLICATION->ShowPanel();?></div>
   <header class="toolbar">
     <div class="container">
-      <div class="logo__frame">
-        <a href="/" class="logo"><?=svg('logo')?></a>
-        <div class="shield shield--big-left">
-          <div class="shield__right"><?=svg('shield-r')?></div>
-        </div>
-      </div>
       <div class="row no-gutter-md">
-        <div class="col-xs-3 visible-md visible-lg">
+        <div class="col-xs-6 col-sm-4 col-md-3">
           <a href="/" class="logo"><?=svg('logo')?></a>
           <div class="shield shield--big-left">
             <div class="shield__right"><?=svg('shield-r')?></div>
           </div>
         </div>
-        <div class="col-xs-12 col-md-9 no-padding-right-md">
+        <div class="col-xs-6 col-sm-8 col-md-9 no-padding-right-md">
           <div class="row">
-            <div class="col-xs-3 col-md-2">
+            <div class="col-xs-3 col-md-2 hidden-xs hidden-sm">
               <?php
               $APPLICATION->IncludeComponent("bitrix:menu", "sites", 
               array(
@@ -54,12 +48,12 @@
               ?>
               
             </div>
-            <div class="col-xs-2 col-lg-3">
+            <div class="col-xs-2 col-xs-offset-3 col-sm-offset-0 col-lg-3">
               <a data-toggle="modal" data-target="#Contacts" href="#Contacts" class="popup-trigger"><?=svg('phone')?></a>
               <a data-toggle="modal" data-target="#Search" href="#Search" class="popup-trigger"><?=svg('seach')?></a>
               <div data-variant="russian,english" class="lang-trigger lang-trigger--lang_russian"><span class="lang-trigger__label">RU</span><span class="lang-trigger__carriage"></span><span class="lang-trigger__label">EN</span></div>
             </div>
-            <div class="col-xs-3 md-right"><a href="tel:<?=str_replace(' ', '', COption::GetOptionString("grain.customsettings","toolbar_phone"))?>" class="phone"><?=svg('phone')?></svg><?=COption::GetOptionString("grain.customsettings","toolbar_phone")?></a></div>
+            <div class="col-xs-3 col-sm-6 col-md-3 sm-right"><a href="tel:<?=str_replace(' ', '', COption::GetOptionString("grain.customsettings","toolbar_phone"))?>" class="phone"><?=svg('phone')?></svg><?=COption::GetOptionString("grain.customsettings","toolbar_phone")?></a></div>
             <div class="col-xs-4 col-md-5 col-lg-4 right">
               <?/*<a href="#" class="filials visible-md-inline visible-lg-inline"><?=svg('pin')?>Филиальная сеть</a>*/?>
               <a data-toggle="modal" data-target="#Feedback" href="#Feedback" class="feedback visible-md-inline visible-lg-inline">Обратная связь</a>

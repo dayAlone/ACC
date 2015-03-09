@@ -182,9 +182,10 @@
 			padding 13px 13px 6px
 			t(background)
 			&:hover
-				background #0082dc !important
-				.tech__link
-					opacity 1
+				@media (min-width: scr_md)
+					background #0082dc !important
+					.tech__link
+						opacity 1
 			@media (min-width: scr_sm)
 				margin-top 30px
 				padding 13px 13px 10px
@@ -284,13 +285,14 @@
 				line-height 105px
 			margin-left -13px
 			&:hover
-				padding 13px 13px 8px
-				margin-top -6px
-				margin-bottom -8px
-				t(background)
-				background black
-				.services__title
-					color white
+				@media (min-width: scr_md)
+					padding 13px 13px 8px
+					margin-top -6px
+					margin-bottom -8px
+					t(background)
+					background black
+					.services__title
+						color white
 	.years, .pages
 		display none
 		@media (min-width: scr_sm)
@@ -364,10 +366,11 @@
 				background rgba(0,0,0,.45)
 				overflow hidden
 				&:hover
-					background #0082dc !important
-					color white
-					.news__date
+					@media (min-width: scr_md)
+						background #0082dc !important
 						color white
+						.news__date
+							color white
 	.filter, .select
 		full-width()
 		position relative
