@@ -1252,6 +1252,11 @@ a.toolbar__phone svg path {
   min-width: 220px;
   max-width: 300px;
 }
+@media (min-width: 375px) {
+  .toolbar .shield {
+    min-width: 237px;
+  }
+}
 @media (min-width: 992px) {
   .toolbar .shield {
     height: 101px;
