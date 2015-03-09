@@ -69,7 +69,7 @@
   };
 
   autoHeight = function(el, selector, height_selector, use_padding, debug) {
-    var count, heights, i, item, item_padding, items, loops, padding, step, x, _i, _ref, _results;
+    var count, heights, i, item, item_padding, items, j, loops, padding, ref, results, step, x;
     if (selector == null) {
       selector = '';
     }
@@ -102,10 +102,10 @@
       if (debug) {
         console.log(count, step, item_padding, padding, el.width(), item.width());
       }
-      _results = [];
+      results = [];
       while (i < count) {
         items = {};
-        for (x = _i = 0, _ref = step - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; x = 0 <= _ref ? ++_i : --_i) {
+        for (x = j = 0, ref = step - 1; 0 <= ref ? j <= ref : j >= ref; x = 0 <= ref ? ++j : --j) {
           if (item[i + x]) {
             items[x] = item[i + x];
           }
@@ -128,9 +128,9 @@
             return $(this).height(Math.max.apply(Math, heights));
           }
         });
-        _results.push(i += step);
+        results.push(i += step);
       }
-      return _results;
+      return results;
     }
   };
 
