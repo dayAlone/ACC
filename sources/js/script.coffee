@@ -225,6 +225,7 @@ $(document).ready ->
 				properties: "transition.slideDownIn"
 				options:
 					duration: 300
+		e.preventDefault()
 
 	logoTimer = false
 	$(window).on 'scroll mousewheel touchstart touchmove DOMMouseScroll MozMousePixelScroll', ->

@@ -279,20 +279,21 @@
       var form;
       form = $(this).parents('.modal').find('form');
       if (form.is(':visible')) {
-        return form.velocity({
+        form.velocity({
           properties: "transition.slideUpOut",
           options: {
             duration: 300
           }
         });
       } else {
-        return form.velocity({
+        form.velocity({
           properties: "transition.slideDownIn",
           options: {
             duration: 300
           }
         });
       }
+      return e.preventDefault();
     });
     logoTimer = false;
     $(window).on('scroll mousewheel touchstart touchmove DOMMouseScroll MozMousePixelScroll', function() {

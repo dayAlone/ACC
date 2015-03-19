@@ -8,6 +8,7 @@
   <?
   $APPLICATION->SetAdditionalCSS("/layout/css/frontend.css", true);
   $APPLICATION->AddHeadScript('/layout/js/frontend.js');
+  if($_SERVER['SERVER_NAME'] == 'acc.local') $APPLICATION->AddHeadScript('http://127.0.0.1:35729/livereload.js?ext=Safari&extver=2.0.9');
   $APPLICATION->ShowViewContent('header');?>
   <title><?php 
     $APPLICATION->ShowTitle();
@@ -150,7 +151,7 @@
               <a href="tel:<?=str_replace(' ', '', COption::GetOptionString("grain.customsettings","toolbar_phone"))?>" class="toolbar__phone"><?=svg('phone')?></svg><?=COption::GetOptionString("grain.customsettings","toolbar_phone")?></a>
             </div>
             <div class="col-xs-6 col-sm-2 sm-center no-padding-left">
-              <a data-toggle="modal" data-target="#Contacts" href="#Contacts" class="visbile-xs s-margin-right"><?=svg('phone')?></a>
+              <a data-toggle="modal" data-target="#Contacts" href="#Contacts" class="visible-xs-inline s-margin-right"><?=svg('phone')?></a>
               <a data-toggle="modal" data-target="#Search" href="#Search"><?=svg('seach')?></a>
 
             </div>

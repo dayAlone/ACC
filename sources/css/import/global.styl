@@ -131,8 +131,14 @@ article
 	padding 0
 .modal-dialog
 	width 100%
-	margin 0
+	margin 0 auto
 	min-height 100%
+	@media (max-width: scr_md)
+		iframe, #map
+			margin-top 52px !important
+		.form, .success
+			margin 0 auto !important
+			margin-top 32px !important
 	@media (min-width: scr_md)
 		min-height none
 		margin: 30px auto;
