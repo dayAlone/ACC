@@ -183,7 +183,7 @@
   $(document).ready(function() {
     var closeDropdown, logoTimer, mapInit, openDropdown, spin, timer, x;
     $('.search-trigger').click(function(e) {
-      if ($('.toolbar .container').width() <= 750) {
+      if ($('.toolbar .container').width() <= 750 || $.browser.mobile) {
         $('#Search').modal();
       } else {
         if ($('.toolbar .search-form').is(':hidden')) {

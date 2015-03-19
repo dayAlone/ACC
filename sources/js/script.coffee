@@ -137,7 +137,7 @@ blur = ()->
 $(document).ready ->
 
 	$('.search-trigger').click (e)->
-		if $('.toolbar .container').width() <= 750
+		if $('.toolbar .container').width() <= 750 || $.browser.mobile
 			$('#Search').modal()
 		else
 			if $('.toolbar .search-form').is ':hidden'
