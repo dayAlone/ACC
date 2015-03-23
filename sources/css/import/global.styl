@@ -42,6 +42,19 @@ article
 	position relative
 	z-index 10
 
+body:not(.eng)
+	.toolbar
+		.logo
+			@media (min-width: scr_md)
+				margin-left 0px
+			svg
+				
+				@media (min-width: scr_sm)
+					max-width 70%
+				@media (min-width: scr_lg)
+					max-width 223px
+					max-height 80px
+
 .index-page
 	full-width()
 	float right

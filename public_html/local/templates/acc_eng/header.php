@@ -21,21 +21,73 @@
     $APPLICATION->ShowHead();
   ?>
 </head>
-<body class="<?=$APPLICATION->AddBufferContent("body_class");?>">
+<body class="eng <?=$APPLICATION->AddBufferContent("body_class");?>">
 <div class="wrap">
   <div id="panel"><?$APPLICATION->ShowPanel();?></div>
   <header class="toolbar">
-    <div class="container">
-      <div class="row no-gutter-md">
-        <div class="col-xs-3 visible-md visible-lg">
+    <header class="toolbar">
+    <div class="container hidden-xs hidden-sm">
+      <div class="row no-gutter">
+        <div class="col-md-3 s-padding-left">
           <a href="/" class="logo"><?=svg('logo_eng')?></a>
+          <div class="shield">
+            <div class="shield__right"><?=svg('shield-r')?></div>
+          </div>
+        </div>
+        <div class="col-md-9">
+          <div class="row toolbar__tools">
+            <div class="col-xs-2">
+              <?php
+              $APPLICATION->IncludeComponent("bitrix:menu", "sites", 
+              array(
+                  "ALLOW_MULTI_SELECT" => "Y",
+                  "MENU_CACHE_TYPE"    => "A",
+                  "ROOT_MENU_TYPE"     => "sites",
+                  "MAX_LEVEL"          => "1",
+                  ),
+              false);
+              ?>
+            </div>
+            <div class="col-xs-3">
+              <div data-variant="russian,english" class="lang-trigger lang-trigger--lang_english s-margin-left"><span class="lang-trigger__label">RU</span><span class="lang-trigger__carriage"></span><span class="lang-trigger__label">EN</span></div>
+            </div>
+            <div class="col-xs-3 right">
+              <a href="tel:<?=str_replace(' ', '', COption::GetOptionString("grain.customsettings","toolbar_phone"))?>" class="toolbar__phone"><?=svg('phone')?></svg><?=COption::GetOptionString("grain.customsettings","toolbar_phone")?></a>
+            </div>
+            <div class="col-xs-4 right">
+              <a data-toggle="modal" data-target="#Feedback" href="#Feedback" class="feedback visible-md-inline visible-lg-inline">Обратная связь</a>
+              <form action="/search/" class="search-form">
+                <input type="text" name="q" class="search-form__text" placeholder="">
+                <button type="submit" class="search-form__button"><?=svg('seach')?></button>
+              </form>
+              <a href="#" class="search-trigger m-margin-left"><?=svg('seach')?></a>
+            </div>
+          </div>
+          <div class="toolbar__nav">
+            <?
+              $APPLICATION->IncludeComponent("bitrix:menu", "top", 
+              array(
+                  "ALLOW_MULTI_SELECT" => "Y",
+                  "MENU_CACHE_TYPE"    => "A",
+                  "ROOT_MENU_TYPE"     => "left",
+                  "MAX_LEVEL"          => "1",
+                  ),
+              false);
+              ?>
+          </div>
+        </div>
+      </div>
+      <?/*
+      <div class="row no-gutter-md">
+        <div class="col-xs-6 col-sm-4 col-md-3">
+          <a href="/" class="logo"><?=svg('logo')?></a>
           <div class="shield shield--big-left">
             <div class="shield__right"><?=svg('shield-r')?></div>
           </div>
         </div>
-        <div class="col-xs-12 col-md-9 no-padding-right-md">
+        <div class="col-xs-6 col-sm-8 col-md-9 no-padding-right-md">
           <div class="row">
-            <div class="col-xs-3 col-md-2">
+            <div class="col-xs-3 col-md-2 hidden-xs hidden-sm">
               <?php
               $APPLICATION->IncludeComponent("bitrix:menu", "sites", 
               array(
@@ -48,16 +100,16 @@
               ?>
               
             </div>
-            <div class="col-xs-2 col-lg-3">
+            <div class="col-xs-5 col-lg-3">
               <a data-toggle="modal" data-target="#Contacts" href="#Contacts" class="popup-trigger"><?=svg('phone')?></a>
               <a data-toggle="modal" data-target="#Search" href="#Search" class="popup-trigger"><?=svg('seach')?></a>
-              <div data-variant="russian,english" class="lang-trigger lang-trigger--lang_english"><span class="lang-trigger__label">RU</span><span class="lang-trigger__carriage"></span><span class="lang-trigger__label">EN</span></div>
+              <div data-variant="russian,english" class="lang-trigger lang-trigger--lang_russian"><span class="lang-trigger__label">RU</span><span class="lang-trigger__carriage"></span><span class="lang-trigger__label">EN</span></div>
             </div>
-            <div class="col-xs-3 md-right"><a href="tel:<?=str_replace(' ', '', COption::GetOptionString("grain.customsettings","toolbar_phone"))?>" class="phone"><?=svg('phone')?></svg><?=COption::GetOptionString("grain.customsettings","toolbar_phone")?></a></div>
+            <div class="col-xs-3 col-sm-6 col-md-3 sm-right"><a href="tel:<?=str_replace(' ', '', COption::GetOptionString("grain.customsettings","toolbar_phone"))?>" class="phone"><?=svg('phone')?></svg><?=COption::GetOptionString("grain.customsettings","toolbar_phone")?></a></div>
             <div class="col-xs-4 col-md-5 col-lg-4 right">
-              <?/*<a href="#" class="filials visible-md-inline visible-lg-inline"><?=svg('pin')?>Филиальная сеть</a>*/?>
-              <a data-toggle="modal" data-target="#Feedback" href="#Feedback" class="feedback visible-md-inline visible-lg-inline">Feedback</a>
-              <a data-toggle="modal" data-target="#Nav" href="#Nav" class="nav-trigger"><span>Menu</span><?=svg('nav')?></a>
+              <?/*<a href="#" class="filials visible-md-inline visible-lg-inline"><?=svg('pin')?>Филиальная сеть</a>?>
+              <a data-toggle="modal" data-target="#Feedback" href="#Feedback" class="feedback visible-md-inline visible-lg-inline">Обратная связь</a>
+              <a data-toggle="modal" data-target="#Nav" href="#Nav" class="nav-trigger"><span>Меню</span><?=svg('nav')?></a>
               <form action="/search/" class="search-form">
                 <input type="text" name="q" class="search-form__text" placeholder="">
                 <button type="submit" class="search-form__button"><?=svg('seach')?></button>
@@ -80,7 +132,37 @@
           </div>
         </div>
       </div>
+      */?>
     </div>
+    <div class="container visible-sm visible-xs">
+      <div class="row no-gutter-sm">
+        <div class="col-sm-4 col-xs-7 xs-center">
+          <a href="/" class="logo"><?=svg('logo_eng')?></a>
+          <div class="shield">
+            <div class="shield__right"><?=svg('shield-r')?></div>
+          </div>
+        </div>
+        <div class="col-sm-8 col-xs-5">
+          <div class="row toolbar__tools">
+            <div class="col-sm-3 visible-sm">
+              <div data-variant="russian,english" class="lang-trigger lang-trigger--lang_russian"><span class="lang-trigger__label">RU</span><span class="lang-trigger__carriage"></span><span class="lang-trigger__label">EN</span></div>
+            </div>
+            <div class="col-sm-5 right visible-sm">
+              <a href="tel:<?=str_replace(' ', '', COption::GetOptionString("grain.customsettings","toolbar_phone"))?>" class="toolbar__phone"><?=svg('phone')?></svg><?=COption::GetOptionString("grain.customsettings","toolbar_phone")?></a>
+            </div>
+            <div class="col-xs-6 col-sm-2 sm-center no-padding-left">
+              <a data-toggle="modal" data-target="#Contacts" href="#Contacts" class="visible-xs-inline s-margin-right"><?=svg('phone')?></a>
+              <a data-toggle="modal" data-target="#Search" href="#Search"><?=svg('seach')?></a>
+
+            </div>
+            <div class="col-xs-6 col-sm-2 right">
+              <a data-toggle="modal" data-target="#Nav" href="#Nav"><span>Меню</span><?=svg('nav')?></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
   </header>
   <main class="page">
     <div class="container">

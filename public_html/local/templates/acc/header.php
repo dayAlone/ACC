@@ -136,7 +136,7 @@
     </div>
     <div class="container visible-sm visible-xs">
       <div class="row no-gutter-sm">
-        <div class="col-sm-4 col-xs-7 xs-center sm-left">
+        <div class="col-sm-4 col-xs-7 xs-center">
           <a href="/" class="logo"><?=svg('logo')?></a>
           <div class="shield">
             <div class="shield__right"><?=svg('shield-r')?></div>
