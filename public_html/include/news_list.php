@@ -26,7 +26,7 @@
 			$Open       = false;
 
 			$Sections   = array();
-			$arSort     = array("DEPTH_LEVEL" => "ASC");
+			$arSort     = array("NAME" => "DESC");
 			$arFilter   = array("IBLOCK_ID" => $params['IBLOCK']);
 			$rsSections = CIBlockSection::GetList($arSort, $arFilter);
 			
